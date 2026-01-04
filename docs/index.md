@@ -23,9 +23,9 @@ article.md-content__inner::before { display: none !important; }
 .md-content__button { display: none !important; }
 .md-source-file { display: none !important; }
 
-/* ===== 导航栏优化：单行布局 + 更明显字体 ===== */
-/* 隐藏顶部 header 第一行（logo + site_name） */
-.md-header__title { display: none !important; }
+/* ===== 导航栏优化：单行布局 ===== */
+/* 隐藏顶部 header 第一行 */
+.md-header__inner > .md-header__title { display: none !important; }
 
 /* 导航栏字体加粗加大 */
 .md-tabs__link {
@@ -34,21 +34,51 @@ article.md-content__inner::before { display: none !important; }
   opacity: 1 !important;
 }
 
-/* 搜索框和图标在同一行 */
+/* 隐藏原 header 行，只保留 tabs */
 .md-header__inner {
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.5rem !important;
+  height: 0 !important;
+  overflow: visible !important;
+  padding: 0 !important;
+}
+
+/* 搜索框移到 tabs 行右侧 */
+.md-search {
+  position: absolute !important;
+  right: 120px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 100 !important;
+}
+
+/* GitHub 图标和风格切换移到搜索框右侧 */
+.md-header__source {
+  position: absolute !important;
+  right: 16px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 100 !important;
+  margin: 0 !important;
+}
+
+/* 风格切换按钮 */
+.md-header__option {
+  position: absolute !important;
+  right: 70px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 100 !important;
+}
+
+/* tabs 容器相对定位 */
+.md-tabs {
+  background: var(--md-primary-fg-color) !important;
+  border: none !important;
+  position: relative !important;
+  padding-right: 280px !important; /* 为右侧元素留空间 */
 }
 
 /* 调整 header 高度 */
 .md-header { min-height: auto !important; }
-
-/* 让 tabs 和 header 在视觉上合并 */
-.md-tabs {
-  background: var(--md-primary-fg-color) !important;
-  border: none !important;
-}
 
 /* Hero 全屏区块 */
 .tx-hero {
