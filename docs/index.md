@@ -1,5 +1,4 @@
 ---
-template: home.html
 title: TKE Workshop
 hide:
   - navigation
