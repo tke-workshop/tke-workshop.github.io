@@ -1,0 +1,18 @@
+# TKE Workshop CODEOWNERS
+# 详细说明: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# 默认审核人（管理员）
+*                           @admin1 @admin2
+
+# 站点配置（仅管理员可修改）
+mkdocs.yml                  @admin1 @admin2
+.github/                    @admin1 @admin2
+
+# 模块负责人
+/docs/basics/               @basics-owner
+/docs/networking/           @networking-owner
+/docs/observability/        @observability-owner
+/docs/security/             @security-owner
+/docs/ai-ml/                @ai-ml-owner
+/docs/data/                 @data-owner
+/docs/control-plane/        @control-plane-owner

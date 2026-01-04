@@ -1,0 +1,197 @@
+# mkdocs.yml
+# TKE Workshop 站点配置
+
+# ==================== 基础信息 ====================
+site_name: TKE Workshop
+site_url: https://tke-workshop.github.io
+site_author: Tencent Cloud TKE Team
+site_description: 腾讯云容器服务 TKE 最佳实践 Workshop
+
+# ==================== 仓库信息 ====================
+repo_url: https://github.com/tke-workshop/tke-workshop.github.io
+repo_name: tke-workshop/tke-workshop.github.io
+edit_uri: edit/main/docs/
+
+# ==================== 主题配置 ====================
+theme:
+  name: material
+  language: zh
+  custom_dir: overrides  # 自定义覆盖目录
+  
+  # 调色板（支持明暗切换）
+  palette:
+    - scheme: default
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-7
+        name: 切换到深色模式
+    - scheme: slate
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-4
+        name: 切换到浅色模式
+  
+  # 功能特性
+  features:
+    # 导航
+    - navigation.tabs           # 顶部标签页导航
+    - navigation.tabs.sticky    # 标签页固定
+    - navigation.sections       # 侧边栏分组
+    - navigation.expand         # 侧边栏展开
+    - navigation.top            # 返回顶部按钮
+    - navigation.indexes        # 章节索引页
+    - navigation.footer         # 页脚导航
+    
+    # 搜索
+    - search.highlight          # 搜索高亮
+    - search.share              # 搜索分享
+    - search.suggest            # 搜索建议
+    
+    # 内容
+    - content.action.edit       # 编辑按钮
+    - content.action.view       # 查看源码按钮
+    - content.code.copy         # 代码复制按钮
+    - content.code.annotate     # 代码注释
+    - content.tabs.link         # 标签页链接
+    
+    # 目录
+    - toc.follow                # 目录跟随
+  
+  # 图标
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+
+# ==================== 导航结构 ====================
+nav:
+  - 首页: index.md
+  
+  - 快速入门:
+    - basics/index.md
+    - 环境准备: basics/prerequisites.md
+    - 创建集群: basics/create-cluster.md
+    - kubectl 基础: basics/kubectl-basics.md
+    - 部署应用: basics/deploy-app.md
+  
+  - 网络:
+    - networking/index.md
+    - Service 配置: networking/service.md
+    - Ingress 实践: networking/ingress.md
+    - 网络策略: networking/network-policy.md
+    - VPC-CNI: networking/vpc-cni.md
+  
+  - 可观测性:
+    - observability/index.md
+    - 监控告警: observability/monitoring.md
+    - 日志采集: observability/logging.md
+    - 链路追踪: observability/tracing.md
+  
+  - 安全:
+    - security/index.md
+    - RBAC 配置: security/rbac.md
+    - Pod 安全: security/pod-security.md
+    - 镜像安全: security/image-security.md
+  
+  - AI/ML:
+    - ai-ml/index.md
+    - GPU 调度: ai-ml/gpu-scheduling.md
+    - 模型推理: ai-ml/model-inference.md
+    - 训练任务: ai-ml/training.md
+  
+  - Data:
+    - data/index.md
+    - 存储配置: data/storage.md
+    - 数据处理: data/data-processing.md
+  
+  - 控制面:
+    - control-plane/index.md
+    - 集群升级: control-plane/upgrade.md
+    - 高可用: control-plane/high-availability.md
+
+# ==================== 插件配置 ====================
+plugins:
+  - search:
+      lang: zh
+      separator: '[\s\-\.]+'
+  
+  - git-revision-date-localized:
+      type: date
+      fallback_to_build_date: true
+      enable_creation_date: true
+  
+  - git-committers:
+      repository: tke-workshop/tke-workshop.github.io
+      branch: main
+      enabled: !ENV [CI, false]
+  
+  - minify:
+      minify_html: true
+
+# ==================== Markdown 扩展 ====================
+markdown_extensions:
+  # 基础扩展
+  - abbr                        # 缩写
+  - admonition                  # 告警框
+  - attr_list                   # 属性列表
+  - def_list                    # 定义列表
+  - footnotes                   # 脚注
+  - md_in_html                  # HTML 中的 Markdown
+  - tables                      # 表格
+  - toc:
+      permalink: true
+      toc_depth: 3
+  
+  # PyMdown 扩展
+  - pymdownx.arithmatex:        # 数学公式
+      generic: true
+  - pymdownx.betterem:          # 更好的强调
+      smart_enable: all
+  - pymdownx.caret              # 上标
+  - pymdownx.details            # 可折叠详情
+  - pymdownx.emoji:             # Emoji
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:         # 代码高亮
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite       # 行内代码高亮
+  - pymdownx.keys               # 键盘按键
+  - pymdownx.mark               # 标记
+  - pymdownx.smartsymbols       # 智能符号
+  - pymdownx.snippets           # 代码片段
+  - pymdownx.superfences:       # 超级围栏
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:            # 标签页
+      alternate_style: true
+  - pymdownx.tasklist:          # 任务列表
+      custom_checkbox: true
+  - pymdownx.tilde              # 删除线
+
+# ==================== 额外配置 ====================
+extra:
+  # 社交链接
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/tke-workshop/tke-workshop.github.io
+      name: GitHub
+  
+  # 版本信息
+  version:
+    provider: mike
+
+# ==================== 额外 CSS/JS ====================
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js
+
+# ==================== 版权信息 ====================
+copyright: Copyright &copy; 2024-2026 Tencent Cloud

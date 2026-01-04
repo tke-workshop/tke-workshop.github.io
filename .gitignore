@@ -1,0 +1,24 @@
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.so
+
+# MkDocs
+site/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

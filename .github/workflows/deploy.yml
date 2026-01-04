@@ -1,0 +1,71 @@
+name: Deploy TKE Workshop
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  # 构建任务
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 获取完整历史（用于显示贡献者和更新时间）
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build site
+        run: mkdocs build --strict
+        env:
+          CI: true
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  # 部署任务（仅 main 分支）
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # PR 预览（可选）
+  preview:
+    if: github.event_name == 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment PR with preview info
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ 构建成功！PR 合并后将自动部署。'
+            })

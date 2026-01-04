@@ -1,0 +1,28 @@
+/* TKE Workshop 自定义样式 */
+
+/* 首页卡片样式增强 */
+.md-typeset .grid.cards > ul > li {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.md-typeset .grid.cards > ul > li:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 代码块样式 */
+.md-typeset pre > code {
+  border-radius: 6px;
+}
+
+/* 告警框圆角 */
+.md-typeset .admonition {
+  border-radius: 6px;
+}
+
+/* 标签页样式 */
+.md-typeset .tabbed-labels > label {
+  border-radius: 4px 4px 0 0;
+}
