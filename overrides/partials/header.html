@@ -1,0 +1,69 @@
+{#-
+  GKE 风格单行导航栏
+  布局: [Logo] [站点名] [导航链接...] [主题切换] [GitHub] [搜索框]
+-#}
+{% set class = "md-header md-header--shadow" %}
+<header class="{{ class }}" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="{{ lang.t('header') }}">
+    
+    <!-- Logo -->
+    <a href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" title="{{ config.site_name | e }}" class="md-header__button md-logo" aria-label="{{ config.site_name }}" data-md-component="logo">
+      {% include "partials/logo.html" %}
+    </a>
+    
+    <!-- 移动端菜单按钮 -->
+    <label class="md-header__button md-icon md-header__drawer-toggle" for="__drawer">
+      {% set icon = config.theme.icon.menu or "material/menu" %}
+      {% include ".icons/" ~ icon ~ ".svg" %}
+    </label>
+    
+    <!-- 站点标题 -->
+    <a href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" class="md-header__title-link">
+      <span class="md-header__title-text">{{ config.site_name }}</span>
+    </a>
+
+    <!-- 导航链接（GKE 风格） -->
+    <nav class="md-header__nav">
+      {% for nav_item in nav %}
+        {% if nav_item.title and nav_item.title != config.site_name %}
+          <a href="{{ nav_item.url | url }}" class="md-header__nav-link {% if nav_item.active %}md-header__nav-link--active{% endif %}">
+            {{ nav_item.title }}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </nav>
+
+    <!-- 右侧工具区 -->
+    <div class="md-header__tools">
+      <!-- 主题切换 -->
+      {% if config.theme.palette %}
+        {% if not config.theme.palette is mapping %}
+          {% include "partials/palette.html" %}
+        {% endif %}
+      {% endif %}
+      {% if not config.theme.palette is mapping %}
+        {% include "partials/javascripts/palette.html" %}
+      {% endif %}
+
+      <!-- GitHub 链接 -->
+      {% if config.repo_url %}
+        <a href="{{ config.repo_url }}" title="{{ config.repo_name }}" class="md-header__button md-icon md-header__github" target="_blank" rel="noopener">
+          {% include ".icons/fontawesome/brands/github.svg" %}
+        </a>
+      {% endif %}
+
+      <!-- 搜索 -->
+      {% if "material/search" in config.plugins %}
+        {% set search = config.plugins["material/search"] | attr("config") %}
+        {% if search.enabled %}
+          <label class="md-header__button md-icon md-header__search-toggle" for="__search">
+            {% set icon = config.theme.icon.search or "material/magnify" %}
+            {% include ".icons/" ~ icon ~ ".svg" %}
+          </label>
+          {% include "partials/search.html" %}
+        {% endif %}
+      {% endif %}
+    </div>
+
+  </nav>
+</header>

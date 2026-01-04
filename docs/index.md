@@ -26,63 +26,6 @@ article.md-content__inner::before { display: none !important; }
 .md-content__button { display: none !important; }
 .md-source-file { display: none !important; }
 
-/* ===== 导航栏优化：单行布局 ===== */
-/* 隐藏顶部 header 第一行 */
-.md-header__inner > .md-header__title { display: none !important; }
-
-/* 导航栏字体加粗加大 */
-.md-tabs__link {
-  font-size: 0.85rem !important;
-  font-weight: 600 !important;
-  opacity: 1 !important;
-}
-
-/* 隐藏原 header 行，只保留 tabs */
-.md-header__inner {
-  height: 0 !important;
-  overflow: visible !important;
-  padding: 0 !important;
-}
-
-/* 搜索框移到 tabs 行右侧 */
-.md-search {
-  position: absolute !important;
-  right: 120px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  z-index: 100 !important;
-}
-
-/* GitHub 图标和风格切换移到搜索框右侧 */
-.md-header__source {
-  position: absolute !important;
-  right: 16px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  z-index: 100 !important;
-  margin: 0 !important;
-}
-
-/* 风格切换按钮 */
-.md-header__option {
-  position: absolute !important;
-  right: 70px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  z-index: 100 !important;
-}
-
-/* tabs 容器相对定位 */
-.md-tabs {
-  background: var(--md-primary-fg-color) !important;
-  border: none !important;
-  position: relative !important;
-  padding-right: 280px !important; /* 为右侧元素留空间 */
-}
-
-/* 调整 header 高度 */
-.md-header { min-height: auto !important; }
-
 /* Hero 全屏区块 */
 .tx-hero {
   width: 100vw;
@@ -428,7 +371,7 @@ article.md-content__inner::before { display: none !important; }
         <a class="tx-btn tx-btn--ghost" href="https://github.com/tke-workshop/tke-workshop.github.io" target="_blank">查看 GitHub ↗</a>
       </div>
       <div class="tx-hero__badges">
-        <span class="tx-badge">7 个模块</span>
+        <span class="tx-badge">6 个模块</span>
         <span class="tx-badge">动手实验导向</span>
         <span class="tx-badge">持续更新</span>
       </div>
@@ -546,14 +489,7 @@ article.md-content__inner::before { display: none !important; }
         <p class="tx-module__desc">升级、高可用与运维要点。把集群管理做到可持续。</p>
         <a class="tx-module__link" href="control-plane/">探索更多 →</a>
       </div>
-      <div class="tx-module">
-        <div class="tx-module__header">
-          <p class="tx-module__title">网络</p>
-          <div class="tx-module__icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="none"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
-        </div>
-        <p class="tx-module__desc">Service、Ingress、网络策略与 VPC-CNI 实践。</p>
-        <a class="tx-module__link" href="networking/">深入了解 →</a>
-      </div>
+
       <div class="tx-module">
         <div class="tx-module__header">
           <p class="tx-module__title">安全</p>

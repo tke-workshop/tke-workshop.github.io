@@ -1,6 +1,158 @@
 /* TKE Workshop 自定义样式 */
 
 /* =====================
+   GKE 风格单行导航栏
+   ===================== */
+
+/* 隐藏默认的 tabs 行 */
+.md-tabs { display: none !important; }
+
+/* Header 单行布局 */
+.md-header__inner {
+  display: flex !important;
+  align-items: center !important;
+  height: 56px !important;
+  padding: 0 1.5rem !important;
+  gap: 0.5rem !important;
+}
+
+/* Logo */
+.md-header__button.md-logo {
+  margin-right: 0.25rem !important;
+  padding: 0.5rem !important;
+}
+
+/* 移动端菜单按钮 - 桌面隐藏 */
+.md-header__drawer-toggle {
+  display: none !important;
+}
+
+@media (max-width: 76.25em) {
+  .md-header__drawer-toggle {
+    display: flex !important;
+  }
+  .md-header__nav {
+    display: none !important;
+  }
+}
+
+/* 站点标题链接 */
+.md-header__title-link {
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  margin-right: 1.5rem !important;
+}
+
+/* 隐藏原来的 title div */
+.md-header__title {
+  display: none !important;
+}
+
+/* 导航链接容器 */
+.md-header__nav {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.25rem !important;
+  flex: 1 !important;
+}
+
+/* 导航链接 */
+.md-header__nav-link {
+  padding: 0.5rem 0.875rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  color: rgba(255,255,255,0.85) !important;
+  text-decoration: none !important;
+  border-radius: 6px !important;
+  transition: background 0.15s, color 0.15s !important;
+  white-space: nowrap !important;
+}
+
+.md-header__nav-link:hover {
+  background: rgba(255,255,255,0.1) !important;
+  color: #fff !important;
+}
+
+.md-header__nav-link--active {
+  color: #fff !important;
+  background: rgba(255,255,255,0.15) !important;
+}
+
+/* 右侧工具区 */
+.md-header__tools {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.25rem !important;
+  margin-left: auto !important;
+}
+
+/* 图标按钮统一样式 */
+.md-header__tools .md-header__button {
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  color: rgba(255,255,255,0.85) !important;
+}
+
+.md-header__tools .md-header__button:hover {
+  background: rgba(255,255,255,0.1) !important;
+  color: #fff !important;
+}
+
+/* GitHub 图标 */
+.md-header__github svg {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+/* 主题切换按钮 */
+.md-header__option {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.md-header__option .md-header__button {
+  width: 40px !important;
+  height: 40px !important;
+}
+
+/* 搜索框样式 - GKE 风格 */
+.md-search {
+  position: relative !important;
+}
+
+.md-search__form {
+  background: rgba(255,255,255,0.1) !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+  border-radius: 8px !important;
+  height: 40px !important;
+}
+
+.md-search__input {
+  font-size: 0.875rem !important;
+}
+
+.md-search__input::placeholder {
+  color: rgba(255,255,255,0.6) !important;
+}
+
+/* 隐藏搜索图标按钮（桌面端直接显示搜索框） */
+.md-header__search-toggle {
+  display: none !important;
+}
+
+/* 隐藏原来的 source 区域 */
+.md-header__source {
+  display: none !important;
+}
+
+/* =====================
    仅首页使用的 Landing Page 样式
    ===================== */
 
