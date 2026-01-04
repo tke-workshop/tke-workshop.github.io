@@ -38,8 +38,7 @@ theme:
     # 导航
     - navigation.tabs           # 顶部标签页导航
     - navigation.tabs.sticky    # 标签页固定
-    - navigation.sections       # 侧边栏分组
-    - navigation.expand         # 侧边栏展开
+    - navigation.sections       # 侧边栏分组（仅当前模块）
     - navigation.top            # 返回顶部按钮
     - navigation.indexes        # 章节索引页
     - navigation.footer         # 页脚导航

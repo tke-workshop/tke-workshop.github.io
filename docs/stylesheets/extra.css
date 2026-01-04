@@ -135,3 +135,41 @@
 [data-md-color-scheme="slate"] .md-header__button.md-icon:hover {
   background-color: rgba(255,255,255,0.1) !important;
 }
+
+/* 6. 调整 Header 元素顺序：主题切换放到搜索框后 */
+.md-header__inner {
+  display: flex !important;
+  flex-direction: row !important;
+}
+
+/* 使用 flexbox order 调整顺序 */
+.md-header__button[for="__drawer"] {
+  order: 1 !important;  /* 汉堡菜单 */
+}
+
+.md-header__button--logo,
+.md-header__topic {
+  order: 2 !important;  /* Logo 和标题 */
+}
+
+.md-header__title {
+  order: 3 !important;
+}
+
+/* 搜索框 */
+.md-search {
+  order: 10 !important;
+  margin-left: auto !important;  /* 推到右侧 */
+}
+
+/* 主题切换按钮（小太阳）放在搜索框后 */
+form.md-header__option {
+  order: 11 !important;
+  margin-left: 8px !important;
+}
+
+/* GitHub 图标放最后 */
+.md-header__source {
+  order: 12 !important;
+  margin-left: 8px !important;
+}
