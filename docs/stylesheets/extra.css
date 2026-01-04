@@ -1,209 +1,118 @@
-/* TKE Workshop - GKE 风格单行导航栏 */
+/* ============================================================
+   GKE AI Labs 风格全量定义
+   ============================================================ */
 
-/* =====================
-   隐藏默认 tabs
-   ===================== */
+/* 1. 隐藏原生 Tabs 栏 */
 .md-tabs {
   display: none !important;
 }
 
-/* =====================
-   Header 单行布局
-   ===================== */
+/* 2. Header 基础样式：白色背景，固定高度 */
 .md-header {
-  background: #fff !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+  background-color: #ffffff !important;
   color: #202124 !important;
+  box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15) !important;
+  transition: background-color 250ms !important;
 }
 
+/* 深色模式适配 */
 [data-md-color-scheme="slate"] .md-header {
-  background: #1e1e1e !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+  background-color: #202124 !important;
+  color: #e8eaed !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5) !important;
 }
 
+/* 3. 内部布局：对齐 */
 .md-header__inner {
+  height: 64px !important;
   display: flex !important;
   align-items: center !important;
-  height: 64px !important;
-  padding: 0 24px !important;
-  gap: 8px !important;
+  padding: 0 1.5rem !important;
   max-width: 100% !important;
 }
 
-/* =====================
-   Logo
-   ===================== */
+/* 4. Logo 样式 */
 .md-header__button.md-logo {
-  margin-right: 4px !important;
-  padding: 8px !important;
+  margin: 0 0.5rem 0 0 !important;
+  color: #4285f4 !important; /* GKE 蓝 */
 }
-
 .md-header__button.md-logo svg {
   width: 28px !important;
   height: 28px !important;
-  fill: #4285f4 !important;
 }
 
-/* =====================
-   站点标题
-   ===================== */
+/* 5. 标题与内联导航容器 */
 .md-header__title {
-  display: none !important;
-}
-
-.md-header__title-link {
-  font-size: 18px !important;
-  font-weight: 600 !important;
-  color: #202124 !important;
-  text-decoration: none !important;
-  white-space: nowrap !important;
-  margin-right: 32px !important;
-}
-
-[data-md-color-scheme="slate"] .md-header__title-link {
-  color: #e8eaed !important;
-}
-
-.md-header__title-link:hover {
-  color: #4285f4 !important;
-}
-
-/* =====================
-   导航链接
-   ===================== */
-.md-header__nav {
-  display: flex !important;
-  align-items: center !important;
-  gap: 4px !important;
+  display: block !important;
   flex: 1 !important;
+  font-size: 1.1rem !important;
+  font-weight: 500 !important;
 }
 
-.md-header__nav-link {
-  padding: 8px 16px !important;
-  font-size: 14px !important;
-  font-weight: 500 !important;
+.md-header__ellipsis {
+  display: flex !important;
+  align-items: center !important;
+  gap: 2rem !important;
+}
+
+/* 6. 内联导航链接样式 */
+.md-header__inline-nav {
+  display: flex !important;
+  gap: 1.5rem !important;
+  margin-left: 1rem !important;
+}
+
+.md-header__link {
   color: #5f6368 !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
   text-decoration: none !important;
-  border-radius: 4px !important;
-  transition: background 0.2s, color 0.2s !important;
+  transition: color 0.2s !important;
   white-space: nowrap !important;
 }
 
-[data-md-color-scheme="slate"] .md-header__nav-link {
+[data-md-color-scheme="slate"] .md-header__link {
   color: #9aa0a6 !important;
 }
 
-.md-header__nav-link:hover {
-  background: #f1f3f4 !important;
-  color: #202124 !important;
-}
-
-[data-md-color-scheme="slate"] .md-header__nav-link:hover {
-  background: #3c4043 !important;
-  color: #e8eaed !important;
-}
-
-.md-header__nav-link--active {
+.md-header__link:hover {
   color: #1a73e8 !important;
-  background: #e8f0fe !important;
 }
 
-[data-md-color-scheme="slate"] .md-header__nav-link--active {
-  color: #8ab4f8 !important;
-  background: #394457 !important;
+.md-header__link--active {
+  color: #1a73e8 !important;
+  border-bottom: 2px solid #1a73e8 !important;
+  padding-bottom: 20px !important;
+  margin-bottom: -20px !important;
 }
 
-/* =====================
-   右侧工具区
-   ===================== */
-.md-header__tools {
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  margin-left: auto !important;
-}
-
-/* 图标按钮 */
-.md-header__tools .md-header__button,
-.md-header__tools .md-icon {
-  width: 40px !important;
-  height: 40px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border-radius: 50% !important;
-  color: #5f6368 !important;
-  cursor: pointer !important;
-}
-
-[data-md-color-scheme="slate"] .md-header__tools .md-header__button,
-[data-md-color-scheme="slate"] .md-header__tools .md-icon {
-  color: #9aa0a6 !important;
-}
-
-.md-header__tools .md-header__button:hover,
-.md-header__tools .md-icon:hover {
-  background: #f1f3f4 !important;
-  color: #202124 !important;
-}
-
-[data-md-color-scheme="slate"] .md-header__tools .md-header__button:hover,
-[data-md-color-scheme="slate"] .md-header__tools .md-icon:hover {
-  background: #3c4043 !important;
-  color: #e8eaed !important;
-}
-
-/* GitHub 图标 */
-.md-header__github svg {
-  width: 24px !important;
-  height: 24px !important;
-  fill: currentColor !important;
-}
-
-/* 主题切换 */
-.md-header__option {
-  display: flex !important;
-  align-items: center !important;
-}
-
-.md-header__option .md-header__button svg {
-  fill: currentColor !important;
-}
-
-/* =====================
-   搜索框 - GKE 风格
-   ===================== */
+/* 7. 搜索框改造：长条圆角风格 */
 .md-search {
-  position: relative !important;
+  padding: 0 !important;
+  margin-left: 1rem !important;
 }
 
 .md-search__form {
-  background: #f1f3f4 !important;
-  border: 1px solid #dadce0 !important;
-  border-radius: 24px !important;
+  background-color: #f1f3f4 !important;
+  border-radius: 8px !important;
   height: 40px !important;
-  min-width: 280px !important;
-  transition: box-shadow 0.2s, border-color 0.2s !important;
+  width: 350px !important; /* 加长搜索框 */
+  border: 1px solid transparent !important;
+  transition: background-color 0.2s, width 0.2s !important;
 }
 
 [data-md-color-scheme="slate"] .md-search__form {
-  background: #303134 !important;
-  border-color: #5f6368 !important;
+  background-color: #303134 !important;
 }
 
-.md-search__form:focus-within {
-  background: #fff !important;
-  border-color: #4285f4 !important;
-  box-shadow: 0 1px 6px rgba(32,33,36,0.28) !important;
-}
-
-[data-md-color-scheme="slate"] .md-search__form:focus-within {
-  background: #202124 !important;
-  border-color: #8ab4f8 !important;
+.md-search__form:hover {
+  background-color: #e8eaed !important;
 }
 
 .md-search__input {
-  font-size: 14px !important;
+  padding-left: 2.5rem !important;
+  height: 40px !important;
+  font-size: 0.85rem !important;
   color: #202124 !important;
 }
 
@@ -211,62 +120,43 @@
   color: #e8eaed !important;
 }
 
-.md-search__input::placeholder {
+/* 搜索图标位置 */
+.md-search__icon {
+  top: 8px !important;
+  left: 10px !important;
+}
+
+/* 8. 右侧按钮（GitHub, 主题切换等） */
+.md-header__tools {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.md-header__button.md-icon {
   color: #5f6368 !important;
 }
 
-[data-md-color-scheme="slate"] .md-search__input::placeholder {
+[data-md-color-scheme="slate"] .md-header__button.md-icon {
   color: #9aa0a6 !important;
 }
 
-/* 搜索图标 */
-.md-search__icon[for="__search"] svg {
-  fill: #5f6368 !important;
-}
-
-[data-md-color-scheme="slate"] .md-search__icon[for="__search"] svg {
-  fill: #9aa0a6 !important;
-}
-
-/* 隐藏搜索按钮（桌面端直接显示搜索框） */
-.md-header__search-toggle {
-  display: none !important;
-}
-
-/* 隐藏原来的 source 区域 */
-.md-header__source {
-  display: none !important;
-}
-
-/* =====================
-   移动端响应式
-   ===================== */
-@media (max-width: 76.25em) {
-  .md-header__nav {
+/* 隐藏侧边栏按钮（桌面端） */
+@media screen and (min-width: 76.25em) {
+  [for="__drawer"] {
     display: none !important;
   }
-  
-  .md-search__form {
-    min-width: 200px !important;
-  }
 }
 
-@media (max-width: 60em) {
-  .md-header__title-link {
-    margin-right: 16px !important;
-  }
-  
-  .md-search__form {
-    min-width: 160px !important;
-  }
-}
-
-@media (max-width: 44.9375em) {
-  .md-search {
+/* 移动端适配：隐藏内联导航，显示抽屉按钮 */
+@media screen and (max-width: 76.25em) {
+  .md-header__inline-nav {
     display: none !important;
   }
-  
-  .md-header__search-toggle {
-    display: flex !important;
+  .md-search__form {
+    width: 200px !important;
+  }
+  [for="__drawer"] {
+    display: block !important;
   }
 }
