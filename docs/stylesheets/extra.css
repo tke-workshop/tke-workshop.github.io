@@ -1,5 +1,5 @@
 /* ============================================================
-   TKE Workshop 极简现代风 2.0 - 深度美化
+   TKE Workshop 极简现代风 - 纯 CSS 美化（无自定义 header）
    ============================================================ */
 
 /* 1. Header 样式：纯白，微阴影 */
@@ -24,34 +24,40 @@
   align-items: center !important;
 }
 
-/* 2. Logo 样式：简洁线条版 */
-.md-logo svg {
-  fill: #1a73e8 !important;
-  width: 32px !important;
-  height: 32px !important;
+/* 2. Logo 样式 */
+.md-logo svg,
+.md-logo img {
+  width: 28px !important;
+  height: 28px !important;
 }
 
 .md-header__title {
   font-size: 1.1rem !important;
   font-weight: 700 !important;
   margin-left: 0.5rem !important;
+  color: #202124 !important;
+}
+
+[data-md-color-scheme="slate"] .md-header__title {
+  color: #e8eaed !important;
 }
 
 /* 3. 导航标签 (Tabs) 样式：加大字号，增加间距 */
 .md-tabs {
   background-color: #ffffff !important;
-  height: 52px !important; /* 增加高度 */
-  border-bottom: 1px solid #f0f0f0 !important;
+  height: 52px !important;
+  border-bottom: 1px solid #e8eaed !important;
 }
 
 [data-md-color-scheme="slate"] .md-tabs {
   background-color: #1a1a1a !important;
-  border-bottom: 1px solid #222 !important;
+  border-bottom: 1px solid #333 !important;
 }
 
 .md-tabs__list {
   display: flex !important;
   align-items: center !important;
+  height: 100% !important;
 }
 
 .md-tabs__item {
@@ -62,16 +68,16 @@
 
 .md-tabs__link {
   color: #5f6368 !important;
-  font-size: 0.95rem !important; /* 加大字号 */
+  font-size: 1rem !important;
   font-weight: 500 !important;
   opacity: 1 !important;
-  padding: 0 20px !important; /* 增加左右间距 */
+  padding: 0 20px !important;
   height: 100% !important;
   display: flex !important;
   align-items: center !important;
   transition: all 0.2s ease !important;
-  border-bottom: 3px solid transparent !important; /* 预留底线位置 */
-  margin-top: 3px !important; /* 微调对齐 */
+  border-bottom: 3px solid transparent !important;
+  box-sizing: border-box !important;
 }
 
 [data-md-color-scheme="slate"] .md-tabs__link {
@@ -84,18 +90,24 @@
   background-color: rgba(26, 115, 232, 0.04) !important;
 }
 
-.md-tabs__link--active {
+.md-tabs__link--active,
+.md-tabs__link[aria-selected="true"] {
   color: #1a73e8 !important;
   font-weight: 600 !important;
-  border-bottom-color: #1a73e8 !important; /* 明显的底线 */
+  border-bottom-color: #1a73e8 !important;
 }
 
-/* 4. 搜索框美化：GKE 风格长圆角 */
+[data-md-color-scheme="slate"] .md-tabs__link:hover,
+[data-md-color-scheme="slate"] .md-tabs__link--active {
+  color: #8ab4f8 !important;
+  border-bottom-color: #8ab4f8 !important;
+}
+
+/* 4. 搜索框美化 */
 .md-search__form {
   background-color: #f1f3f4 !important;
-  border-radius: 20px !important; /* 更圆润 */
+  border-radius: 20px !important;
   height: 40px !important;
-  width: 300px !important;
 }
 
 [data-md-color-scheme="slate"] .md-search__form {
@@ -104,22 +116,20 @@
 
 .md-search__input {
   font-size: 0.9rem !important;
-  padding-left: 2.8rem !important;
 }
 
-/* 5. 工具按钮间距 */
-.md-header__tools {
-  gap: 0.5rem !important;
-}
-
+/* 5. 工具按钮样式 */
 .md-header__button.md-icon {
-  width: 44px !important;
-  height: 44px !important;
-  border-radius: 50% !important;
+  color: #5f6368 !important;
+}
+
+[data-md-color-scheme="slate"] .md-header__button.md-icon {
+  color: #9aa0a6 !important;
 }
 
 .md-header__button.md-icon:hover {
   background-color: rgba(0,0,0,0.05) !important;
+  border-radius: 50% !important;
 }
 
 [data-md-color-scheme="slate"] .md-header__button.md-icon:hover {
