@@ -1,257 +1,256 @@
 ---
-title: TKE Workshop
+title: 首页
 hide:
   - navigation
   - toc
 ---
 
-<style>
-/* Hero Section */
-.tx-hero {
-  background: linear-gradient(135deg, #3949ab 0%, #1a237e 50%, #0d47a1 100%);
-  padding: 4rem 2rem;
-  margin: -1rem -1rem 2rem -1rem;
-  color: white;
-  text-align: center;
-}
+<div class="tx-home">
 
-.tx-hero h1 {
-  font-size: 3rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: white !important;
-}
+<section class="tx-fullbleed tx-hero">
+  <div class="tx-container">
+    <div class="tx-hero__inner">
+      <div class="tx-hero__copy">
+        <p class="tx-hero__eyebrow">
+          <span style="width:10px;height:10px;border-radius:999px;background:rgba(34,211,238,.9);display:inline-block"></span>
+          Tencent Cloud · TKE
+        </p>
+        <h1 class="tx-hero__title">TKE Workshop</h1>
+        <p class="tx-hero__subtitle">
+          以最短路径掌握云原生核心技能：从集群到网络与安全，再到 AI/ML 与数据工作负载。<br>
+          更少概念堆叠，更清晰的实验步骤。
+        </p>
+        <div class="tx-hero__actions">
+          <a class="tx-btn tx-btn--primary" href="basics/">
+            <span>开始学习</span>
+            <span aria-hidden="true">→</span>
+          </a>
+          <a class="tx-btn tx-btn--ghost" href="https://github.com/tke-workshop/tke-workshop.github.io">
+            <span>查看 GitHub</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div class="tx-hero__meta" aria-label="Highlights">
+          <span class="tx-badge">7 个模块</span>
+          <span class="tx-badge">动手实验导向</span>
+          <span class="tx-badge">持续更新</span>
+        </div>
+      </div>
 
-.tx-hero .tx-hero__subtitle {
-  font-size: 1.4rem;
-  opacity: 0.9;
-  margin-bottom: 2rem;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.tx-hero__button {
-  display: inline-block;
-  padding: 1rem 2.5rem;
-  background: white;
-  color: #3949ab !important;
-  font-weight: 600;
-  font-size: 1.1rem;
-  border-radius: 50px;
-  text-decoration: none;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.tx-hero__button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  color: #1a237e !important;
-}
-
-/* Feature Cards */
-.tx-features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin: 3rem 0;
-}
-
-.tx-feature-card {
-  background: var(--md-default-bg-color);
-  border: 1px solid var(--md-default-fg-color--lightest);
-  border-radius: 12px;
-  padding: 2rem;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.tx-feature-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-.tx-feature-card__icon {
-  width: 56px;
-  height: 56px;
-  background: linear-gradient(135deg, #3949ab, #5c6bc0);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.2rem;
-  font-size: 1.5rem;
-}
-
-.tx-feature-card__title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-  color: var(--md-default-fg-color);
-}
-
-.tx-feature-card__desc {
-  color: var(--md-default-fg-color--light);
-  margin-bottom: 1.2rem;
-  line-height: 1.6;
-}
-
-.tx-feature-card__link {
-  display: inline-block;
-  padding: 0.6rem 1.2rem;
-  background: #3949ab;
-  color: white !important;
-  border-radius: 6px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: background 0.2s;
-}
-
-.tx-feature-card__link:hover {
-  background: #1a237e;
-}
-
-/* Value Props */
-.tx-values {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  margin: 3rem 0;
-  text-align: center;
-}
-
-@media (max-width: 768px) {
-  .tx-values {
-    grid-template-columns: 1fr;
-  }
-}
-
-.tx-value-item {
-  padding: 1.5rem;
-}
-
-.tx-value-item__icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.tx-value-item__title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.tx-value-item__desc {
-  color: var(--md-default-fg-color--light);
-  font-size: 0.95rem;
-}
-
-/* Section Title */
-.tx-section-title {
-  text-align: center;
-  margin: 3rem 0 2rem 0;
-}
-
-.tx-section-title h2 {
-  font-size: 2rem;
-  font-weight: 600;
-}
-</style>
-
-<!-- Hero Section -->
-<div class="tx-hero">
-  <h1>TKE Workshop</h1>
-  <p class="tx-hero__subtitle">
-    腾讯云容器服务 TKE 官方最佳实践指南<br>
-    通过动手实验，快速掌握云原生核心技能
-  </p>
-  <a href="basics/" class="tx-hero__button">开始学习</a>
-</div>
-
-<!-- Value Props -->
-<div class="tx-values">
-  <div class="tx-value-item">
-    <div class="tx-value-item__icon">🚀</div>
-    <div class="tx-value-item__title">快速上手</div>
-    <div class="tx-value-item__desc">从零开始，2 小时掌握 TKE 核心操作</div>
-  </div>
-  <div class="tx-value-item">
-    <div class="tx-value-item__icon">📚</div>
-    <div class="tx-value-item__title">自主学习</div>
-    <div class="tx-value-item__desc">按需选择模块，自定义学习路径</div>
-  </div>
-  <div class="tx-value-item">
-    <div class="tx-value-item__icon">🔧</div>
-    <div class="tx-value-item__title">实战导向</div>
-    <div class="tx-value-item__desc">每个章节都有可运行的实践案例</div>
-  </div>
-</div>
-
-<!-- Section: 探索模块 -->
-<div class="tx-section-title">
-  <h2>探索学习模块</h2>
-</div>
-
-<div class="tx-features">
-  <div class="tx-feature-card">
-    <div class="tx-feature-card__icon">⚡</div>
-    <div class="tx-feature-card__title">基础操作</div>
-    <div class="tx-feature-card__desc">
-      集群创建、kubectl 基础、应用部署，快速入门容器化世界
+      <div class="tx-hero__art" aria-hidden="true">
+        <!-- 极简线条插画：参考 EKS 的线性风格，避免“花哨” -->
+        <svg viewBox="0 0 720 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g" x1="92" y1="72" x2="648" y2="456" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#22D3EE" stop-opacity="0.95"/>
+              <stop offset="1" stop-color="#60A5FA" stop-opacity="0.85"/>
+            </linearGradient>
+          </defs>
+          <g opacity="0.92" stroke="url(#g)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M110 330C160 250 270 220 350 250C420 275 500 260 560 220"/>
+            <path d="M140 380C210 290 320 275 385 310C470 355 560 330 610 290"/>
+            <path d="M160 175C230 140 320 150 380 195C450 248 540 252 610 210"/>
+            <circle cx="140" cy="380" r="8"/>
+            <circle cx="110" cy="330" r="8"/>
+            <circle cx="160" cy="175" r="8"/>
+            <circle cx="610" cy="210" r="8"/>
+            <circle cx="610" cy="290" r="8"/>
+            <circle cx="560" cy="220" r="8"/>
+            <circle cx="560" cy="330" r="8"/>
+          </g>
+          <g opacity="0.55" stroke="rgba(255,255,255,0.55)" stroke-width="1.4" stroke-linecap="round">
+            <path d="M200 120h320"/>
+            <path d="M240 90h240"/>
+            <path d="M240 420h240"/>
+          </g>
+          <g opacity="0.9" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.14)">
+            <rect x="150" y="210" width="150" height="110" rx="18"/>
+            <rect x="330" y="165" width="240" height="155" rx="18"/>
+            <rect x="210" y="340" width="320" height="95" rx="18"/>
+          </g>
+          <g opacity="0.92" stroke="rgba(255,255,255,0.55)" stroke-width="1.6" stroke-linecap="round">
+            <path d="M182 245h86"/>
+            <path d="M182 270h62"/>
+            <path d="M362 200h176"/>
+            <path d="M362 225h132"/>
+            <path d="M246 376h250"/>
+            <path d="M246 401h190"/>
+          </g>
+        </svg>
+      </div>
     </div>
-    <a href="basics/" class="tx-feature-card__link">开始学习</a>
   </div>
+</section>
 
-  <div class="tx-feature-card">
-    <div class="tx-feature-card__icon">🤖</div>
-    <div class="tx-feature-card__title">AI/ML</div>
-    <div class="tx-feature-card__desc">
-      GPU 调度、模型推理、分布式训练，释放 AI 算力潜能
-    </div>
-    <a href="ai-ml/" class="tx-feature-card__link">立即体验</a>
-  </div>
+<section class="tx-section">
+  <div class="tx-container">
+    <h2 class="tx-section__title">为什么是这个 Workshop</h2>
+    <p class="tx-section__desc">像苹果的产品页一样，我们把复杂度藏起来：你只需要跟着做，就能把关键能力跑通。</p>
 
-  <div class="tx-feature-card">
-    <div class="tx-feature-card__icon">💾</div>
-    <div class="tx-feature-card__title">Data</div>
-    <div class="tx-feature-card__desc">
-      存储配置、数据处理，构建云原生数据平台
-    </div>
-    <a href="data/" class="tx-feature-card__link">深入了解</a>
-  </div>
+    <div class="tx-grid-3">
+      <div class="tx-vcard">
+        <div class="tx-vcard__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 2L3 14h8l-1 8 11-14h-8l0-6z" stroke="#22D3EE" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <p class="tx-vcard__title">更短路径</p>
+        <p class="tx-vcard__desc">从“能跑起来”开始，逐步进入网络、安全、可观测性与 AI/ML 工作负载。</p>
+      </div>
 
-  <div class="tx-feature-card">
-    <div class="tx-feature-card__icon">🎛️</div>
-    <div class="tx-feature-card__title">控制面</div>
-    <div class="tx-feature-card__desc">
-      集群升级、高可用配置，保障业务稳定运行
-    </div>
-    <a href="control-plane/" class="tx-feature-card__link">探索更多</a>
-  </div>
+      <div class="tx-vcard">
+        <div class="tx-vcard__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 6h16M4 12h10M4 18h14" stroke="#22D3EE" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p class="tx-vcard__title">更少噪音</p>
+        <p class="tx-vcard__desc">每个实验都有明确目标、步骤与验证点，避免概念堆叠与“看完就忘”。</p>
+      </div>
 
-  <div class="tx-feature-card">
-    <div class="tx-feature-card__icon">🌐</div>
-    <div class="tx-feature-card__title">网络</div>
-    <div class="tx-feature-card__desc">
-      Service、Ingress、网络策略、VPC-CNI 最佳实践
+      <div class="tx-vcard">
+        <div class="tx-vcard__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3v18M3 12h18" stroke="#22D3EE" stroke-width="2" stroke-linecap="round"/>
+            <path d="M7 7l10 10M17 7L7 17" stroke="#22D3EE" stroke-width="2" stroke-linecap="round" opacity="0.35"/>
+          </svg>
+        </div>
+        <p class="tx-vcard__title">更易扩展</p>
+        <p class="tx-vcard__desc">模块化结构，方便你把内容继续扩展成团队的标准作业流程（SOP）。</p>
+      </div>
     </div>
-    <a href="networking/" class="tx-feature-card__link">深入了解</a>
   </div>
+</section>
 
-  <div class="tx-feature-card">
-    <div class="tx-feature-card__icon">🔒</div>
-    <div class="tx-feature-card__title">安全</div>
-    <div class="tx-feature-card__desc">
-      RBAC、Pod 安全策略、镜像安全扫描
-    </div>
-    <a href="security/" class="tx-feature-card__link">查看详情</a>
-  </div>
+<section class="tx-fullbleed tx-band">
+  <div class="tx-container">
+    <h2 class="tx-section__title">从这里开始</h2>
+    <p class="tx-section__desc">按你关注的主题进入对应模块（推荐从“基础操作”开始）。</p>
 
-  <div class="tx-feature-card">
-    <div class="tx-feature-card__icon">📊</div>
-    <div class="tx-feature-card__title">可观测性</div>
-    <div class="tx-feature-card__desc">
-      监控告警、日志采集、链路追踪一站式方案
+    <div class="tx-modules">
+      <div class="tx-mcard">
+        <div class="tx-mcard__top">
+          <div>
+            <p class="tx-mcard__title">基础操作</p>
+          </div>
+          <div class="tx-mcard__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 7h16M6 12h12M8 17h8" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <p class="tx-mcard__desc">创建集群、kubectl、部署应用。把第一个工作负载跑起来。</p>
+        <a class="tx-mcard__link" href="basics/">开始学习 <span aria-hidden="true">→</span></a>
+      </div>
+
+      <div class="tx-mcard">
+        <div class="tx-mcard__top">
+          <div>
+            <p class="tx-mcard__title">AI/ML</p>
+          </div>
+          <div class="tx-mcard__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 8V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" stroke-width="2"/>
+              <path d="M6 8h12v7a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4V8z" stroke-width="2"/>
+              <path d="M9 12h.01M15 12h.01" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <p class="tx-mcard__desc">GPU 调度、推理与训练。把算力跑出“可复用”的范式。</p>
+        <a class="tx-mcard__link" href="ai-ml/">立即体验 <span aria-hidden="true">→</span></a>
+      </div>
+
+      <div class="tx-mcard">
+        <div class="tx-mcard__top">
+          <div>
+            <p class="tx-mcard__title">Data</p>
+          </div>
+          <div class="tx-mcard__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 6c0 1.66 3.58 3 8 3s8-1.34 8-3-3.58-3-8-3-8 1.34-8 3z" stroke-width="2"/>
+              <path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6" stroke-width="2"/>
+              <path d="M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+        <p class="tx-mcard__desc">存储、数据处理与运行方式。让数据工作负载更可控。</p>
+        <a class="tx-mcard__link" href="data/">深入了解 <span aria-hidden="true">→</span></a>
+      </div>
+
+      <div class="tx-mcard">
+        <div class="tx-mcard__top">
+          <div>
+            <p class="tx-mcard__title">控制面</p>
+          </div>
+          <div class="tx-mcard__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 3v3" stroke-width="2" stroke-linecap="round"/>
+              <path d="M12 18v3" stroke-width="2" stroke-linecap="round"/>
+              <path d="M4.2 6.2l2.1 2.1" stroke-width="2" stroke-linecap="round"/>
+              <path d="M17.7 15.7l2.1 2.1" stroke-width="2" stroke-linecap="round"/>
+              <path d="M3 12h3" stroke-width="2" stroke-linecap="round"/>
+              <path d="M18 12h3" stroke-width="2" stroke-linecap="round"/>
+              <path d="M6.3 15.7l-2.1 2.1" stroke-width="2" stroke-linecap="round"/>
+              <path d="M19.8 6.2l-2.1 2.1" stroke-width="2" stroke-linecap="round"/>
+              <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+        <p class="tx-mcard__desc">升级、高可用与运维要点。把集群管理做到可持续。</p>
+        <a class="tx-mcard__link" href="control-plane/">探索更多 <span aria-hidden="true">→</span></a>
+      </div>
+
+      <div class="tx-mcard">
+        <div class="tx-mcard__top">
+          <div>
+            <p class="tx-mcard__title">网络</p>
+          </div>
+          <div class="tx-mcard__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 12a5 5 0 0 1 10 0" stroke-width="2" stroke-linecap="round"/>
+              <path d="M5 12a7 7 0 0 1 14 0" stroke-width="2" stroke-linecap="round" opacity="0.65"/>
+              <path d="M9.5 12a2.5 2.5 0 0 1 5 0" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+              <path d="M12 12v6" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <p class="tx-mcard__desc">Service、Ingress、网络策略与 VPC-CNI 的关键实践。</p>
+        <a class="tx-mcard__link" href="networking/">深入了解 <span aria-hidden="true">→</span></a>
+      </div>
+
+      <div class="tx-mcard">
+        <div class="tx-mcard__top">
+          <div>
+            <p class="tx-mcard__title">安全</p>
+          </div>
+          <div class="tx-mcard__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 3l7 4v6c0 5-3 8-7 8s-7-3-7-8V7l7-4z" stroke-width="2"/>
+              <path d="M9 12l2 2 4-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <p class="tx-mcard__desc">RBAC、Pod 安全与镜像安全。把“默认安全”建立起来。</p>
+        <a class="tx-mcard__link" href="security/">查看详情 <span aria-hidden="true">→</span></a>
+      </div>
+
+      <div class="tx-mcard">
+        <div class="tx-mcard__top">
+          <div>
+            <p class="tx-mcard__title">可观测性</p>
+          </div>
+          <div class="tx-mcard__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 14l3-3 3 3 4-6 6 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 20h16" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+            </svg>
+          </div>
+        </div>
+        <p class="tx-mcard__desc">监控、日志、链路追踪。让排障与容量评估“有据可依”。</p>
+        <a class="tx-mcard__link" href="observability/">探索更多 <span aria-hidden="true">→</span></a>
+      </div>
     </div>
-    <a href="observability/" class="tx-feature-card__link">探索更多</a>
   </div>
+</section>
+
 </div>
