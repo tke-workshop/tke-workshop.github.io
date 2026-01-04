@@ -9,7 +9,7 @@ site_description: 腾讯云容器服务 TKE 最佳实践 Workshop
 
 # ==================== 仓库信息 ====================
 repo_url: https://github.com/tke-workshop/tke-workshop.github.io
-repo_name: tke-workshop/tke-workshop.github.io
+repo_name: TKE Workshop
 edit_uri: edit/main/docs/
 
 # ==================== 主题配置 ====================
@@ -18,17 +18,17 @@ theme:
   language: zh
   custom_dir: overrides  # 自定义覆盖目录
   
-  # 调色板（支持明暗切换）
+  # 调色板（支持明暗切换）- 时尚现代风格
   palette:
     - scheme: default
-      primary: blue
-      accent: light blue
+      primary: indigo
+      accent: cyan
       toggle:
         icon: material/brightness-7
         name: 切换到深色模式
     - scheme: slate
-      primary: blue
-      accent: light blue
+      primary: indigo
+      accent: cyan
       toggle:
         icon: material/brightness-4
         name: 切换到浅色模式
@@ -69,31 +69,12 @@ theme:
 nav:
   - 首页: index.md
   
-  - 快速入门:
+  - 基础操作:
     - basics/index.md
     - 环境准备: basics/prerequisites.md
     - 创建集群: basics/create-cluster.md
     - kubectl 基础: basics/kubectl-basics.md
     - 部署应用: basics/deploy-app.md
-  
-  - 网络:
-    - networking/index.md
-    - Service 配置: networking/service.md
-    - Ingress 实践: networking/ingress.md
-    - 网络策略: networking/network-policy.md
-    - VPC-CNI: networking/vpc-cni.md
-  
-  - 可观测性:
-    - observability/index.md
-    - 监控告警: observability/monitoring.md
-    - 日志采集: observability/logging.md
-    - 链路追踪: observability/tracing.md
-  
-  - 安全:
-    - security/index.md
-    - RBAC 配置: security/rbac.md
-    - Pod 安全: security/pod-security.md
-    - 镜像安全: security/image-security.md
   
   - AI/ML:
     - ai-ml/index.md
@@ -110,6 +91,25 @@ nav:
     - control-plane/index.md
     - 集群升级: control-plane/upgrade.md
     - 高可用: control-plane/high-availability.md
+  
+  - 网络:
+    - networking/index.md
+    - Service 配置: networking/service.md
+    - Ingress 实践: networking/ingress.md
+    - 网络策略: networking/network-policy.md
+    - VPC-CNI: networking/vpc-cni.md
+  
+  - 安全:
+    - security/index.md
+    - RBAC 配置: security/rbac.md
+    - Pod 安全: security/pod-security.md
+    - 镜像安全: security/image-security.md
+  
+  - 可观测性:
+    - observability/index.md
+    - 监控告警: observability/monitoring.md
+    - 日志采集: observability/logging.md
+    - 链路追踪: observability/tracing.md
 
 # ==================== 插件配置 ====================
 plugins:
