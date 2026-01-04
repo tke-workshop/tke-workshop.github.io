@@ -300,18 +300,20 @@ article.md-content__inner::before { display: none !important; }
   font-size: 0.95rem;
 }
 
-/* 模块入口全宽区块 - 与整体背景一致 */
+/* 模块入口全宽区块 - 白色背景与灰色区分 */
 .tx-modules-band {
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  background: transparent;
-  padding: 0 2rem 5rem;
+  background: #fff;
+  padding: 5rem 2rem;
   position: relative;
+  border-top: 1px solid #e2e8f0;
 }
 
 /* 暗色模式 */
 [data-md-color-scheme="slate"] .tx-modules-band {
-  background: transparent;
+  background: #0f172a;
+  border-color: #334155;
 }
 
 .tx-modules-band__inner {
@@ -334,7 +336,7 @@ article.md-content__inner::before { display: none !important; }
 }
 
 .tx-module {
-  background: #fff;
+  background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 16px;
   padding: 1.75rem;
@@ -349,8 +351,8 @@ article.md-content__inner::before { display: none !important; }
 }
 
 [data-md-color-scheme="slate"] .tx-module {
-  background: #334155;
-  border-color: #475569;
+  background: #1e293b;
+  border-color: #334155;
 }
 
 .tx-module__header {
@@ -546,14 +548,7 @@ article.md-content__inner::before { display: none !important; }
         <p class="tx-module__desc">升级、高可用与运维要点。把集群管理做到可持续。</p>
         <a class="tx-module__link" href="control-plane/">探索更多 →</a>
       </div>
-      <div class="tx-module">
-        <div class="tx-module__header">
-          <p class="tx-module__title">网络</p>
-          <div class="tx-module__icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="none"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
-        </div>
-        <p class="tx-module__desc">Service、Ingress、网络策略与 VPC-CNI 实践。</p>
-        <a class="tx-module__link" href="networking/">深入了解 →</a>
-      </div>
+
       <div class="tx-module">
         <div class="tx-module__header">
           <p class="tx-module__title">安全</p>
