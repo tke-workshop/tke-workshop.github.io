@@ -70,10 +70,42 @@ nav:
   
   - 基础操作:
     - basics/index.md
-    - 环境准备: basics/prerequisites.md
-    - 创建集群: basics/create-cluster.md
-    - kubectl 基础: basics/kubectl-basics.md
-    - 部署应用: basics/deploy-app.md
+    - 集群管理:
+      - 创建集群: basics/cluster/01-create-cluster.md
+      - 删除集群: basics/cluster/02-delete-cluster.md
+      - 查询集群: basics/cluster/04-describe-clusters.md
+    - 节点管理:
+      - 添加节点: basics/node/01-add-node.md
+      - 删除节点: basics/node/02-delete-node.md
+      - 查询节点: basics/node/04-describe-nodes.md
+    - 节点池管理:
+      - 创建节点池: basics/node-pool/01-create-node-pool.md
+      - 扩缩节点池: basics/node-pool/02-scale-node-pool.md
+    - 工作负载:
+      - 创建 Deployment: basics/workload/01-create-deployment.md
+      - 更新 Deployment: basics/workload/02-update-deployment.md
+      - 删除 Deployment: basics/workload/03-delete-deployment.md
+    - 服务管理:
+      - 创建 Service: basics/service/01-create-service.md
+  
+  - 网络:
+    - networking/index.md
+    - Service: networking/service.md
+    - Ingress: networking/ingress.md
+    - Network Policy: networking/network-policy.md
+    - VPC-CNI: networking/vpc-cni.md
+  
+  - 可观测性:
+    - observability/index.md
+    - 监控告警: observability/monitoring.md
+    - 日志采集: observability/logging.md
+    - 链路追踪: observability/tracing.md
+  
+  - 安全:
+    - security/index.md
+    - RBAC 配置: security/rbac.md
+    - Pod 安全: security/pod-security.md
+    - 镜像安全: security/image-security.md
   
   - AI/ML:
     - ai-ml/index.md
@@ -90,18 +122,6 @@ nav:
     - control-plane/index.md
     - 集群升级: control-plane/upgrade.md
     - 高可用: control-plane/high-availability.md
-  
-  - 安全:
-    - security/index.md
-    - RBAC 配置: security/rbac.md
-    - Pod 安全: security/pod-security.md
-    - 镜像安全: security/image-security.md
-  
-  - 可观测性:
-    - observability/index.md
-    - 监控告警: observability/monitoring.md
-    - 日志采集: observability/logging.md
-    - 链路追踪: observability/tracing.md
 
 # ==================== 插件配置 ====================
 plugins:
