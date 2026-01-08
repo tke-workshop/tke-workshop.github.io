@@ -1659,14 +1659,15 @@ spec:
 
 完整可执行代码示例:
 
-- **Python 脚本**: [deploy_gpu_pod.py](../../cookbook/supernode/deploy_gpu_pod.py) - 功能丰富的 GPU Pod 部署工具
-- **YAML 配置**: [gpu_pod_examples.yaml](../../cookbook/supernode/gpu_pod_examples.yaml) - 8 个完整配置示例
-- **使用文档**: [Supernode Cookbook README](../../cookbook/supernode/README.md) - 详细使用指南
+- **Python 脚本**: [deploy_gpu_pod.py](https://github.com/tke-workshop/tke-workshop.github.io/blob/main/cookbook/supernode/deploy_gpu_pod.py) - 功能丰富的 GPU Pod 部署工具
+- **YAML 配置**: [gpu_pod_examples.yaml](https://github.com/tke-workshop/tke-workshop.github.io/blob/main/cookbook/supernode/gpu_pod_examples.yaml) - 8 个完整配置示例
+- **使用文档**: [Supernode Cookbook README](https://github.com/tke-workshop/tke-workshop.github.io/blob/main/cookbook/supernode/README.md) - 详细使用指南
 
 **快速开始**:
 ```bash
-# 下载脚本
-cd cookbook/supernode
+# 克隆仓库
+git clone https://github.com/tke-workshop/tke-workshop.github.io.git
+cd tke-workshop.github.io/cookbook/supernode
 
 # 创建 GPU Pod
 python3 deploy_gpu_pod.py \

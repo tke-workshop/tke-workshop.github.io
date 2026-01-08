@@ -127,9 +127,6 @@ nav:
     - control-plane/index.md
     - 集群升级: control-plane/upgrade.md
     - 高可用: control-plane/high-availability.md
-  
-  - Cookbook:
-    - cookbook/index.md
 
 # ==================== 插件配置 ====================
 plugins:
