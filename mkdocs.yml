@@ -81,6 +81,10 @@ nav:
     - 节点池管理:
       - 创建节点池: basics/node-pool/01-create-node-pool.md
       - 扩缩节点池: basics/node-pool/02-scale-node-pool.md
+    - 超级节点管理:
+      - 创建超级节点池: basics/supernode/01-create-supernode-pool.md
+      - 创建按量超级节点: basics/supernode/02-create-supernode.md
+      - 删除超级节点: basics/supernode/03-delete-supernode.md
     - 工作负载:
       - 创建 Deployment: basics/workload/01-create-deployment.md
       - 更新 Deployment: basics/workload/02-update-deployment.md
@@ -111,6 +115,7 @@ nav:
   - AI/ML:
     - ai-ml/index.md
     - GPU 调度: ai-ml/gpu-scheduling.md
+    - GPU Pod 最佳实践: ai-ml/04-gpu-pod-best-practices.md
     - 模型推理: ai-ml/model-inference.md
     - 训练任务: ai-ml/training.md
   

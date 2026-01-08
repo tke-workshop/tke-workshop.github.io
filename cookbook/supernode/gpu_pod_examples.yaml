@@ -1,0 +1,381 @@
+# GPU Pod 配置示例集合
+# 文档: https://tke-workshop.github.io/ai-ml/04-gpu-pod-best-practices/
+
+---
+# 示例 1: 基础 GPU Pod（自动匹配 - 推荐）
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-inference-auto
+  labels:
+    app: gpu-inference
+    scenario: auto-match
+  annotations:
+    # 自动匹配模式：仅指定 GPU 类型
+    eks.tke.cloud.tencent.com/gpu-type: T4
+spec:
+  containers:
+  - name: inference
+    image: pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
+    command: ["python3", "-c"]
+    args:
+    - |
+      import torch
+      print(f"PyTorch version: {torch.__version__}")
+      print(f"CUDA available: {torch.cuda.is_available()}")
+      if torch.cuda.is_available():
+          print(f"GPU count: {torch.cuda.device_count()}")
+          print(f"GPU name: {torch.cuda.get_device_name(0)}")
+      import time
+      time.sleep(3600)
+    resources:
+      requests:
+        cpu: "4"
+        memory: "16Gi"
+        nvidia.com/gpu: 1
+      limits:
+        cpu: "8"
+        memory: "32Gi"
+        nvidia.com/gpu: 1
+    env:
+    - name: NVIDIA_VISIBLE_DEVICES
+      value: "all"
+    - name: NVIDIA_DRIVER_CAPABILITIES
+      value: "compute,utility"
+  restartPolicy: Never
+  nodeSelector:
+    type: virtual-kubelet
+  tolerations:
+  - key: serverless
+    operator: Exists
+    effect: NoSchedule
+
+---
+# 示例 2: 显式指定 GPU 配置
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-training-explicit
+  labels:
+    app: gpu-training
+    scenario: explicit-config
+  annotations:
+    # 显式指定模式：精确控制资源
+    eks.tke.cloud.tencent.com/gpu-type: V100
+    eks.tke.cloud.tencent.com/gpu-count: "1"
+    eks.tke.cloud.tencent.com/cpu: "8"
+    eks.tke.cloud.tencent.com/mem: "40Gi"
+spec:
+  containers:
+  - name: training
+    image: tensorflow/tensorflow:2.13.0-gpu
+    command: ["python3", "-c"]
+    args:
+    - |
+      import tensorflow as tf
+      print(f"TensorFlow version: {tf.__version__}")
+      print(f"GPU devices: {tf.config.list_physical_devices('GPU')}")
+      import time
+      time.sleep(3600)
+    env:
+    - name: NVIDIA_VISIBLE_DEVICES
+      value: "all"
+    - name: NVIDIA_DRIVER_CAPABILITIES
+      value: "compute,utility"
+  restartPolicy: Never
+  nodeSelector:
+    type: virtual-kubelet
+  tolerations:
+  - key: serverless
+    operator: Exists
+    effect: NoSchedule
+
+---
+# 示例 3: 使用自动镜像缓存加速启动
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-fast-startup
+  labels:
+    app: gpu-inference
+    scenario: image-cache-auto
+  annotations:
+    # GPU 配置
+    eks.tke.cloud.tencent.com/gpu-type: T4
+    # 自动镜像缓存
+    eks.tke.cloud.tencent.com/use-image-cache: auto
+    # 磁盘大小（镜像缓存依赖）
+    eks.tke.cloud.tencent.com/pod-resource: '{"disk": {"size": 200}}'
+spec:
+  containers:
+  - name: inference
+    image: pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
+    command: ["sleep", "3600"]
+    resources:
+      requests:
+        cpu: "4"
+        memory: "16Gi"
+        nvidia.com/gpu: 1
+      limits:
+        cpu: "8"
+        memory: "32Gi"
+        nvidia.com/gpu: 1
+    env:
+    - name: NVIDIA_VISIBLE_DEVICES
+      value: "all"
+  restartPolicy: Never
+  nodeSelector:
+    type: virtual-kubelet
+  tolerations:
+  - key: serverless
+    operator: Exists
+    effect: NoSchedule
+
+---
+# 示例 4: 手动指定镜像缓存
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-manual-cache
+  labels:
+    app: gpu-inference
+    scenario: image-cache-manual
+  annotations:
+    eks.tke.cloud.tencent.com/gpu-type: T4
+    # 手动指定镜像缓存 ID
+    eks.tke.cloud.tencent.com/use-image-cache: imc-xxxxxxxx
+spec:
+  containers:
+  - name: inference
+    image: pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
+    command: ["sleep", "3600"]
+    resources:
+      requests:
+        cpu: "4"
+        memory: "16Gi"
+        nvidia.com/gpu: 1
+      limits:
+        nvidia.com/gpu: 1
+    env:
+    - name: NVIDIA_VISIBLE_DEVICES
+      value: "all"
+  restartPolicy: Never
+  nodeSelector:
+    type: virtual-kubelet
+  tolerations:
+  - key: serverless
+    operator: Exists
+    effect: NoSchedule
+
+---
+# 示例 5: 多 GPU 训练 Pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-multi-training
+  labels:
+    app: distributed-training
+    scenario: multi-gpu
+  annotations:
+    eks.tke.cloud.tencent.com/gpu-type: V100
+spec:
+  containers:
+  - name: training
+    image: nvcr.io/nvidia/pytorch:23.08-py3
+    command: ["python3", "-c"]
+    args:
+    - |
+      import torch
+      import torch.distributed as dist
+      print(f"GPU count: {torch.cuda.device_count()}")
+      for i in range(torch.cuda.device_count()):
+          print(f"GPU {i}: {torch.cuda.get_device_name(i)}")
+      import time
+      time.sleep(3600)
+    resources:
+      requests:
+        cpu: "16"
+        memory: "64Gi"
+        nvidia.com/gpu: 2
+      limits:
+        cpu: "18"
+        memory: "80Gi"
+        nvidia.com/gpu: 2
+    env:
+    - name: NVIDIA_VISIBLE_DEVICES
+      value: "all"
+    - name: MASTER_PORT
+      value: "29500"
+  restartPolicy: Never
+  nodeSelector:
+    type: virtual-kubelet
+  tolerations:
+  - key: serverless
+    operator: Exists
+    effect: NoSchedule
+
+---
+# 示例 6: vGPU Pod（1/4 T4 - 成本优化）
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-vgpu-inference
+  labels:
+    app: lightweight-inference
+    scenario: vgpu
+  annotations:
+    eks.tke.cloud.tencent.com/gpu-type: 1/4*T4
+spec:
+  containers:
+  - name: inference
+    image: pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
+    command: ["python3", "-c"]
+    args:
+    - |
+      import torch
+      print("Testing vGPU (1/4 T4)...")
+      print(f"CUDA available: {torch.cuda.is_available()}")
+      if torch.cuda.is_available():
+          print(f"GPU memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f} GB")
+      import time
+      time.sleep(3600)
+    resources:
+      requests:
+        cpu: "2"
+        memory: "8Gi"
+        nvidia.com/gpu: 1
+      limits:
+        cpu: "4"
+        memory: "16Gi"
+        nvidia.com/gpu: 1
+    env:
+    - name: NVIDIA_VISIBLE_DEVICES
+      value: "all"
+  restartPolicy: Never
+  nodeSelector:
+    type: virtual-kubelet
+  tolerations:
+  - key: serverless
+    operator: Exists
+    effect: NoSchedule
+
+---
+# 示例 7: GPU Deployment（生产环境推荐）
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gpu-inference-service
+  labels:
+    app: gpu-inference
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gpu-inference
+  template:
+    metadata:
+      labels:
+        app: gpu-inference
+      annotations:
+        eks.tke.cloud.tencent.com/gpu-type: T4
+        eks.tke.cloud.tencent.com/use-image-cache: auto
+        eks.tke.cloud.tencent.com/pod-resource: '{"disk": {"size": 200}}'
+    spec:
+      containers:
+      - name: inference
+        image: pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
+        ports:
+        - containerPort: 8080
+          name: http
+        command: ["python3", "-m", "http.server", "8080"]
+        resources:
+          requests:
+            cpu: "4"
+            memory: "16Gi"
+            nvidia.com/gpu: 1
+          limits:
+            cpu: "8"
+            memory: "32Gi"
+            nvidia.com/gpu: 1
+        env:
+        - name: NVIDIA_VISIBLE_DEVICES
+          value: "all"
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: "compute,utility"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 30
+      restartPolicy: Always
+      nodeSelector:
+        type: virtual-kubelet
+      tolerations:
+      - key: serverless
+        operator: Exists
+        effect: NoSchedule
+
+---
+# 示例 8: GPU Job（批处理任务）
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: gpu-training-job
+  labels:
+    app: training-job
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app: training-job
+      annotations:
+        eks.tke.cloud.tencent.com/gpu-type: V100
+        eks.tke.cloud.tencent.com/use-image-cache: auto
+        eks.tke.cloud.tencent.com/pod-resource: '{"disk": {"size": 300}}'
+    spec:
+      containers:
+      - name: training
+        image: tensorflow/tensorflow:2.13.0-gpu
+        command: ["python3", "-c"]
+        args:
+        - |
+          import tensorflow as tf
+          import time
+          
+          print("Starting GPU training job...")
+          print(f"TensorFlow version: {tf.__version__}")
+          print(f"GPU devices: {tf.config.list_physical_devices('GPU')}")
+          
+          # 模拟训练任务
+          print("Training for 5 minutes...")
+          time.sleep(300)
+          print("Training completed!")
+        resources:
+          requests:
+            cpu: "8"
+            memory: "40Gi"
+            nvidia.com/gpu: 1
+          limits:
+            cpu: "8"
+            memory: "40Gi"
+            nvidia.com/gpu: 1
+        env:
+        - name: NVIDIA_VISIBLE_DEVICES
+          value: "all"
+        - name: TF_FORCE_GPU_ALLOW_GROWTH
+          value: "true"
+      restartPolicy: OnFailure
+      nodeSelector:
+        type: virtual-kubelet
+      tolerations:
+      - key: serverless
+        operator: Exists
+        effect: NoSchedule
