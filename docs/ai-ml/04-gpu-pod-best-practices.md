@@ -968,7 +968,351 @@ image: nvidia/cuda:11.4.0-runtime-ubuntu20.04
 - V100 / T4 / A10: CUDA 11.4 (驱动 470)
 - T4 vGPU: CUDA 11.0 (驱动 450)
 
-### 6. 监控与日志
+### 6. Pod 创建加速（高级配置）
+
+在超级节点上创建 GPU Pod 时，如果镜像较大（如深度学习框架镜像），首次拉取镜像可能需要较长时间。通过配置**镜像缓存**可以显著提升 Pod 创建速度，实现秒级启动。
+
+#### 工作原理
+
+镜像缓存通过提前拉取镜像并创建快照，在创建 Pod 时直接基于快照挂载数据盘，避免重复下载镜像层：
+
+```
+传统方式: 创建 Pod → 分配资源 → 拉取镜像（3-10分钟） → 启动容器
+使用缓存: 创建 Pod → 分配资源 → 挂载快照（5-30秒） → 启动容器
+```
+
+**性能提升**:
+- 小镜像 (< 1GB): 节省 30-60 秒
+- 中等镜像 (1-5GB): 节省 2-5 分钟
+- 大镜像 (> 5GB): 节省 5-15 分钟
+
+#### 方式一：自动匹配镜像缓存（推荐）
+
+系统自动查找匹配的镜像缓存，无需手动管理缓存 ID。
+
+**1. 配置 Pod Annotation**
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-inference-fast
+  annotations:
+    # 启用自动镜像缓存匹配
+    eks.tke.cloud.tencent.com/use-image-cache: auto
+    # 定义磁盘大小（与缓存大小匹配）
+    eks.tke.cloud.tencent.com/pod-resource: '{"disk": {"size": 200}}'
+    # GPU 配置
+    eks.tke.cloud.tencent.com/gpu-type: T4
+spec:
+  containers:
+  - name: inference
+    image: pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime  # 约 5GB
+    resources:
+      limits:
+        nvidia.com/gpu: 1
+  nodeSelector:
+    type: virtual-kubelet
+  tolerations:
+  - key: serverless
+    operator: Exists
+    effect: NoSchedule
+```
+
+**2. 磁盘大小配置说明**
+
+自动镜像缓存依据磁盘大小创建，需正确配置 `disk.size`：
+
+| 镜像大小 | 推荐磁盘大小 | 适用场景 |
+|---------|------------|---------|
+| < 2GB | 50GB | 轻量推理服务 |
+| 2-5GB | 100GB | 中等深度学习镜像 |
+| 5-10GB | 200GB | 大型 AI 框架镜像 |
+| > 10GB | 300GB+ | 多模型或完整开发环境 |
+
+**磁盘大小计算公式**:
+```
+推荐磁盘大小 = 镜像总大小 × 1.5 + 工作空间 (20-50GB)
+```
+
+**3. 自动匹配策略**
+
+系统按以下优先级自动选择缓存：
+
+1. **镜像名称和版本完全相同**
+2. **优先使用小容量缓存**（节省磁盘费用）
+3. **优先使用较新的缓存**（更新时间晚）
+
+**示例：多容器 Pod 配置**
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-training-multi
+  annotations:
+    eks.tke.cloud.tencent.com/use-image-cache: auto
+    eks.tke.cloud.tencent.com/pod-resource: '{"disk": {"size": 300}}'
+    eks.tke.cloud.tencent.com/gpu-type: V100
+spec:
+  containers:
+  - name: trainer
+    image: tensorflow/tensorflow:2.13.0-gpu  # 约 4GB
+    resources:
+      limits:
+        nvidia.com/gpu: 1
+  - name: monitor
+    image: nvidia/cuda:11.4.0-runtime-ubuntu20.04  # 约 2GB
+  nodeSelector:
+    type: virtual-kubelet
+  tolerations:
+  - key: serverless
+    operator: Exists
+    effect: NoSchedule
+```
+
+#### 方式二：手动匹配镜像缓存
+
+通过指定镜像缓存 ID 实现精确控制，适用于生产环境固定配置。
+
+**步骤 1：创建镜像缓存**
+
+有两种创建方式：控制台创建或使用 CRD 创建。
+
+**方式 2A：通过控制台创建**
+
+1. 登录 [TKE 控制台](https://console.cloud.tencent.com/tke2)
+2. 选择左侧 **运维中心 > 镜像缓存**，点击 **新建实例**
+3. 配置参数：
+   - **实例名称**: `gpu-pytorch-cache`
+   - **所在地域**: 与集群相同
+   - **容器网络**: 自动分配
+   - **安全组**: default（或自定义）
+   - **镜像列表**: 添加需要缓存的镜像
+     ```
+     pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
+     nvidia/cuda:11.4.0-runtime-ubuntu20.04
+     ```
+   - **缓存大小**: 200GB（根据镜像总大小设置）
+   - **绑定 EIP**: 如果镜像仓库在外网则启用
+   - **过期策略**: 设置保留天数（0 表示永久保留）
+4. 点击 **创建实例**，等待状态变为"已完成"
+5. 记录镜像缓存 ID（格式如 `imc-xxxxxx`）
+
+**方式 2B：使用 CRD 创建（推荐 IaC）**
+
+1. 确保集群已安装 `imc-operator` 组件：
+   - 进入集群详情页 → **组件管理**
+   - 搜索 `imc-operator`（镜像缓存）并安装
+
+2. 创建 `ImageCache` 资源：
+
+```yaml
+apiVersion: eks.cloud.tencent.com/v1
+kind: ImageCache
+metadata:
+  name: gpu-training-cache
+spec:
+  # 需要缓存的镜像列表
+  images:
+  - pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
+  - tensorflow/tensorflow:2.13.0-gpu
+  - nvidia/cuda:11.4.0-runtime-ubuntu20.04
+  
+  # 缓存大小（GB）
+  imageCacheSize: 200
+  
+  # 过期时间（天），0 表示永不过期
+  retentionDays: 30
+  
+  # 可选：指定子网（建议与超级节点相同子网）
+  # subnetId: subnet-xxxxxx
+  
+  # 可选：指定安全组
+  # securityGroupIds:
+  # - sg-xxxxxx
+  
+  # 可选：自动创建 EIP（访问公网镜像仓库需要）
+  autoCreateEip: false
+  
+  # 可选：私有镜像仓库凭证
+  # imagePullSecrets:
+  # - my-registry-secret
+  
+  # 可选：自定义 DNS
+  # resolveConfig: |
+  #   nameserver 8.8.8.8
+  #   nameserver 8.8.4.4
+```
+
+3. 应用配置并查看状态：
+
+```bash
+# 创建镜像缓存
+kubectl apply -f imagecache.yaml
+
+# 查看缓存状态
+kubectl get imagecache
+
+# 输出示例：
+# NAME                  PHASE       IMAGECACHEID        AGE
+# gpu-training-cache    Ready       imc-abc123xyz       5m
+
+# 查看详细信息和事件
+kubectl describe imagecache gpu-training-cache
+```
+
+**步骤 2：在 Pod 中使用镜像缓存**
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-inference-cached
+  annotations:
+    # 手动指定镜像缓存 ID
+    eks.tke.cloud.tencent.com/use-image-cache: imc-abc123xyz
+    eks.tke.cloud.tencent.com/gpu-type: T4
+spec:
+  containers:
+  - name: inference
+    image: pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
+    resources:
+      limits:
+        nvidia.com/gpu: 1
+  nodeSelector:
+    type: virtual-kubelet
+  tolerations:
+  - key: serverless
+    operator: Exists
+    effect: NoSchedule
+```
+
+**步骤 3：验证缓存使用**
+
+创建 Pod 后，检查事件确认是否使用了缓存：
+
+```bash
+# 查看 Pod 事件
+kubectl describe pod gpu-inference-cached
+
+# 成功使用缓存的事件示例：
+# Events:
+#   Type    Reason   Age   From            Message
+#   ----    ------   ----  ----            -------
+#   Normal  Pulling  30s   kubelet         Using image cache imc-abc123xyz
+#   Normal  Pulled   25s   kubelet         Successfully pulled image (from cache)
+#   Normal  Created  25s   kubelet         Created container
+#   Normal  Started  24s   kubelet         Started container
+
+# 如果未匹配到缓存，将显示正常拉取镜像的事件：
+#   Normal  Pulling  2m    kubelet         Pulling image "pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime"
+```
+
+#### 两种方式对比
+
+| 对比项 | 自动匹配 | 手动指定 |
+|-------|---------|---------|
+| **配置复杂度** | 低（仅需配置 annotation） | 中（需先创建缓存） |
+| **管理成本** | 低（无需管理缓存 ID） | 高（需维护缓存列表） |
+| **适用场景** | 开发测试、动态环境 | 生产环境、固定配置 |
+| **匹配灵活性** | 高（自动选择最优） | 低（必须精确指定） |
+| **成本控制** | 较难预测 | 精确可控 |
+| **推荐等级** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+
+#### 最佳实践建议
+
+**1. 选择合适的方式**
+
+- ✅ **自动匹配**：开发测试、快速迭代、多团队共享
+- ✅ **手动指定**：生产环境、成本敏感、需要审计追踪
+
+**2. 磁盘大小优化**
+
+```yaml
+# 推荐：根据实际镜像大小设置
+annotations:
+  eks.tke.cloud.tencent.com/pod-resource: '{"disk": {"size": 150}}'  # PyTorch 5GB → 150GB
+
+# 避免：过度分配导致浪费
+# eks.tke.cloud.tencent.com/pod-resource: '{"disk": {"size": 500}}'  # 不必要
+```
+
+**3. 缓存生命周期管理**
+
+```yaml
+# 为测试缓存设置过期时间
+spec:
+  retentionDays: 7  # 7 天后自动清理
+
+# 生产缓存设置永久保留
+spec:
+  retentionDays: 0  # 永不过期
+```
+
+**4. 镜像缓存分层策略**
+
+```yaml
+# 基础缓存：包含常用基础镜像
+apiVersion: eks.cloud.tencent.com/v1
+kind: ImageCache
+metadata:
+  name: base-gpu-cache
+spec:
+  images:
+  - nvidia/cuda:11.4.0-runtime-ubuntu20.04
+  - ubuntu:20.04
+  imageCacheSize: 50
+  retentionDays: 0
+
+---
+# 框架缓存：包含深度学习框架
+apiVersion: eks.cloud.tencent.com/v1
+kind: ImageCache
+metadata:
+  name: framework-cache
+spec:
+  images:
+  - pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
+  - tensorflow/tensorflow:2.13.0-gpu
+  imageCacheSize: 200
+  retentionDays: 30
+```
+
+**5. 监控缓存效果**
+
+```bash
+# 对比 Pod 启动时间
+# 无缓存
+time kubectl run test-no-cache --image=pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime \
+  --overrides='{"spec":{"nodeSelector":{"type":"virtual-kubelet"}}}' \
+  -- sleep 3600
+
+# 有缓存
+time kubectl run test-with-cache --image=pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime \
+  --overrides='{"metadata":{"annotations":{"eks.tke.cloud.tencent.com/use-image-cache":"auto"}},
+               "spec":{"nodeSelector":{"type":"virtual-kubelet"}}}' \
+  -- sleep 3600
+```
+
+#### 注意事项
+
+⚠️ **成本说明**:
+- **快照费用**: 按缓存大小和保留时间收费（如 200GB × 30天）
+- **数据盘费用**: Pod 运行时额外按数据盘大小收费
+- **创建费用**: 创建缓存时临时启动一个 2核4GiB Pod（完成后释放）
+
+⚠️ **限制说明**:
+- 自动匹配无法识别 TKE Serverless DaemonSet 镜像
+- 手动指定的缓存 ID 如不匹配镜像，会回退到正常拉取
+- 同一磁盘大小的缓存可被多个 Pod 共享使用
+
+⚠️ **安全建议**:
+- 私有镜像需配置 `imagePullSecrets`
+- 建议使用与超级节点相同的子网和安全组
+- 生产环境建议使用内网镜像仓库（避免 EIP 费用）
+
+### 7. 监控与日志
 
 **配置 GPU 监控**:
 ```yaml
