@@ -28,7 +28,7 @@
 ## 前置条件
 
 - [ ] 已创建 TKE 集群并启用超级节点
-- [ ] 已创建超级节点池（参考 [创建超级节点池](./01-create-supernode-pool.md)）
+- [ ] 已创建超级节点池（参考 [创建超级节点池](../basics/supernode/01-create-supernode-pool.md)）
 - [ ] 了解所需的 GPU 型号和规格
 - [ ] 准备好支持 GPU 的容器镜像（含 CUDA 运行时）
 
@@ -1087,10 +1087,10 @@ spec:
 
 ## 相关文档
 
-- [创建超级节点池](./01-create-supernode-pool.md)
-- [创建按量超级节点](./02-create-supernode.md)
-- [删除超级节点](./03-delete-supernode.md)
-- [TKE GPU 使用指南](../../ai-ml/gpu-scheduling.md)
+- [创建超级节点池](../basics/supernode/01-create-supernode-pool.md)
+- [创建按量超级节点](../basics/supernode/02-create-supernode.md)
+- [删除超级节点](../basics/supernode/03-delete-supernode.md)
+- [TKE GPU 调度](./gpu-scheduling.md)
 
 ---
 
