@@ -38,17 +38,17 @@
 
 ### GPU 型号与 Annotation 配置
 
-| GPU 型号 | Annotation Value | 显存 | CUDA 版本 | 适用场景 |
-|---------|------------------|------|-----------|---------|
-| **NVIDIA V100** | `V100` | 16GB | 11.4 | 高性能训练、大模型推理 |
-| **NVIDIA T4** | `T4` | 16GB | 11.4 | 通用推理、小模型训练 |
-| **1/4 NVIDIA T4** | `1/4*T4` | 4GB | 11.0 | 轻量推理、开发测试 |
-| **1/2 NVIDIA T4** | `1/2*T4` | 8GB | 11.0 | 中等推理、批处理 |
-| **NVIDIA A10 - GNV4** | `A10*GNV4` | 24GB | 11.4 | AI 推理、图形渲染 |
-| **NVIDIA A10 - GNV4v** | `A10*GNV4v` | 24GB | 11.4 | 虚拟化 GPU 工作负载 |
-| **NVIDIA A10 - PNV4** | `A10*PNV4` | 24GB | 11.4 | 高性能图形和计算 |
-| **NVIDIA PNV5b** | `L20` | 48GB | 12.7 | 高端图形工作负载 |
-| **NVIDIA PNV5i** | `L40` | 48GB | 12.7 | 高端图形工作负载 |
+| GPU 型号 | Annotation Value | 显存 | 适用场景 |
+|---------|------------------|------|---------|
+| **NVIDIA V100** | `V100` | 16GB | 高性能训练、大模型推理 |
+| **NVIDIA T4** | `T4` | 16GB | 通用推理、小模型训练 |
+| **1/4 NVIDIA T4** | `1/4*T4` | 4GB | 轻量推理、开发测试 |
+| **1/2 NVIDIA T4** | `1/2*T4` | 8GB | 中等推理、批处理 |
+| **NVIDIA A10 - GNV4** | `A10*GNV4` | 24GB | AI 推理、图形渲染 |
+| **NVIDIA A10 - GNV4v** | `A10*GNV4v` | 24GB | 虚拟化 GPU 工作负载 |
+| **NVIDIA A10 - PNV4** | `A10*PNV4` | 24GB | 高性能图形和计算 |
+| **NVIDIA PNV5b** | `L20` | 48GB | 高端图形工作负载 |
+| **NVIDIA PNV5i** | `L40` | 48GB | 高端图形工作负载 |
 
 ### GPU 规格与 CPU/内存对应关系
 
@@ -561,6 +561,97 @@ spec:
 # 最终分配: V100 1卡, 2核/2GiB（最小配置，节省成本）
 ```
 
+### 示例 9: 使用更高版本驱动（CUDA 12.5+）
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cuda-12-5-training
+  annotations:
+    # 指定 GPU 型号
+    eks.tke.cloud.tencent.com/gpu-type: 'A10*GNV4'
+    # 升级驱动版本以支持 CUDA 12.5+
+    eks.tke.cloud.tencent.com/eklet-version: nvidia-550
+spec:
+  restartPolicy: OnFailure
+  containers:
+  - name: training
+    # 使用 CUDA 12.5 镜像（需要驱动 550+）
+    image: nvidia/cuda:12.5.0-runtime-ubuntu22.04
+    command:
+    - python3
+    - train.py
+    resources:
+      requests:
+        cpu: "8"
+        memory: "32Gi"
+        nvidia.com/gpu: 1
+      limits:
+        cpu: "12"
+        memory: "44Gi"
+        nvidia.com/gpu: 1
+  nodeSelector:
+    type: virtual-kubelet
+  tolerations:
+  - key: serverless
+    operator: Exists
+    effect: NoSchedule
+# 最终分配: A10 GNV4 1卡，12核/44GiB，驱动 550
+```
+
+### 示例 10: 最新驱动版本（CUDA 12.6+）
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cuda-12-6-job
+spec:
+  template:
+    metadata:
+      annotations:
+        eks.tke.cloud.tencent.com/gpu-type: 'V100'
+        # 使用最新驱动版本
+        eks.tke.cloud.tencent.com/eklet-version: nvidia-580
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: compute
+        # 使用最新 CUDA 12.6 镜像
+        image: nvidia/cuda:12.6.0-devel-ubuntu22.04
+        command:
+        - /bin/bash
+        - -c
+        - |
+          nvidia-smi
+          nvcc --version
+          # 运行计算任务
+          python3 /workspace/compute.py
+        resources:
+          requests:
+            cpu: "4"
+            memory: "16Gi"
+            nvidia.com/gpu: 1
+          limits:
+            cpu: "8"
+            memory: "40Gi"
+            nvidia.com/gpu: 1
+        volumeMounts:
+        - name: workspace
+          mountPath: /workspace
+      volumes:
+      - name: workspace
+        emptyDir: {}
+      nodeSelector:
+        type: virtual-kubelet
+      tolerations:
+      - key: serverless
+        operator: Exists
+        effect: NoSchedule
+# 最终分配: V100 1卡，8核/40GiB，驱动 580
+```
+
 ---
 
 ## Annotation 详细说明
@@ -595,7 +686,47 @@ eks.tke.cloud.tencent.com/gpu-type: 'A10*GNV4v'
 
 ### 可选 Annotation
 
-#### 2. GPU 数量配置
+#### 2. 驱动版本配置
+
+```yaml
+eks.tke.cloud.tencent.com/eklet-version: nvidia-550
+```
+
+**说明**:
+- 指定 NVIDIA GPU 驱动版本
+- **默认驱动**: 535（支持 CUDA 12.4）
+- **可选驱动**: `nvidia-550`、`nvidia-580`
+- 驱动向后兼容，高版本驱动支持低版本 CUDA
+
+**驱动与 CUDA 版本对应关系**:
+
+| 驱动版本 | Annotation Value | 支持的最低 CUDA 版本 | 适用场景 |
+|---------|------------------|---------------------|---------|
+| **535** (默认) | 无需显式声明 | CUDA 12.4 | 大部分深度学习场景 |
+| **550** | `nvidia-550` | CUDA 12.4+ | 需要更高版本驱动特性 |
+| **580** | `nvidia-580` | CUDA 12.6+ | 最新 GPU 功能、性能优化 |
+
+**配置示例**:
+
+```yaml
+# 使用默认驱动 535 (无需配置)
+metadata:
+  annotations:
+    eks.tke.cloud.tencent.com/gpu-type: 'V100'
+
+# 显式指定更高版本驱动
+metadata:
+  annotations:
+    eks.tke.cloud.tencent.com/gpu-type: 'V100'
+    eks.tke.cloud.tencent.com/eklet-version: nvidia-550
+```
+
+**注意事项**:
+- ⚠️ 确保容器镜像中的 CUDA 版本与驱动兼容
+- ⚠️ 驱动版本越高，功能越新，但可能存在兼容性问题
+- ⚠️ 建议优先使用默认驱动，除非有明确需求
+
+#### 3. GPU 数量配置
 
 ```yaml
 eks.tke.cloud.tencent.com/gpu-count: '2'
@@ -606,7 +737,7 @@ eks.tke.cloud.tencent.com/gpu-count: '2'
 - 默认值为 1
 - 必须与规格表中支持的卡数匹配
 
-#### 3. CPU 核数配置
+#### 4. CPU 核数配置
 
 ```yaml
 eks.tke.cloud.tencent.com/cpu: '8'
@@ -617,7 +748,7 @@ eks.tke.cloud.tencent.com/cpu: '8'
 - 必须与 GPU 规格对应的 CPU 核数匹配
 - 不推荐手动指定，建议让系统自动匹配
 
-#### 4. 内存大小配置
+#### 5. 内存大小配置
 
 ```yaml
 eks.tke.cloud.tencent.com/mem: '40Gi'
@@ -656,7 +787,7 @@ kubectl exec -it <pod-name> -- nvidia-smi -L
 
 ```
 +-----------------------------------------------------------------------------+
-| NVIDIA-SMI 470.161.03   Driver Version: 470.161.03   CUDA Version: 11.4     |
+| NVIDIA-SMI 535.x.x      Driver Version: 535.x.x      CUDA Version: 12.4    |
 |-------------------------------+----------------------+----------------------+
 | GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
 | Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
@@ -665,6 +796,11 @@ kubectl exec -it <pod-name> -- nvidia-smi -L
 | N/A   40C    P0    42W / 300W |      0MiB / 16160MiB |      0%      Default |
 +-------------------------------+----------------------+----------------------+
 ```
+
+> **说明**: 
+> - `Driver Version` 显示的是节点预装的驱动版本（默认 535.x.x）
+> - `CUDA Version` 显示的是该驱动支持的最高 CUDA 版本
+> - 实际容器内的 CUDA 版本由镜像决定，可通过 `nvcc --version` 查看
 
 ### Step 3: 测试 CUDA 功能
 
@@ -701,7 +837,7 @@ kubectl get pod <pod-name> -o jsonpath='{.spec.containers[0].resources}'
 | **Annotation 错误** | `InvalidParameter.Param` | Annotation 格式或取值错误 | 检查 Annotation key 和 value |
 | **内存单位错误** | `Invalid memory format` | 内存单位使用了 G 而非 Gi | 使用 `Gi` 作为内存单位 |
 | **CPU/内存不匹配** | `No matching instance type` | CPU 和内存与 GPU 规格不对应 | 参考规格表调整或移除手动配置 |
-| **镜像不支持 GPU** | `CUDA driver version is insufficient` | 镜像中 CUDA 版本不兼容 | 使用与 GPU 驱动匹配的镜像 |
+| **驱动版本不足** | `CUDA driver version is insufficient` | 镜像 CUDA 版本高于驱动支持版本 | 降低镜像 CUDA 版本或升级驱动（添加 `eklet-version` annotation） |
 
 ### GPU Pod Pending 处理
 
@@ -961,12 +1097,84 @@ image: tensorflow/tensorflow:2.13.0-gpu
 image: pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
 
 # NVIDIA CUDA
-image: nvidia/cuda:11.4.0-runtime-ubuntu20.04
+image: nvidia/cuda:12.4.0-runtime-ubuntu20.04
 ```
 
-**确保 CUDA 版本匹配**:
-- V100 / T4 / A10: CUDA 11.4 (驱动 470)
-- T4 vGPU: CUDA 11.0 (驱动 450)
+**CUDA 版本兼容性说明**:
+
+TKE 超级节点 Serverless 模式预装 NVIDIA GPU 驱动，驱动版本决定支持的 CUDA 版本范围：
+
+| 环境配置 | 驱动版本 | 支持的 CUDA 版本 | 推荐镜像 CUDA 版本 |
+|---------|---------|-----------------|------------------|
+| 默认配置 | 535 | CUDA ≤ 12.4 | 11.8, 12.0, 12.4 |
+| nvidia-550 | 550 | CUDA ≤ 12.5 | 12.4, 12.5 |
+| nvidia-580 | 580 | CUDA ≤ 12.6 | 12.5, 12.6 |
+
+**兼容性原则**:
+- ✅ 镜像 CUDA 版本 **必须小于或等于** 驱动支持的最高版本
+- ✅ 驱动向后兼容：高版本驱动支持低版本 CUDA 应用
+- ⚠️ CUDA 版本过高会导致 `CUDA driver version is insufficient` 错误
+
+**最佳实践**:
+
+```yaml
+# 推荐：使用默认驱动 + CUDA 12.4 镜像（兼容性最佳）
+metadata:
+  annotations:
+    eks.tke.cloud.tencent.com/gpu-type: 'V100'
+spec:
+  containers:
+  - name: training
+    image: pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
+
+---
+
+# 场景：需要 CUDA 12.5 新特性
+metadata:
+  annotations:
+    eks.tke.cloud.tencent.com/gpu-type: 'V100'
+    eks.tke.cloud.tencent.com/eklet-version: nvidia-550  # 显式指定更高驱动
+spec:
+  containers:
+  - name: training
+    image: nvidia/cuda:12.5.0-runtime-ubuntu22.04
+
+---
+
+# 场景：使用较旧 CUDA 11.x 镜像（兼容所有驱动）
+metadata:
+  annotations:
+    eks.tke.cloud.tencent.com/gpu-type: 'T4'
+spec:
+  containers:
+  - name: inference
+    image: tensorflow/tensorflow:2.12.0-gpu  # CUDA 11.8
+```
+
+**常见镜像 CUDA 版本对照**:
+
+| 镜像 | CUDA 版本 | 默认驱动兼容 | 需要升级驱动 |
+|------|-----------|------------|------------|
+| `pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime` | 11.7 | ✅ 兼容 | ❌ 不需要 |
+| `tensorflow/tensorflow:2.13.0-gpu` | 11.8 | ✅ 兼容 | ❌ 不需要 |
+| `nvidia/cuda:12.4.0-runtime-ubuntu20.04` | 12.4 | ✅ 兼容 | ❌ 不需要 |
+| `nvidia/cuda:12.5.0-runtime-ubuntu22.04` | 12.5 | ❌ 不兼容 | ✅ nvidia-550 |
+| `nvidia/cuda:12.6.0-runtime-ubuntu22.04` | 12.6 | ❌ 不兼容 | ✅ nvidia-580 |
+
+**验证驱动和 CUDA 版本**:
+
+```bash
+# 进入 Pod 查看驱动版本
+kubectl exec -it <pod-name> -- nvidia-smi
+
+# 输出示例：
+# +-----------------------------------------------------------------------------+
+# | NVIDIA-SMI 535.x.x        Driver Version: 535.x.x        CUDA Version: 12.4 |
+# +-----------------------------------------------------------------------------+
+
+# 查看容器内 CUDA 版本
+kubectl exec -it <pod-name> -- nvcc --version
+```
 
 ### 6. Pod 创建加速（高级配置）
 
