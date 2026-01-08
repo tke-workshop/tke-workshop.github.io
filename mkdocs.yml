@@ -106,6 +106,7 @@ nav:
     - RBAC 配置: security/rbac.md
     - Pod 安全: security/pod-security.md
     - 镜像安全: security/image-security.md
+    - 策略管理: security/policy-management.md
   
   - AI/ML:
     - ai-ml/index.md
