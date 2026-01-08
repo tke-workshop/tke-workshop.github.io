@@ -48,7 +48,7 @@
 | **NVIDIA A10 - GNV4v** | `A10*GNV4v` | 24GB | 11.4 | 虚拟化 GPU 工作负载 |
 | **NVIDIA A10 - PNV4** | `A10*PNV4` | 24GB | 11.4 | 高性能图形和计算 |
 | **NVIDIA PNV5b** | `L20` | 48GB | 12.7 | 高端图形工作负载 |
-| **NVIDIA PNV5b** | `L40` | 48GB | 12.7 | 高端图形工作负载 |
+| **NVIDIA PNV5i** | `L40` | 48GB | 12.7 | 高端图形工作负载 |
 
 ### GPU 规格与 CPU/内存对应关系
 
@@ -1449,10 +1449,29 @@ spec:
 
 ## Cookbook 示例
 
-完整可执行代码示例: [TKE 超级节点 GPU Pod Cookbook](../../cookbook/gpu-pod-example.py)
+完整可执行代码示例:
+
+- **Python 脚本**: [deploy_gpu_pod.py](../../cookbook/supernode/deploy_gpu_pod.py) - 功能丰富的 GPU Pod 部署工具
+- **YAML 配置**: [gpu_pod_examples.yaml](../../cookbook/supernode/gpu_pod_examples.yaml) - 8 个完整配置示例
+- **使用文档**: [Supernode Cookbook README](../../cookbook/supernode/README.md) - 详细使用指南
+
+**快速开始**:
+```bash
+# 下载脚本
+cd cookbook/supernode
+
+# 创建 GPU Pod
+python3 deploy_gpu_pod.py \
+  --name gpu-test \
+  --image pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime \
+  --gpu-type T4
+
+# 或使用 YAML
+kubectl apply -f gpu_pod_examples.yaml
+```
 
 ---
 
-**文档版本**: v1.0  
-**最后更新**: 2026-01-07  
+**文档版本**: v1.1  
+**最后更新**: 2026-01-08  
 **维护者**: TKE Documentation Team
