@@ -140,8 +140,7 @@ nav:
     - 存储配置: data/storage.md
     - 数据处理: data/data-processing.md
   
-  - Cookbook:
-    - https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook
+  - Cookbook Collection: https://tke-workshop.github.io/cookbook-patterns.html
 
 # ==================== 插件配置 ====================
 plugins:
