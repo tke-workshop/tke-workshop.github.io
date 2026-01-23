@@ -809,7 +809,7 @@
                 <div class="filter-panel">
                     <div class="filter-header">
                         <span class="filter-title">Filters</span>
-                        <span class="filter-count" id="totalCount">3 patterns</span>
+                        <span class="filter-count" id="totalCount">11 patterns</span>
                     </div>
                     
                     <button class="reset-filters" onclick="resetFilters()">Reset All</button>
@@ -837,6 +837,10 @@
                             <input type="checkbox" id="cat-storage" value="storage" onchange="filterCookbooks()">
                             <label for="cat-storage">存储 Storage</label>
                         </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="cat-testing" value="testing" onchange="filterCookbooks()">
+                            <label for="cat-testing">测试 Testing</label>
+                        </div>
                     </div>
 
                     <!-- Language Filters -->
@@ -853,6 +857,14 @@
                         <div class="filter-option">
                             <input type="checkbox" id="lang-bash" value="Bash" onchange="filterCookbooks()">
                             <label for="lang-bash">Bash</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="lang-yaml" value="YAML" onchange="filterCookbooks()">
+                            <label for="lang-yaml">YAML</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="lang-terraform" value="Terraform" onchange="filterCookbooks()">
+                            <label for="lang-terraform">Terraform</label>
                         </div>
                     </div>
 
@@ -909,6 +921,7 @@
     <script>
         // Cookbook 数据配置 - 每个 cookbook 必须关联唯一的 GitHub 仓库
         const cookbooks = [
+            // ========== 原有的 Workshop Cookbooks ==========
             {
                 id: 'create-cluster',
                 title: '创建 TKE 托管集群',
@@ -923,7 +936,7 @@
                     path: 'cookbook/cluster',                      // 子目录路径
                     branch: 'main'                                 // 分支名
                 },
-                url: 'https://github.com/tke-workshop/tke-workshop.github.io/blob/main/cookbook/cluster/create_cluster.py',
+                url: 'https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook/cluster',
                 services: ['TKE', 'API']
             },
             {
@@ -939,7 +952,7 @@
                     path: 'cookbook/workload',
                     branch: 'main'
                 },
-                url: 'https://github.com/tke-workshop/tke-workshop.github.io/blob/main/cookbook/workload/deploy_nginx.py',
+                url: 'https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook/workload',
                 services: ['DEP', 'SVC']
             },
             {
@@ -955,8 +968,138 @@
                     path: 'cookbook/supernode',
                     branch: 'main'
                 },
-                url: 'https://github.com/tke-workshop/tke-workshop.github.io/blob/main/cookbook/supernode/deploy_gpu_pod.py',
+                url: 'https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook/supernode',
                 services: ['GPU', 'POD']
+            },
+
+            // ========== TKEStack Playbook Cookbooks ==========
+            {
+                id: 'tke-ai-playbook',
+                title: 'TKE AI Playbook',
+                description: '加载中...',
+                category: 'gpu',
+                language: 'YAML',
+                resources: ['AI', 'ML'],
+                tags: ['AI/ML', 'GPU', 'Training'],
+                github: {
+                    repo: 'tkestack/tke-playbook',
+                    path: 'tke-ai-playbook',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-ai-playbook',
+                services: ['AI', 'TKE']
+            },
+            {
+                id: 'tke-chaos-playbook',
+                title: 'TKE Chaos Playbook',
+                description: '加载中...',
+                category: 'testing',
+                language: 'YAML',
+                resources: ['Chaos', 'Testing'],
+                tags: ['Chaos', 'Fault', 'Resilience'],
+                github: {
+                    repo: 'tkestack/tke-playbook',
+                    path: 'tke-chaos-playbook',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-chaos-playbook',
+                services: ['CHO', 'TST']
+            },
+            {
+                id: 'tke-direct-upgrade',
+                title: 'TKE Direct Upgrade',
+                description: '加载中...',
+                category: 'cluster',
+                language: 'Bash',
+                resources: ['Upgrade'],
+                tags: ['Upgrade', 'Migration', 'Version'],
+                github: {
+                    repo: 'tkestack/tke-playbook',
+                    path: 'tke-direct-upgrade',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-direct-upgrade',
+                services: ['TKE', 'UPG']
+            },
+            {
+                id: 'tke-get-client-ip',
+                title: 'TKE Get Client IP',
+                description: '加载中...',
+                category: 'networking',
+                language: 'YAML',
+                resources: ['Service', 'Ingress'],
+                tags: ['Network', 'Client IP', 'LB'],
+                github: {
+                    repo: 'tkestack/tke-playbook',
+                    path: 'tke-get-client-ip',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-get-client-ip',
+                services: ['NET', 'LB']
+            },
+            {
+                id: 'tke-hybrid-node-architecture',
+                title: 'TKE Hybrid Node Architecture',
+                description: '加载中...',
+                category: 'cluster',
+                language: 'YAML',
+                resources: ['Node', 'Architecture'],
+                tags: ['Hybrid', 'Node', 'Multi-Arch'],
+                github: {
+                    repo: 'tkestack/tke-playbook',
+                    path: 'tke-hybrid-node-architecture',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-hybrid-node-architecture',
+                services: ['NOD', 'ARC']
+            },
+            {
+                id: 'tke-karpenter',
+                title: 'TKE Karpenter',
+                description: '加载中...',
+                category: 'cluster',
+                language: 'YAML',
+                resources: ['Autoscaling', 'Node'],
+                tags: ['Karpenter', 'Autoscaling', 'Node'],
+                github: {
+                    repo: 'tkestack/tke-playbook',
+                    path: 'tke-karpenter',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-karpenter',
+                services: ['KAR', 'NOD']
+            },
+            {
+                id: 'tke-terraform-examples',
+                title: 'TKE Terraform Examples',
+                description: '加载中...',
+                category: 'cluster',
+                language: 'Terraform',
+                resources: ['IaC'],
+                tags: ['Terraform', 'IaC', 'Automation'],
+                github: {
+                    repo: 'tkestack/tke-playbook',
+                    path: 'tke-terraform-examples',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-terraform-examples',
+                services: ['TF', 'IAC']
+            },
+            {
+                id: 'tke-to-community-ingress',
+                title: 'TKE to Community Ingress',
+                description: '加载中...',
+                category: 'networking',
+                language: 'YAML',
+                resources: ['Ingress'],
+                tags: ['Ingress', 'Migration', 'Community'],
+                github: {
+                    repo: 'tkestack/tke-playbook',
+                    path: 'tke-to-community-ingress',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-to-community-ingress',
+                services: ['ING', 'NET']
             }
         ];
 
@@ -1166,7 +1309,8 @@
                 'workload': 'WORKLOAD',
                 'gpu': 'GPU/AI',
                 'networking': 'NETWORK',
-                'storage': 'STORAGE'
+                'storage': 'STORAGE',
+                'testing': 'TESTING'
             };
             return names[cat] || cat.toUpperCase();
         }
