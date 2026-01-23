@@ -92,42 +92,56 @@ nav:
     - 服务管理:
       - 创建 Service: basics/service/01-create-service.md
   
-  - 网络:
-    - networking/index.md
-    - Service: networking/service.md
-    - Ingress: networking/ingress.md
-    - Network Policy: networking/network-policy.md
-    - VPC-CNI: networking/vpc-cni.md
+  - 最佳实践:
+    - best-practices/index.md
+    - 安全:
+      - best-practices/security/index.md
+      - 身份认证和访问管理: best-practices/security/identity-auth-and-access-management.md
+      - 运行时安全: best-practices/security/pod-security.md
+      - 网络安全: best-practices/security/network-security.md
+      - 制品和镜像安全: best-practices/security/image-security.md
+      - 数据安全: best-practices/security/data-security.md
+      - 合规与审计: best-practices/security/compliance-and-audit.md
+    - 可用性:
+      - best-practices/availability/index.md
+      - 控制面高可用 - etcd过载保护: best-practices/availability/etcd-overload-protection.md
+      - 控制面高可用 - apiserver限速和熔断: best-practices/availability/apiserver-rate-limiting.md
+      - 生产实践 - 配置TKE防误删策略: best-practices/availability/deletion-protection.md
+      - 生产实践 - 使用企业级云原生etcd: best-practices/availability/cloud-native-etcd.md
+      - 数据面高可用 - 备份与恢复: best-practices/availability/backup-and-recovery.md
+    - 可扩展性:
+      - TKE 可扩展性指南概述: best-practices/scalability/index.md
+      - 控制平面扩展: best-practices/scalability/control-plane-scaling.md
+      - 数据平面扩展: best-practices/scalability/data-plane-scaling.md
+      - 系统组件扩展: best-practices/scalability/system-component-scaling.md
+      - 工作负载扩展: best-practices/scalability/workload-scaling.md
+    - 集群升级:
+      - best-practices/upgrade/index.md
+      - 升级集群控制面: best-practices/upgrade/control-plane-upgrade.md
+      - 升级集群数据面: best-practices/upgrade/data-plane-upgrade.md
+      - 升级集群内组件: best-practices/upgrade/component-upgrade.md
+      - 跨多Kubernetes版本 迁移业务升级集群: best-practices/upgrade/cross-version-migration.md
+    - 成本优化:
+      - best-practices/cost-optimization/index.md
+      - 分析成本: best-practices/cost-optimization/cost-analysis.md
+      - 优化成本 - 选择最优的调度策略: best-practices/cost-optimization/scheduling-optimization.md
+      - 优化成本 - 规整算力资源碎片: best-practices/cost-optimization/resource-defragmentation.md
+      - 优化成本 - 资源动态伸缩: best-practices/cost-optimization/dynamic-scaling.md
   
-  - 可观测性:
-    - observability/index.md
-    - 监控告警: observability/monitoring.md
-    - 日志采集: observability/logging.md
-    - 链路追踪: observability/tracing.md
-  
-  - 安全:
-    - security/index.md
-    - RBAC 配置: security/rbac.md
-    - Pod 安全: security/pod-security.md
-    - 镜像安全: security/image-security.md
-    - 策略管理: security/policy-management.md
-  
-  - AI/ML:
+  - AI on TKE:
     - ai-ml/index.md
     - GPU 调度: ai-ml/gpu-scheduling.md
     - GPU Pod 最佳实践: ai-ml/04-gpu-pod-best-practices.md
     - 模型推理: ai-ml/model-inference.md
     - 训练任务: ai-ml/training.md
   
-  - Data:
+  - Data on TKE:
     - data/index.md
     - 存储配置: data/storage.md
     - 数据处理: data/data-processing.md
   
-  - 控制面:
-    - control-plane/index.md
-    - 集群升级: control-plane/upgrade.md
-    - 高可用: control-plane/high-availability.md
+  - Cookbook:
+    - https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook
 
 # ==================== 插件配置 ====================
 plugins:
