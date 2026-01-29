@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookbook Detail - TKE Workshop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Markdown 渲染支持 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.0/marked.min.js"></script>
+    
+    <!-- 代码高亮支持 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-primary: #0f1419;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #1c2128;
+            --accent-blue: #1e88e5;
+            --accent-purple: #9c27b0;
+            --accent-cyan: #00bcd4;
+            --accent-green: #4caf50;
+            --accent-orange: #ff9800;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+            --card-hover: #21262d;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 背景动画 */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(156, 39, 176, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(0, 188, 212, 0.1) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        .grid-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background-image: 
+                linear-gradient(rgba(102, 126, 234, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(102, 126, 234, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* 返回按钮 */
+        .back-button {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 1000;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--accent-blue);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-button:hover {
+            background: var(--bg-tertiary);
+            transform: translateX(-4px);
+        }
+
+        .back-button::before {
+            content: '←';
+            font-size: 1.25rem;
+        }
+
+        /* 页面容器 */
+        .page-container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            padding: 2rem;
+            padding-top: 6rem;
+        }
+
+        .detail-layout {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+        }
+
+        /* 左侧主内容区 */
+        .main-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* 标题区域 */
+        .cookbook-header {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem;
+        }
+
+        .cookbook-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cookbook-meta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--accent-blue);
+        }
+
+        .cookbook-summary {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* 架构图区域 */
+        .architecture-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 3rem 2rem;
+            position: relative;
+        }
+
+        .architecture-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(90deg, rgba(102, 126, 234, 0.05) 1px, transparent 1px),
+                linear-gradient(rgba(102, 126, 234, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            position: relative;
+            z-index: 1;
+        }
+
+        .architecture-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            min-height: 200px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .arch-component {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .arch-icon {
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+            position: relative;
+        }
+
+        .arch-icon::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 16px;
+            padding: 3px;
+            background: var(--gradient-1);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.5;
+        }
+
+        .arch-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .arch-arrow {
+            color: var(--accent-blue);
+            font-size: 3rem;
+            opacity: 0.7;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* README 内容区域 */
+        .readme-content {
+            padding: 2rem;
+        }
+
+        .readme-loading {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .readme-loading::before {
+            content: '⏳';
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .readme-error {
+            background: rgba(245, 87, 108, 0.1);
+            border: 1px solid rgba(245, 87, 108, 0.3);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem;
+            color: #f5576c;
+        }
+
+        .readme-error::before {
+            content: '⚠️ ';
+            font-size: 2rem;
+        }
+
+        /* Markdown 样式 */
+        .markdown-body {
+            color: var(--text-primary);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .markdown-body h1,
+        .markdown-body h2,
+        .markdown-body h3,
+        .markdown-body h4,
+        .markdown-body h5,
+        .markdown-body h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .markdown-body h1 { font-size: 2rem; }
+        .markdown-body h2 { font-size: 1.75rem; }
+        .markdown-body h3 { font-size: 1.5rem; }
+        .markdown-body h4 { font-size: 1.25rem; }
+
+        .markdown-body p {
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body ul,
+        .markdown-body ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+
+        .markdown-body li {
+            margin-bottom: 0.5rem;
+        }
+
+        .markdown-body code {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.2rem 0.4rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--accent-cyan);
+        }
+
+        .markdown-body pre {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            color: var(--text-primary);
+        }
+
+        .markdown-body blockquote {
+            border-left: 4px solid var(--accent-blue);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: var(--text-secondary);
+        }
+
+        .markdown-body img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .markdown-body a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .markdown-body a:hover {
+            color: var(--accent-cyan);
+            text-decoration: underline;
+        }
+
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .markdown-body th,
+        .markdown-body td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .markdown-body th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+        }
+
+        /* 右侧操作面板 */
+        .action-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: sticky;
+            top: 2rem;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+
+        .action-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .action-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .github-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--accent-blue);
+            padding: 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+        }
+
+        .github-link:hover {
+            background: var(--card-hover);
+            border-color: var(--accent-blue);
+            transform: translateX(4px);
+        }
+
+        .github-link::before {
+            content: '🔗';
+            font-size: 1.5rem;
+        }
+
+        .code-block {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            overflow-x: auto;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .code-block code {
+            color: var(--accent-cyan);
+            display: block;
+            white-space: pre;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            color: var(--accent-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .copy-button:hover {
+            background: rgba(102, 126, 234, 0.3);
+        }
+
+        .copy-button.copied {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: rgba(76, 175, 80, 0.3);
+            color: var(--accent-green);
+        }
+
+        .resource-list {
+            list-style: none;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .resource-item:hover {
+            background: var(--card-hover);
+        }
+
+        .resource-item::before {
+            content: '📄';
+            font-size: 1.25rem;
+        }
+
+        .resource-item a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .resource-item a:hover {
+            color: var(--accent-cyan);
+            text-decoration: underline;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .detail-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .action-panel {
+                position: static;
+                max-height: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 1rem;
+                padding-top: 5rem;
+            }
+
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+
+            .cookbook-title {
+                font-size: 2rem;
+            }
+
+            .architecture-diagram {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .arch-arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回按钮 -->
+    <a href="cookbook-patterns.html" class="back-button" id="backButton">
+        返回所有 Patterns
+    </a>
+
+    <!-- 背景动画 -->
+    <div class="bg-animation"></div>
+    <div class="grid-lines"></div>
+
+    <div class="page-container">
+        <div class="detail-layout">
+            <!-- 左侧主内容 -->
+            <div class="main-content">
+                <!-- 标题区域 -->
+                <div class="cookbook-header">
+                    <h1 class="cookbook-title" id="cookbookTitle">Loading...</h1>
+                    <div class="cookbook-meta" id="cookbookMeta">
+                        <!-- Meta badges will be inserted here -->
+                    </div>
+                    <p class="cookbook-summary" id="cookbookSummary">
+                        正在加载 Cookbook 信息...
+                    </p>
+                </div>
+
+                <!-- 架构图区域 -->
+                <div class="architecture-section">
+                    <h2 class="section-title">📐 架构流程</h2>
+                    <div class="architecture-diagram" id="architectureDiagram">
+                        <!-- Architecture diagram will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- README 内容 -->
+                <div class="readme-content">
+                    <h2 class="section-title">📚 详细文档</h2>
+                    <div id="readmeContent" class="readme-loading">
+                        正在加载详细文档...
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧操作面板 -->
+            <aside class="action-panel">
+                <!-- GitHub 链接 -->
+                <div class="action-card">
+                    <h3 class="action-card-title">🔗 GitHub 仓库</h3>
+                    <a href="#" id="githubLink" class="github-link" target="_blank">
+                        访问 GitHub 仓库
+                    </a>
+                </div>
+
+                <!-- Download -->
+                <div class="action-card">
+                    <h3 class="action-card-title">⬇️ Download</h3>
+                    <div class="code-block" id="downloadCommand">
+                        <button class="copy-button" onclick="copyCode('downloadCommand')">Copy</button>
+                        <code>git clone [URL]</code>
+                    </div>
+                </div>
+
+                <!-- Deploy -->
+                <div class="action-card">
+                    <h3 class="action-card-title">🚀 Deploy</h3>
+                    <div class="code-block" id="deployCommand">
+                        <button class="copy-button" onclick="copyCode('deployCommand')">Copy</button>
+                        <code># See README for deploy instructions</code>
+                    </div>
+                </div>
+
+                <!-- Testing -->
+                <div class="action-card">
+                    <h3 class="action-card-title">🧪 Testing</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">
+                        参考 GitHub 仓库中的详细测试说明。
+                    </p>
+                    <a href="#" id="testingLink" class="github-link" target="_blank" style="font-size: 0.875rem;">
+                        查看测试文档
+                    </a>
+                </div>
+
+                <!-- Cleanup -->
+                <div class="action-card">
+                    <h3 class="action-card-title">🧹 Cleanup</h3>
+                    <div class="code-block" id="cleanupCommand">
+                        <button class="copy-button" onclick="copyCode('cleanupCommand')">Copy</button>
+                        <code># See README for cleanup instructions</code>
+                    </div>
+                </div>
+
+                <!-- Additional Resources -->
+                <div class="action-card">
+                    <h3 class="action-card-title">📎 Additional Resources</h3>
+                    <ul class="resource-list" id="resourceList">
+                        <li class="resource-item">
+                            <a href="https://cloud.tencent.com/document/product/457" target="_blank">TKE 官方文档</a>
+                        </li>
+                        <li class="resource-item">
+                            <a href="https://kubernetes.io/docs/" target="_blank">Kubernetes 文档</a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        // 从 URL 获取 cookbook ID
+        const urlParams = new URLSearchParams(window.location.search);
+        const cookbookId = urlParams.get('id');
+
+        // Cookbook 数据配置 (从 cookbook-patterns.html 复制)
+        const cookbooks = [
+            {
+                id: 'create-cluster',
+                title: '创建 TKE 托管集群',
+                category: 'cluster',
+                language: 'Python',
+                resources: [],
+                tags: ['TKE API', 'VPC', 'Managed'],
+                github: {
+                    repo: 'tke-workshop/tke-workshop.github.io',
+                    path: 'cookbook/cluster',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook/cluster',
+                services: ['TKE', 'API']
+            },
+            {
+                id: 'deploy-nginx',
+                title: '部署 Nginx 应用',
+                category: 'workload',
+                language: 'Python',
+                resources: ['Deployment', 'Service'],
+                tags: ['K8s', 'LB', 'Health'],
+                github: {
+                    repo: 'tke-workshop/tke-workshop.github.io',
+                    path: 'cookbook/workload',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook/workload',
+                services: ['DEP', 'SVC']
+            },
+            {
+                id: 'deploy-gpu-pod',
+                title: '部署 GPU 工作负载',
+                category: 'gpu',
+                language: 'Python',
+                resources: ['Pod', 'SuperNode'],
+                tags: ['GPU', 'AI/ML', 'Cache'],
+                github: {
+                    repo: 'tke-workshop/tke-workshop.github.io',
+                    path: 'cookbook/supernode',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook/supernode',
+                services: ['GPU', 'POD']
+            },
+            {
+                id: 'tke-ai-playbook',
+                title: 'TKE AI Playbook',
+                category: 'gpu',
+                language: 'YAML',
+                resources: ['AI', 'ML'],
+                tags: ['AI/ML', 'GPU', 'Training'],
+                github: {
+                    repo: 'tkestack/tke-playbook',
+                    path: 'tke-ai-playbook',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-ai-playbook',
+                services: ['AI', 'TKE']
+            },
+            {
+                id: 'tke-chaos-playbook',
+                title: 'TKE Chaos Playbook',
+                category: 'testing',
+                language: 'YAML',
+                resources: ['Chaos', 'Testing'],
+                tags: ['Chaos', 'Fault', 'Resilience'],
+                github: {
+                    repo: 'tkestack/tke-playbook',
+                    path: 'tke-chaos-playbook',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-chaos-playbook',
+                services: ['CHO', 'TST']
+            },
+            {
+                id: 'tke-direct-upgrade',
+                title: 'TKE Direct Upgrade',
+                category: 'cluster',
+                language: 'Bash',
+                resources: ['Upgrade'],
+                tags: ['Upgrade', 'Migration', 'Version'],
+                github: {
+                    repo: 'tkestack/tke-playbook',
+                    path: 'tke-direct-upgrade',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-direct-upgrade',
+                services: ['TKE', 'UPG']
+            },
+            {
+                id: 'tke-get-client-ip',
+                title: 'TKE Get Client IP',
+                category: 'networking',
+                language: 'YAML',
+                resources: ['Service', 'Ingress'],
+                tags: ['Network', 'Client IP', 'LB'],
+                github: {
+                    repo: 'tkestack/tke-playbook',
+                    path: 'tke-get-client-ip',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-get-client-ip',
+                services: ['NET', 'LB']
+            },
+            {
+                id: 'tke-hybrid-node-architecture',
+                title: 'TKE Hybrid Node Architecture',
+                category: 'cluster',
+                language: 'YAML',
+                resources: ['Node', 'Architecture'],
+                tags: ['Hybrid', 'Node', 'Multi-Arch'],
+                github: {
+                    repo: 'tkestack/tke-playbook',
+                    path: 'tke-hybrid-node-architecture',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-hybrid-node-architecture',
+                services: ['NOD', 'ARC']
+            },
+            {
+                id: 'tke-karpenter',
+                title: 'TKE Karpenter',
+                category: 'cluster',
+                language: 'YAML',
+                resources: ['Autoscaling', 'Node'],
+                tags: ['Karpenter', 'Autoscaling', 'Node'],
+                github: {
+                    repo: 'tkestack/tke-playbook',
+                    path: 'tke-karpenter',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-karpenter',
+                services: ['KAR', 'NOD']
+            },
+            {
+                id: 'tke-terraform-examples',
+                title: 'TKE Terraform Examples',
+                category: 'cluster',
+                language: 'Terraform',
+                resources: ['IaC'],
+                tags: ['Terraform', 'IaC', 'Automation'],
+                github: {
+                    repo: 'tkestack/tke-playbook',
+                    path: 'tke-terraform-examples',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-terraform-examples',
+                services: ['TF', 'IAC']
+            },
+            {
+                id: 'tke-to-community-ingress',
+                title: 'TKE to Community Ingress',
+                category: 'networking',
+                language: 'YAML',
+                resources: ['Ingress'],
+                tags: ['Ingress', 'Migration', 'Community'],
+                github: {
+                    repo: 'tkestack/tke-playbook',
+                    path: 'tke-to-community-ingress',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-to-community-ingress',
+                services: ['ING', 'NET']
+            }
+        ];
+
+        // 查找当前 cookbook
+        const currentCookbook = cookbooks.find(c => c.id === cookbookId);
+
+        if (!currentCookbook) {
+            document.body.innerHTML = `
+                <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
+                    <h1 style="font-size: 3rem; margin-bottom: 1rem;">❌</h1>
+                    <h2>Cookbook 不存在</h2>
+                    <p style="margin: 1rem 0;">未找到 ID 为 "${cookbookId}" 的 Cookbook</p>
+                    <a href="cookbook-patterns.html" style="color: var(--accent-blue);">返回列表</a>
+                </div>
+            `;
+        } else {
+            // 渲染页面
+            initializePage(currentCookbook);
+        }
+
+        /**
+         * 初始化页面
+         */
+        async function initializePage(cookbook) {
+            // 设置标题
+            document.title = `${cookbook.title} - TKE Workshop`;
+            document.getElementById('cookbookTitle').textContent = cookbook.title;
+
+            // 设置 Meta 标签
+            const metaHtml = `
+                <span class="meta-badge">
+                    📦 ${getCategoryName(cookbook.category)}
+                </span>
+                <span class="meta-badge">
+                    💻 ${cookbook.language}
+                </span>
+                ${cookbook.tags.map(tag => `
+                    <span class="meta-badge">
+                        🏷️ ${tag}
+                    </span>
+                `).join('')}
+            `;
+            document.getElementById('cookbookMeta').innerHTML = metaHtml;
+
+            // 设置架构图
+            const diagramHtml = `
+                <div class="arch-component">
+                    <div class="arch-icon">${cookbook.services[0]}</div>
+                    <div class="arch-label">${cookbook.services[0]}</div>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-component">
+                    <div class="arch-icon" style="background: var(--gradient-2);">${cookbook.services[1] || '?'}</div>
+                    <div class="arch-label">${cookbook.services[1] || 'Service'}</div>
+                </div>
+            `;
+            document.getElementById('architectureDiagram').innerHTML = diagramHtml;
+
+            // 设置 GitHub 链接
+            document.getElementById('githubLink').href = cookbook.url;
+            document.getElementById('testingLink').href = cookbook.url;
+
+            // 设置下载命令
+            const cloneUrl = `https://github.com/${cookbook.github.repo}.git`;
+            document.getElementById('downloadCommand').innerHTML = `
+                <button class="copy-button" onclick="copyCode('downloadCommand')">Copy</button>
+                <code>git clone ${cloneUrl}
+cd ${cookbook.github.path}</code>
+            `;
+
+            // 加载 README
+            await loadReadme(cookbook);
+        }
+
+        /**
+         * 从 GitHub 加载 README
+         */
+        async function loadReadme(cookbook) {
+            const { repo, path, branch = 'main' } = cookbook.github;
+            const readmeUrl = `https://raw.githubusercontent.com/${repo}/${branch}/${path}/README.md`;
+
+            try {
+                const response = await fetch(readmeUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const markdownContent = await response.text();
+                
+                // 提取 summary (前 300 字符)
+                const summary = extractSummary(markdownContent);
+                document.getElementById('cookbookSummary').textContent = summary;
+
+                // 渲染完整 Markdown
+                marked.setOptions({
+                    highlight: function(code, lang) {
+                        if (lang && hljs.getLanguage(lang)) {
+                            return hljs.highlight(code, { language: lang }).value;
+                        }
+                        return hljs.highlightAuto(code).value;
+                    },
+                    breaks: true,
+                    gfm: true
+                });
+
+                const htmlContent = marked.parse(markdownContent);
+                document.getElementById('readmeContent').innerHTML = `<div class="markdown-body">${htmlContent}</div>`;
+
+                // 提取部署和清理命令
+                extractCommands(markdownContent);
+
+            } catch (error) {
+                console.error('Failed to load README:', error);
+                document.getElementById('readmeContent').innerHTML = `
+                    <div class="readme-error">
+                        无法加载 README 文档。<br>
+                        错误: ${error.message}<br>
+                        <a href="${cookbook.url}" target="_blank" style="color: #f5576c; text-decoration: underline;">
+                            直接访问 GitHub 查看
+                        </a>
+                    </div>
+                `;
+                document.getElementById('cookbookSummary').textContent = '无法加载描述。请访问 GitHub 仓库查看详细信息。';
+            }
+        }
+
+        /**
+         * 提取 README 摘要
+         */
+        function extractSummary(markdown) {
+            // 移除标题、代码块、链接
+            let content = markdown
+                .replace(/^#+\s+.*$/gm, '')
+                .replace(/```[\s\S]*?```/g, '')
+                .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
+                .replace(/!\[([^\]]*)\]\([^\)]+\)/g, '')
+                .replace(/<[^>]+>/g, '')
+                .trim();
+
+            // 提取前 300 字符
+            const lines = content.split('\n').filter(line => line.trim().length > 20);
+            let summary = '';
+            
+            for (const line of lines) {
+                summary += line.trim() + ' ';
+                if (summary.length > 300) break;
+            }
+            
+            summary = summary.substring(0, 300).trim();
+            if (summary.length === 300) {
+                summary += '...';
+            }
+            
+            return summary || '暂无描述信息。';
+        }
+
+        /**
+         * 提取部署和清理命令
+         */
+        function extractCommands(markdown) {
+            // 查找 "Deploy" 或 "部署" 相关的代码块
+            const deployMatch = markdown.match(/##\s*(Deploy|部署|Usage|使用)[\s\S]*?```(?:bash|sh)?\n([\s\S]*?)```/i);
+            if (deployMatch && deployMatch[2]) {
+                const deployCmd = deployMatch[2].trim();
+                document.getElementById('deployCommand').innerHTML = `
+                    <button class="copy-button" onclick="copyCode('deployCommand')">Copy</button>
+                    <code>${escapeHtml(deployCmd)}</code>
+                `;
+            }
+
+            // 查找 "Cleanup" 或 "清理" 相关的代码块
+            const cleanupMatch = markdown.match(/##\s*(Cleanup|清理|Delete|删除)[\s\S]*?```(?:bash|sh)?\n([\s\S]*?)```/i);
+            if (cleanupMatch && cleanupMatch[2]) {
+                const cleanupCmd = cleanupMatch[2].trim();
+                document.getElementById('cleanupCommand').innerHTML = `
+                    <button class="copy-button" onclick="copyCode('cleanupCommand')">Copy</button>
+                    <code>${escapeHtml(cleanupCmd)}</code>
+                `;
+            }
+        }
+
+        /**
+         * 复制代码到剪贴板
+         */
+        function copyCode(blockId) {
+            const block = document.getElementById(blockId);
+            const code = block.querySelector('code').textContent;
+            const button = block.querySelector('.copy-button');
+
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                button.textContent = 'Failed';
+            });
+        }
+
+        /**
+         * 辅助函数
+         */
+        function getCategoryName(cat) {
+            const names = {
+                'cluster': '集群管理',
+                'workload': '工作负载',
+                'gpu': 'GPU/AI',
+                'networking': '网络',
+                'storage': '存储',
+                'testing': '测试'
+            };
+            return names[cat] || cat;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
