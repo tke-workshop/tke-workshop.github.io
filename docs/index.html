@@ -421,137 +421,6 @@
       color: #a78bfa;
     }
 
-    /* ===== Learning Path Section ===== */
-    .learning-path {
-      padding: 6rem 2rem;
-      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-    }
-
-    .path-visualization {
-      max-width: 1200px;
-      margin: 3rem auto;
-      position: relative;
-    }
-
-    .path-timeline {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2rem;
-      position: relative;
-    }
-
-    @media (max-width: 1024px) {
-      .path-timeline {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 640px) {
-      .path-timeline {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .path-stage {
-      background: white;
-      border-radius: 20px;
-      padding: 2rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      transition: all 0.3s ease;
-      position: relative;
-      border: 2px solid transparent;
-    }
-
-    .path-stage:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 40px rgba(34, 211, 238, 0.2);
-      border-color: var(--accent);
-    }
-
-    .stage-number {
-      width: 50px;
-      height: 50px;
-      background: var(--gradient-2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.3rem;
-      color: white;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 4px 15px rgba(34, 211, 238, 0.3);
-    }
-
-    .stage-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 0.75rem;
-    }
-
-    .stage-desc {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
-      line-height: 1.6;
-    }
-
-    .stage-modules {
-      list-style: none;
-      margin-bottom: 1.5rem;
-    }
-
-    .stage-modules li {
-      padding: 0.5rem 0;
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .stage-modules li::before {
-      content: "✓";
-      color: var(--accent);
-      font-weight: bold;
-    }
-
-    .stage-progress {
-      margin-top: 1.5rem;
-    }
-
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      margin-bottom: 0.5rem;
-    }
-
-    .progress-bar {
-      height: 8px;
-      background: #e2e8f0;
-      border-radius: 9999px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: var(--gradient-2);
-      border-radius: 9999px;
-      transition: width 1s ease;
-    }
-
-    .stage-time {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      margin-top: 1rem;
-    }
-
     /* ===== Cookbook Carousel ===== */
     .cookbook-section {
       padding: 6rem 2rem;
@@ -829,7 +698,7 @@
       <ul class="nav-menu">
         <li><a href="#hero">首页</a></li>
         <li><a href="#demo">Agent Demo</a></li>
-        <li><a href="#learning">学习路径</a></li>
+        <li><a href="#learning">最佳实践</a></li>
         <li><a href="#cookbook">Cookbook</a></li>
         <li><a href="basics/">文档</a></li>
       </ul>
@@ -911,119 +780,118 @@
     </div>
   </section>
 
-  <!-- Learning Path Section -->
-  <section id="learning" class="learning-path">
+  <!-- Best Practices: Agent-Ready Features -->
+  <section id="learning" class="best-practices" style="padding: 6rem 2rem; background: white;">
     <div class="container">
       <div class="section-header">
-        <span class="section-eyebrow">🗺️ Learning Path</span>
-        <h2 class="section-title">从新手到专家的学习路径</h2>
+        <span class="section-eyebrow">🤖 Agent-Ready Features</span>
+        <h2 class="section-title">Agent-Ready 核心特性</h2>
         <p class="section-desc">
-          结构化的学习路径，每个阶段都有明确的目标和可量化的成果
+          让 AI Agent 能够理解、调用和自主执行云原生基础设施的核心能力
         </p>
       </div>
-      <div class="path-visualization">
-        <div class="path-timeline">
-          <!-- Stage 1: Beginner -->
-          <div class="path-stage">
-            <div class="stage-number">1</div>
-            <h3 class="stage-title">🌱 新手入门</h3>
-            <p class="stage-desc">掌握 TKE 基础操作，完成第一个集群部署</p>
-            <ul class="stage-modules">
-              <li>创建集群</li>
-              <li>添加节点</li>
-              <li>部署应用</li>
-              <li>暴露服务</li>
-            </ul>
-            <div class="stage-progress">
-              <div class="progress-label">
-                <span>完成度</span>
-                <span>100%</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: 100%;"></div>
-              </div>
-            </div>
-            <div class="stage-time">
-              ⏱️ 预计 2-3 小时
-            </div>
+      
+      <div class="best-practices-grid" style="max-width: 1000px; margin: 3rem auto; display: grid; gap: 2rem;">
+        
+        <!-- Feature 01 -->
+        <div class="feature-row" style="display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: start; background: rgba(56, 189, 248, 0.03); padding: 2rem; border-radius: 16px; border-left: 4px solid var(--accent);">
+          <div class="feature-number" style="background: rgba(34, 211, 238, 0.15); padding: 0.75rem 1.25rem; border-radius: 12px; font-weight: 800; color: var(--accent-dark); font-size: 1.5rem; min-width: 60px; text-align: center;">
+            01
           </div>
-
-          <!-- Stage 2: Intermediate -->
-          <div class="path-stage">
-            <div class="stage-number">2</div>
-            <h3 class="stage-title">🚀 中级开发</h3>
-            <p class="stage-desc">深入网络、存储、工作负载编排</p>
-            <ul class="stage-modules">
-              <li>Service & Ingress</li>
-              <li>持久化存储</li>
-              <li>StatefulSet</li>
-              <li>ConfigMap & Secret</li>
-            </ul>
-            <div class="stage-progress">
-              <div class="progress-label">
-                <span>完成度</span>
-                <span>40%</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: 40%;"></div>
-              </div>
-            </div>
-            <div class="stage-time">
-              ⏱️ 预计 5-8 小时
-            </div>
-          </div>
-
-          <!-- Stage 3: Advanced -->
-          <div class="path-stage">
-            <div class="stage-number">3</div>
-            <h3 class="stage-title">🎓 高级工程师</h3>
-            <p class="stage-desc">可观测性、安全加固、CI/CD</p>
-            <ul class="stage-modules">
-              <li>Prometheus 监控</li>
-              <li>RBAC 权限</li>
-              <li>Pod Security</li>
-              <li>日志收集</li>
-            </ul>
-            <div class="stage-progress">
-              <div class="progress-label">
-                <span>完成度</span>
-                <span>20%</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: 20%;"></div>
-              </div>
-            </div>
-            <div class="stage-time">
-              ⏱️ 预计 10-15 小时
-            </div>
-          </div>
-
-          <!-- Stage 4: Expert -->
-          <div class="path-stage">
-            <div class="stage-number">4</div>
-            <h3 class="stage-title">🏆 云原生专家</h3>
-            <p class="stage-desc">控制面管理、AI/ML 工作负载、性能优化</p>
-            <ul class="stage-modules">
-              <li>集群升级</li>
-              <li>GPU 调度</li>
-              <li>模型推理</li>
-              <li>成本优化</li>
-            </ul>
-            <div class="stage-progress">
-              <div class="progress-label">
-                <span>完成度</span>
-                <span>10%</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: 10%;"></div>
-              </div>
-            </div>
-            <div class="stage-time">
-              ⏱️ 预计 20-30 小时
-            </div>
+          <div class="feature-content">
+            <h3 style="margin: 0 0 0.75rem 0; font-size: 1.4rem; font-weight: 700; color: var(--text-primary);">零截图文档</h3>
+            <p style="margin: 0; color: var(--text-secondary); line-height: 1.8; font-size: 1.05rem;">
+              所有操作步骤均使用<strong style="color: var(--accent-dark);">纯文本、代码块和 YAML/JSON 配置</strong>描述，AI Agent 可直接解析和执行，无需 OCR 或图像识别。告别截图依赖，拥抱机器可读的文档标准。
+            </p>
           </div>
         </div>
+
+        <!-- Feature 02 -->
+        <div class="feature-row" style="display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: start; background: rgba(56, 189, 248, 0.03); padding: 2rem; border-radius: 16px; border-left: 4px solid var(--accent);">
+          <div class="feature-number" style="background: rgba(34, 211, 238, 0.15); padding: 0.75rem 1.25rem; border-radius: 12px; font-weight: 800; color: var(--accent-dark); font-size: 1.5rem; min-width: 60px; text-align: center;">
+            02
+          </div>
+          <div class="feature-content">
+            <h3 style="margin: 0 0 0.75rem 0; font-size: 1.4rem; font-weight: 700; color: var(--text-primary);">结构化 API 文档</h3>
+            <p style="margin: 0; color: var(--text-secondary); line-height: 1.8; font-size: 1.05rem;">
+              每个 API 调用都包含：<strong style="color: var(--accent-dark);">请求参数表 + 完整 cURL 示例 + 响应结构 + 错误码说明</strong>。Agent 可直接生成调用代码，无需人工翻译接口文档，显著降低集成成本。
+            </p>
+          </div>
+        </div>
+
+        <!-- Feature 03 -->
+        <div class="feature-row" style="display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: start; background: rgba(56, 189, 248, 0.03); padding: 2rem; border-radius: 16px; border-left: 4px solid var(--accent);">
+          <div class="feature-number" style="background: rgba(34, 211, 238, 0.15); padding: 0.75rem 1.25rem; border-radius: 12px; font-weight: 800; color: var(--accent-dark); font-size: 1.5rem; min-width: 60px; text-align: center;">
+            03
+          </div>
+          <div class="feature-content">
+            <h3 style="margin: 0 0 0.75rem 0; font-size: 1.4rem; font-weight: 700; color: var(--text-primary);">声明式优先</h3>
+            <p style="margin: 0; color: var(--text-secondary); line-height: 1.8; font-size: 1.05rem;">
+              提供 <strong style="color: var(--accent-dark);">Kubernetes YAML、Terraform HCL、Pulumi 代码</strong>等声明式配置，Agent 可理解意图并生成可复现的基础设施代码。从命令式操作转向声明式管理，提升自动化水平。
+            </p>
+          </div>
+        </div>
+
+        <!-- Feature 04 -->
+        <div class="feature-row" style="display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: start; background: rgba(56, 189, 248, 0.03); padding: 2rem; border-radius: 16px; border-left: 4px solid var(--accent);">
+          <div class="feature-number" style="background: rgba(34, 211, 238, 0.15); padding: 0.75rem 1.25rem; border-radius: 12px; font-weight: 800; color: var(--accent-dark); font-size: 1.5rem; min-width: 60px; text-align: center;">
+            04
+          </div>
+          <div class="feature-content">
+            <h3 style="margin: 0 0 0.75rem 0; font-size: 1.4rem; font-weight: 700; color: var(--text-primary);">可复现演习场景</h3>
+            <p style="margin: 0; color: var(--text-secondary); line-height: 1.8; font-size: 1.05rem;">
+              每个场景都有明确的<strong style="color: var(--accent-dark);">前置条件 → 执行步骤 → 验证标准 → 清理流程</strong>，Agent 可端到端自动执行。完整的 Few-shot 示例库，让 AI Agent 快速学习并应用到实际生产场景。
+            </p>
+          </div>
+        </div>
+
       </div>
+
+      <!-- Comparison Table -->
+      <div style="max-width: 1100px; margin: 4rem auto; padding: 2rem; background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(99, 102, 241, 0.05)); border-radius: 20px;">
+        <h3 style="text-align: center; font-size: 1.8rem; font-weight: 700; margin-bottom: 2rem; color: var(--text-primary);">
+          与传统产品文档的区别
+        </h3>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+            <thead>
+              <tr style="background: rgba(56, 189, 248, 0.15);">
+                <th style="padding: 1.25rem; text-align: left; border-bottom: 3px solid var(--accent); font-weight: 700;">维度</th>
+                <th style="padding: 1.25rem; text-align: left; border-bottom: 3px solid var(--accent); font-weight: 700;">传统文档（面向人）</th>
+                <th style="padding: 1.25rem; text-align: left; border-bottom: 3px solid var(--accent); font-weight: 700; color: var(--accent-dark);">TKE Workshop（Agent-First）✨</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background: white;">
+                <td style="padding: 1.25rem; border-bottom: 1px solid #e2e8f0; font-weight: 600;">文档形式</td>
+                <td style="padding: 1.25rem; border-bottom: 1px solid #e2e8f0;">大量截图 + 控制台操作步骤</td>
+                <td style="padding: 1.25rem; border-bottom: 1px solid #e2e8f0;"><strong style="color: var(--accent-dark);">纯文本 + 代码块 + 结构化数据</strong></td>
+              </tr>
+              <tr style="background: rgba(56, 189, 248, 0.03);">
+                <td style="padding: 1.25rem; border-bottom: 1px solid #e2e8f0; font-weight: 600;">调用方式</td>
+                <td style="padding: 1.25rem; border-bottom: 1px solid #e2e8f0;">主要是控制台点击流程</td>
+                <td style="padding: 1.25rem; border-bottom: 1px solid #e2e8f0;"><strong style="color: var(--accent-dark);">API + CLI + IaC 多维度示例</strong></td>
+              </tr>
+              <tr style="background: white;">
+                <td style="padding: 1.25rem; border-bottom: 1px solid #e2e8f0; font-weight: 600;">可复现性</td>
+                <td style="padding: 1.25rem; border-bottom: 1px solid #e2e8f0;">依赖手动操作，难以自动化</td>
+                <td style="padding: 1.25rem; border-bottom: 1px solid #e2e8f0;"><strong style="color: var(--accent-dark);">声明式配置，一键复现</strong></td>
+              </tr>
+              <tr style="background: rgba(56, 189, 248, 0.03);">
+                <td style="padding: 1.25rem; border-bottom: 1px solid #e2e8f0; font-weight: 600;">错误处理</td>
+                <td style="padding: 1.25rem; border-bottom: 1px solid #e2e8f0;">简单的错误提示</td>
+                <td style="padding: 1.25rem; border-bottom: 1px solid #e2e8f0;"><strong style="color: var(--accent-dark);">结构化错误码 + 修复建议 + 验证脚本</strong></td>
+              </tr>
+              <tr style="background: white;">
+                <td style="padding: 1.25rem; font-weight: 600;">Agent 友好度</td>
+                <td style="padding: 1.25rem;">❌ 需要 OCR/图像理解</td>
+                <td style="padding: 1.25rem;"><strong style="color: var(--accent-dark);">✅ 可直接解析和执行</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   </section>
 
