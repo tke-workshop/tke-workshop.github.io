@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookbook Detail - TKE Workshop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Markdown 渲染支持 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.0/marked.min.js"></script>
+    
+    <!-- 代码高亮支持 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <!-- Mermaid 流程图支持 -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#3b82f6',
+                primaryTextColor: '#1e293b',
+                primaryBorderColor: '#e2e8f0',
+                lineColor: '#3b82f6',
+                secondaryColor: '#22d3ee',
+                tertiaryColor: '#14b8a6'
+            }
+        });
+        window.mermaid = mermaid;
+    </script>
+    
+    <style>
+        :root {
+            /* 浅色主题 - 与主页保持一致 */
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --accent: #22d3ee;
+            --accent-dark: #0891b2;
+            --bg-light: #f8fafc;
+            --bg-white: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --card-hover: #f1f5f9;
+            
+            /* 渐变色 */
+            --gradient-1: linear-gradient(135deg, #3b82f6 0%, #22d3ee 100%);
+            --gradient-2: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --gradient-3: linear-gradient(135deg, #22d3ee 0%, #14b8a6 100%);
+            
+            /* 步骤颜色 */
+            --color-setup: #3b82f6;
+            --color-deploy: #10b981;
+            --color-test: #f59e0b;
+            --color-cleanup: #ef4444;
+            
+            /* 状态颜色 */
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #22d3ee;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 导航栏 - 与主页保持一致 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .navbar-container {
+            width: 100%;
+            max-width: 1400px;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            transition: width 0.3s;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        /* 页面容器 */
+        .page-container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            padding: 2rem;
+            padding-top: 6rem; /* 为导航栏留空间 */
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* ===== 1. Hero Section ===== */
+        .hero-section {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-1);
+        }
+
+        .cookbook-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .cookbook-description {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .cta-button.primary {
+            background: var(--gradient-1);
+            color: white;
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .cta-button.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(102, 126, 234, 0.6);
+        }
+
+        .cta-button.secondary {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--accent-blue);
+        }
+
+        .cta-button.secondary:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-blue);
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .meta-tags {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-tag {
+            padding: 0.5rem 1rem;
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--accent-dark);
+        }
+
+        .meta-time {
+            padding: 0.5rem 1rem;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--accent-orange);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ===== 2. Architecture Section ===== */
+        .architecture-section {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .architecture-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            min-height: 200px;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(34, 211, 238, 0.05) 100%);
+            border-radius: 12px;
+            flex-wrap: wrap;
+        }
+
+        .arch-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .arch-icon {
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .arch-icon:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.35);
+        }
+
+        .arch-icon::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 16px;
+            padding: 3px;
+            background: var(--gradient-1);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.5;
+        }
+
+        .arch-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .arch-arrow {
+            color: var(--accent-blue);
+            font-size: 3rem;
+            opacity: 0.7;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ===== 3. Step-by-Step Guide (Tab) ===== */
+        .step-guide-section {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .tab-header {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-light);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 1.25rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            position: relative;
+        }
+
+        .tab-button:hover {
+            background: rgba(59, 130, 246, 0.08);
+            color: var(--text-primary);
+        }
+
+        .tab-button.active {
+            background: var(--bg-white);
+            color: var(--text-primary);
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-blue);
+        }
+
+        .tab-button.setup.active::after { background: var(--color-setup); }
+        .tab-button.deploy.active::after { background: var(--color-deploy); }
+        .tab-button.test.active::after { background: var(--color-test); }
+        .tab-button.cleanup.active::after { background: var(--color-cleanup); }
+
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .step-item {
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .code-block {
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .code-block code {
+            color: #22d3ee;
+            display: block;
+            white-space: pre;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .copy-button:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        .copy-button.copied {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: var(--accent-green);
+            animation: copySuccess 0.3s ease-out;
+        }
+
+        @keyframes copySuccess {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .step-note {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--accent-orange);
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+
+        .step-note::before {
+            content: '💡 提示: ';
+            color: var(--accent-orange);
+            font-weight: 600;
+        }
+
+        .step-warning {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid var(--accent-red);
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+
+        .step-warning::before {
+            content: '⚠️ 注意: ';
+            color: var(--accent-red);
+            font-weight: 600;
+        }
+
+        .tab-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-button {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            color: var(--accent-blue);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            background: var(--card-hover);
+            border-color: var(--accent-blue);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* ===== 4. Full README (Collapsible) ===== */
+        .readme-section {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .readme-header {
+            padding: 1.5rem 2rem;
+            background: var(--bg-light);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .readme-header:hover {
+            background: var(--card-hover);
+        }
+
+        .readme-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .expand-icon {
+            font-size: 1.5rem;
+            color: var(--accent-blue);
+            transition: transform 0.3s;
+        }
+
+        .readme-header.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .readme-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+
+        .readme-content.expanded {
+            max-height: 10000px;
+        }
+
+        .markdown-body {
+            padding: 2rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .markdown-body h1,
+        .markdown-body h2,
+        .markdown-body h3,
+        .markdown-body h4 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .markdown-body h1 { font-size: 2rem; }
+        .markdown-body h2 { font-size: 1.75rem; }
+        .markdown-body h3 { font-size: 1.5rem; }
+        .markdown-body h4 { font-size: 1.25rem; }
+
+        .markdown-body p {
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body ul,
+        .markdown-body ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+
+        .markdown-body code {
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.2rem 0.4rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--accent-cyan);
+        }
+
+        .markdown-body pre {
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            color: #e2e8f0;
+        }
+
+        .markdown-body blockquote {
+            border-left: 4px solid var(--accent-blue);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: var(--text-secondary);
+        }
+
+        .markdown-body img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .markdown-body a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .markdown-body a:hover {
+            color: var(--accent-cyan);
+            text-decoration: underline;
+        }
+
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .markdown-body th,
+        .markdown-body td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .markdown-body th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+        }
+
+        .readme-loading {
+            padding: 4rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .readme-loading::before {
+            content: '⏳';
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== 5. Related Resources ===== */
+        .resources-section {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .resource-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .resource-card:hover {
+            background: var(--card-hover);
+            transform: translateY(-2px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        }
+
+        .resource-card h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .resource-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .resource-link:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar-container {
+                padding: 0 1rem;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .page-container {
+                padding: 1rem;
+                padding-top: 5rem;
+            }
+
+            .cookbook-title {
+                font-size: 2rem;
+            }
+
+            .tab-header {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                padding: 1rem;
+            }
+
+            .architecture-diagram {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .arch-arrow {
+                transform: rotate(90deg);
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .cta-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+
+        /* 加载状态 */
+        .skeleton {
+            background: linear-gradient(
+                90deg,
+                var(--bg-light) 0%,
+                var(--card-hover) 50%,
+                var(--bg-light) 100%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s ease-in-out infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ===== 优化新增: Toast 提示系统 ===== */
+        .toast {
+            position: fixed;
+            top: 5rem;
+            right: 2rem;
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease-out;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast-icon {
+            font-size: 1.2rem;
+        }
+
+        .toast-message {
+            color: var(--text-primary);
+        }
+
+        .toast-success { border-left: 4px solid var(--accent-green); }
+        .toast-error { border-left: 4px solid var(--accent-red); }
+        .toast-warning { border-left: 4px solid var(--accent-orange); }
+        .toast-info { border-left: 4px solid var(--accent-blue); }
+
+        /* ===== 优化新增: 步骤勾选 ===== */
+        .step-item {
+            display: flex;
+            gap: 1rem;
+            transition: all 0.3s;
+        }
+
+        .step-checkbox-container {
+            flex-shrink: 0;
+            padding-top: 0.5rem;
+        }
+
+        .step-checkbox {
+            display: none;
+        }
+
+        .step-checkbox-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--bg-white);
+            color: transparent;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .step-checkbox:checked + .step-checkbox-label {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: white;
+        }
+
+        .step-checkbox:checked ~ .step-main {
+            opacity: 0.7;
+        }
+
+        .step-checkbox-label:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .step-main {
+            flex: 1;
+            transition: opacity 0.3s;
+        }
+
+        /* ===== 优化新增: 进度条 ===== */
+        .progress-container {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-bar-wrapper {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-blue);
+            transition: all 0.5s ease-out;
+            border-radius: 4px;
+        }
+
+        .progress-text {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-family: 'JetBrains Mono', monospace;
+            text-align: center;
+        }
+
+        /* ===== 优化新增: 键盘快捷键提示 ===== */
+        .keyboard-hints {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            gap: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            animation: fadeInUp 0.5s ease-out 1s forwards;
+        }
+
+        .keyboard-hints kbd {
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.2rem 0.5rem;
+            font-family: inherit;
+            color: var(--accent-blue);
+        }
+
+        @media (max-width: 768px) {
+            .keyboard-hints {
+                display: none;
+            }
+            
+            .toast {
+                right: 1rem;
+                left: 1rem;
+                top: auto;
+                bottom: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 - 与主页保持一致 -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="./" class="logo">TKE Workshop</a>
+            <ul class="nav-menu">
+                <li><a href="./#hero">首页</a></li>
+                <li><a href="./cookbook-patterns.html">Cookbook</a></li>
+                <li><a href="https://github.com/tke-workshop/tke-workshop.github.io" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <!-- 1. Hero Section -->
+        <section class="hero-section" id="heroSection">
+            <h1 class="cookbook-title" id="cookbookTitle">Loading...</h1>
+            <p class="cookbook-description" id="cookbookDescription">
+                正在加载 Cookbook 信息...
+            </p>
+            
+            <div class="hero-actions">
+                <button class="cta-button primary" onclick="scrollToSteps()">
+                    🚀 快速开始
+                </button>
+                <button class="cta-button secondary" onclick="toggleReadme()">
+                    📖 查看完整文档
+                </button>
+            </div>
+
+            <div class="hero-meta">
+                <div class="meta-tags" id="metaTags">
+                    <!-- Tags will be inserted here -->
+                </div>
+                <div class="meta-time" id="metaTime" style="display: none;">
+                    ⏱️ <span id="estimatedTime">15 分钟</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Architecture Visualization -->
+        <section class="architecture-section" id="architectureSection">
+            <h2 class="section-title">📐 架构流程</h2>
+            <div class="architecture-diagram" id="architectureDiagram">
+                <!-- Architecture will be rendered here -->
+            </div>
+        </section>
+
+        <!-- 3. Step-by-Step Guide -->
+        <section class="step-guide-section" id="stepGuideSection">
+            <div class="tab-header">
+                <button class="tab-button setup active" onclick="switchTab('setup')" data-tab="setup">
+                    📦 Setup
+                </button>
+                <button class="tab-button deploy" onclick="switchTab('deploy')" data-tab="deploy">
+                    🚀 Deploy
+                </button>
+                <button class="tab-button test" onclick="switchTab('test')" data-tab="test">
+                    🧪 Test
+                </button>
+                <button class="tab-button cleanup" onclick="switchTab('cleanup')" data-tab="cleanup">
+                    🧹 Cleanup
+                </button>
+            </div>
+
+            <div class="tab-content active" id="setup-content">
+                <div class="step-item skeleton" style="height: 200px;"></div>
+                <div class="step-item skeleton" style="height: 200px;"></div>
+            </div>
+            <div class="tab-content" id="deploy-content"></div>
+            <div class="tab-content" id="test-content"></div>
+            <div class="tab-content" id="cleanup-content"></div>
+        </section>
+
+        <!-- 4. Full README (Collapsible) -->
+        <section class="readme-section">
+            <div class="readme-header" onclick="toggleReadme()">
+                <h2>📚 查看完整文档</h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="readme-content" id="readmeContent">
+                <div class="readme-loading">正在加载详细文档...</div>
+            </div>
+        </section>
+
+        <!-- 5. Related Resources -->
+        <section class="resources-section">
+            <h2 class="section-title">🔗 相关资源</h2>
+            <div class="resources-grid" id="resourcesGrid">
+                <!-- Resources will be inserted here -->
+            </div>
+        </section>
+    </div>
+
+    <!-- 键盘快捷键提示 -->
+    <div class="keyboard-hints">
+        <span><kbd>1-4</kbd> 切换 Tab</span>
+        <span><kbd>←→</kbd> 上下步</span>
+        <span><kbd>Esc</kbd> 返回</span>
+    </div>
+
+    <script>
+        // Cookbook 数据
+        const cookbooks = [
+            {
+                id: 'create-cluster',
+                title: '创建 TKE 托管集群',
+                description: '使用 Python SDK 创建 TKE 集群，配置网络、安全组，并验证节点就绪状态',
+                category: 'cluster',
+                language: 'Python',
+                tags: ['TKE API', 'VPC', 'Managed'],
+                estimatedTime: '15 分钟',
+                github: {
+                    repo: 'tke-workshop/tke-workshop.github.io',
+                    path: 'cookbook/cluster',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook/cluster',
+                services: [
+                    { label: 'Python SDK', icon: '🐍' },
+                    { label: 'TKE API', icon: '☁️' },
+                    { label: 'K8s 集群', icon: '🚢' }
+                ]
+            },
+            {
+                id: 'deploy-nginx',
+                title: '部署 Nginx 应用',
+                description: '使用 Python SDK 部署 Nginx 应用到 TKE 集群，配置 LoadBalancer Service 和健康检查',
+                category: 'workload',
+                language: 'Python',
+                tags: ['K8s', 'LB', 'Health Check'],
+                estimatedTime: '10 分钟',
+                github: {
+                    repo: 'tke-workshop/tke-workshop.github.io',
+                    path: 'cookbook/workload',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook/workload',
+                services: [
+                    { label: 'kubectl', icon: '⚙️' },
+                    { label: 'Deployment', icon: '📦' },
+                    { label: 'LoadBalancer', icon: '🔀' }
+                ]
+            },
+            {
+                id: 'deploy-gpu-pod',
+                title: '部署 GPU 工作负载',
+                description: '在 TKE SuperNode 上部署 GPU Pod，使用镜像缓存加速，验证 GPU 可用性',
+                category: 'gpu',
+                language: 'Python',
+                tags: ['GPU', 'AI/ML', 'SuperNode'],
+                estimatedTime: '20 分钟',
+                github: {
+                    repo: 'tke-workshop/tke-workshop.github.io',
+                    path: 'cookbook/supernode',
+                    branch: 'main'
+                },
+                url: 'https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook/supernode',
+                services: [
+                    { label: 'SuperNode', icon: '🚀' },
+                    { label: 'GPU Pod', icon: '🎮' },
+                    { label: 'AI Training', icon: '🤖' }
+                ]
+            }
+        ];
+
+        // 当前 cookbook
+        const urlParams = new URLSearchParams(window.location.search);
+        const cookbookId = urlParams.get('id');
+        const currentCookbook = cookbooks.find(c => c.id === cookbookId);
+
+        if (!currentCookbook) {
+            document.body.innerHTML = `
+                <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
+                    <h1 style="font-size: 3rem; margin-bottom: 1rem;">❌</h1>
+                    <h2>Cookbook 不存在</h2>
+                    <p style="margin: 1rem 0;">未找到 ID 为 "${cookbookId}" 的 Cookbook</p>
+                    <a href="cookbook-patterns.html" style="color: var(--accent-blue);">返回列表</a>
+                </div>
+            `;
+        } else {
+            initializePage(currentCookbook);
+        }
+
+        /**
+         * 初始化页面
+         */
+        async function initializePage(cookbook) {
+            // 设置标题和描述
+            document.title = `${cookbook.title} - TKE Workshop`;
+            document.getElementById('cookbookTitle').textContent = cookbook.title;
+            document.getElementById('cookbookDescription').textContent = cookbook.description;
+
+            // 设置 Meta 标签
+            const metaTagsHtml = `
+                <span class="meta-tag">📦 ${getCategoryName(cookbook.category)}</span>
+                <span class="meta-tag">💻 ${cookbook.language}</span>
+                ${cookbook.tags.map(tag => `<span class="meta-tag">🏷️ ${tag}</span>`).join('')}
+            `;
+            document.getElementById('metaTags').innerHTML = metaTagsHtml;
+
+            // 设置预计时间
+            if (cookbook.estimatedTime) {
+                document.getElementById('metaTime').style.display = 'flex';
+                document.getElementById('estimatedTime').textContent = cookbook.estimatedTime;
+            }
+
+            // 渲染架构图
+            renderArchitecture(cookbook.services);
+
+            // 加载 README 并提取步骤
+            await loadReadmeAndExtractSteps(cookbook);
+
+            // 设置相关资源
+            renderResources(cookbook);
+        }
+
+        /**
+         * 渲染架构图
+         */
+        function renderArchitecture(services) {
+            const diagram = document.getElementById('architectureDiagram');
+            let html = '';
+
+            services.forEach((service, index) => {
+                html += `
+                    <div class="arch-node">
+                        <div class="arch-icon" style="background: ${getGradientByIndex(index)}">
+                            ${service.icon}
+                        </div>
+                        <div class="arch-label">${service.label}</div>
+                    </div>
+                `;
+                
+                if (index < services.length - 1) {
+                    html += '<div class="arch-arrow">→</div>';
+                }
+            });
+
+            diagram.innerHTML = html;
+        }
+
+        function getGradientByIndex(index) {
+            const gradients = [
+                'var(--gradient-1)',
+                'var(--gradient-2)',
+                'var(--gradient-3)'
+            ];
+            return gradients[index % gradients.length];
+        }
+
+        /**
+         * 加载 README 并提取步骤
+         */
+        async function loadReadmeAndExtractSteps(cookbook) {
+            const { repo, path, branch = 'main' } = cookbook.github;
+            const readmeUrl = `https://raw.githubusercontent.com/${repo}/${branch}/${path}/README.md`;
+
+            try {
+                const response = await fetch(readmeUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const markdownContent = await response.text();
+
+                // 提取步骤
+                const steps = extractSteps(markdownContent);
+                renderSteps(steps);
+
+                // 渲染完整 README
+                marked.setOptions({
+                    highlight: function(code, lang) {
+                        if (lang && hljs.getLanguage(lang)) {
+                            return hljs.highlight(code, { language: lang }).value;
+                        }
+                        return hljs.highlightAuto(code).value;
+                    },
+                    breaks: true,
+                    gfm: true
+                });
+
+                const htmlContent = marked.parse(markdownContent);
+                document.getElementById('readmeContent').innerHTML = `
+                    <div class="markdown-body">${htmlContent}</div>
+                `;
+
+            } catch (error) {
+                console.error('Failed to load README:', error);
+                document.getElementById('readmeContent').innerHTML = `
+                    <div class="readme-loading" style="color: var(--accent-red);">
+                        ⚠️ 无法加载 README 文档<br>
+                        <a href="${cookbook.url}" target="_blank" style="color: var(--accent-blue);">
+                            直接访问 GitHub
+                        </a>
+                    </div>
+                `;
+            }
+        }
+
+        /**
+         * 从 Markdown 提取步骤
+         */
+        function extractSteps(markdown) {
+            const sections = {
+                setup: [],
+                deploy: [],
+                test: [],
+                cleanup: []
+            };
+
+            // 提取 Setup
+            const setupMatch = markdown.match(/##\s*(Setup|安装|环境准备|Prerequisites|前置要求)([\s\S]*?)(?=##|$)/i);
+            if (setupMatch) {
+                sections.setup = parseStepSection(setupMatch[2]);
+            }
+
+            // 提取 Deploy
+            const deployMatch = markdown.match(/##\s*(Deploy|部署|Usage|使用|Quick Start)([\s\S]*?)(?=##|$)/i);
+            if (deployMatch) {
+                sections.deploy = parseStepSection(deployMatch[2]);
+            }
+
+            // 提取 Test
+            const testMatch = markdown.match(/##\s*(Test|测试|Verify|验证)([\s\S]*?)(?=##|$)/i);
+            if (testMatch) {
+                sections.test = parseStepSection(testMatch[2]);
+            }
+
+            // 提取 Cleanup
+            const cleanupMatch = markdown.match(/##\s*(Cleanup|清理|Delete|删除)([\s\S]*?)(?=##|$)/i);
+            if (cleanupMatch) {
+                sections.cleanup = parseStepSection(cleanupMatch[2]);
+            }
+
+            return sections;
+        }
+
+        function parseStepSection(sectionText) {
+            const steps = [];
+            const codeBlocks = [];
+            const regex = /```(?:bash|sh|python|yaml)?\n([\s\S]*?)```/g;
+            let match;
+
+            while ((match = regex.exec(sectionText)) !== null) {
+                codeBlocks.push({
+                    command: match[1].trim(),
+                    startIndex: match.index
+                });
+            }
+
+            const textParts = sectionText.split(/```[\s\S]*?```/);
+
+            codeBlocks.forEach((block, index) => {
+                const description = textParts[index]?.trim() || '';
+                
+                // 提取标题 (### 或数字开头)
+                const titleMatch = description.match(/###\s*(.*?)(?:\n|$)/) || 
+                                 description.match(/^(\d+[\.\)].*?)(?:\n|$)/);
+                
+                const title = titleMatch ? titleMatch[1].trim() : `步骤 ${index + 1}`;
+                const desc = description.replace(/###\s*.*?\n/, '').replace(/^\d+[\.\)].*?\n/, '').trim();
+
+                steps.push({
+                    title: title.replace(/^\d+[\.\)]\s*/, ''),
+                    description: desc.substring(0, 200),
+                    command: block.command
+                });
+            });
+
+            return steps;
+        }
+
+        /**
+         * 渲染步骤
+         */
+        function renderSteps(stepsData) {
+            ['setup', 'deploy', 'test', 'cleanup'].forEach(section => {
+                const container = document.getElementById(`${section}-content`);
+                const steps = stepsData[section];
+
+                if (steps.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                            <p>📝 暂无 ${section} 步骤说明</p>
+                            <p style="margin-top: 0.5rem; font-size: 0.9rem;">请查看完整文档了解详情</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = `
+                    <div class="progress-container">
+                        <div class="progress-bar-wrapper">
+                            <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+                        </div>
+                        <div class="progress-text" id="progressText">0 / ${steps.length} 步骤已完成</div>
+                    </div>
+                `;
+                
+                steps.forEach((step, index) => {
+                    html += `
+                        <div class="step-item">
+                            <div class="step-checkbox-container">
+                                <input 
+                                    type="checkbox" 
+                                    class="step-checkbox" 
+                                    id="${section}-step-${index}" 
+                                    data-step-index="${index}"
+                                    onchange="updateProgress()"
+                                />
+                                <label for="${section}-step-${index}" class="step-checkbox-label">✓</label>
+                            </div>
+                            
+                            <div class="step-main">
+                                <div class="step-header">
+                                    <div class="step-number">${index + 1}</div>
+                                    <div class="step-title">${step.title}</div>
+                                </div>
+                                ${step.description ? `<p class="step-description">${step.description}</p>` : ''}
+                                <div class="code-block">
+                                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                                    <code>${escapeHtml(step.command)}</code>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                // 添加导航
+                html += `
+                    <div class="tab-navigation">
+                        <button class="nav-button" onclick="prevTab('${section}')" ${section === 'setup' ? 'disabled' : ''}>
+                            ← 上一步
+                        </button>
+                        <button class="nav-button" onclick="nextTab('${section}')" ${section === 'cleanup' ? 'disabled' : ''}>
+                            下一步 →
+                        </button>
+                    </div>
+                `;
+
+                container.innerHTML = html;
+            });
+            
+            // 恢复进度
+            setTimeout(() => restoreProgress(), 500);
+        }
+
+        /**
+         * Tab 切换
+         */
+        function switchTab(tabName) {
+            // 移除所有 active
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // 添加 active
+            document.querySelector(`.tab-button[data-tab="${tabName}"]`)?.classList.add('active');
+            const targetContent = document.getElementById(`${tabName}-content`);
+            if (targetContent) {
+                targetContent.classList.add('active');
+                
+                // 更新进度条
+                setTimeout(() => updateProgress(), 100);
+                
+                // 保存进度
+                saveProgress();
+            }
+        }
+
+        function prevTab(currentTab) {
+            const tabs = ['setup', 'deploy', 'test', 'cleanup'];
+            const currentIndex = tabs.indexOf(currentTab);
+            if (currentIndex > 0) {
+                switchTab(tabs[currentIndex - 1]);
+            }
+        }
+
+        function nextTab(currentTab) {
+            const tabs = ['setup', 'deploy', 'test', 'cleanup'];
+            const currentIndex = tabs.indexOf(currentTab);
+            if (currentIndex < tabs.length - 1) {
+                switchTab(tabs[currentIndex + 1]);
+            }
+        }
+
+        /**
+         * README 折叠/展开
+         */
+        function toggleReadme() {
+            const header = document.querySelector('.readme-header');
+            const content = document.getElementById('readmeContent');
+            
+            header.classList.toggle('expanded');
+            content.classList.toggle('expanded');
+        }
+
+        /**
+         * 滚动到步骤指南
+         */
+        function scrollToSteps() {
+            document.getElementById('stepGuideSection').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        /**
+         * 复制代码
+         */
+        function copyCode(button) {
+            const codeBlock = button.parentElement;
+            const code = codeBlock.querySelector('code').textContent;
+
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                // 震动反馈 (移动端)
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(50);
+                }
+                
+                showToast('命令已复制到剪贴板', 'success');
+
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                button.textContent = 'Failed';
+                showToast('复制失败，请手动选择', 'error');
+            });
+        }
+
+        /**
+         * 渲染相关资源
+         */
+        function renderResources(cookbook) {
+            const grid = document.getElementById('resourcesGrid');
+            const resources = [
+                {
+                    title: '📦 相关 Cookbook',
+                    links: [
+                        { text: 'GitHub 仓库', url: cookbook.url }
+                    ]
+                },
+                {
+                    title: '📚 官方文档',
+                    links: [
+                        { text: 'TKE 官方文档', url: 'https://cloud.tencent.com/document/product/457' },
+                        { text: 'Kubernetes 文档', url: 'https://kubernetes.io/docs/' }
+                    ]
+                },
+                {
+                    title: '💬 反馈与问题',
+                    links: [
+                        { text: '提交 Issue', url: 'https://github.com/tke-workshop/tke-workshop.github.io/issues' },
+                        { text: '编辑此页面', url: `${cookbook.url}/edit/main/README.md` }
+                    ]
+                }
+            ];
+
+            let html = '';
+            resources.forEach(resource => {
+                html += `
+                    <div class="resource-card">
+                        <h4>${resource.title}</h4>
+                        ${resource.links.map(link => `
+                            <a href="${link.url}" target="_blank" class="resource-link">
+                                ${link.text} →
+                            </a>
+                        `).join('<br>')}
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        /**
+         * 辅助函数
+         */
+        function getCategoryName(cat) {
+            const names = {
+                'cluster': '集群管理',
+                'workload': '工作负载',
+                'gpu': 'GPU/AI',
+                'networking': '网络',
+                'storage': '存储',
+                'testing': '测试'
+            };
+            return names[cat] || cat;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ===== 优化新增: Toast 提示系统 =====
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const icon = {
+                'info': 'ℹ️',
+                'success': '✅',
+                'warning': '⚠️',
+                'error': '❌'
+            }[type];
+            
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <span class="toast-message">${message}</span>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 100);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ===== 优化新增: 进度保存与恢复 =====
+        function saveProgress() {
+            const currentTab = document.querySelector('.tab-button.active')?.getAttribute('data-tab') || 'setup';
+            const progress = {
+                currentTab,
+                completedSteps: {},
+                lastVisit: new Date().toISOString()
+            };
+            
+            ['setup', 'deploy', 'test', 'cleanup'].forEach(tab => {
+                const checkboxes = document.querySelectorAll(`#${tab}-content .step-checkbox:checked`);
+                progress.completedSteps[tab] = Array.from(checkboxes).map(cb => parseInt(cb.dataset.stepIndex));
+            });
+            
+            const allProgress = JSON.parse(localStorage.getItem('cookbook-progress') || '{}');
+            allProgress[cookbookId] = progress;
+            localStorage.setItem('cookbook-progress', JSON.stringify(allProgress));
+        }
+
+        function restoreProgress() {
+            const allProgress = JSON.parse(localStorage.getItem('cookbook-progress') || '{}');
+            const progress = allProgress[cookbookId];
+            
+            if (progress) {
+                switchTab(progress.currentTab);
+                
+                setTimeout(() => {
+                    Object.entries(progress.completedSteps).forEach(([tab, steps]) => {
+                        steps.forEach(stepIndex => {
+                            const checkbox = document.querySelector(`#${tab}-content .step-checkbox[data-step-index="${stepIndex}"]`);
+                            if (checkbox) {
+                                checkbox.checked = true;
+                                updateProgress();
+                            }
+                        });
+                    });
+                    
+                    showToast('已恢复上次进度', 'info');
+                }, 500);
+            }
+        }
+
+        // ===== 优化新增: 进度条更新 =====
+        function updateProgress() {
+            const currentTab = document.querySelector('.tab-button.active')?.getAttribute('data-tab');
+            if (!currentTab) return;
+            
+            const totalSteps = document.querySelectorAll(`#${currentTab}-content .step-checkbox`).length;
+            const completedSteps = document.querySelectorAll(`#${currentTab}-content .step-checkbox:checked`).length;
+            
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            
+            if (!progressBar || !progressText) return;
+            
+            const percentage = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
+            
+            progressBar.style.width = `${percentage}%`;
+            progressText.textContent = `${completedSteps} / ${totalSteps} 步骤已完成`;
+            
+            if (percentage < 33) {
+                progressBar.style.background = 'var(--accent-red)';
+            } else if (percentage < 66) {
+                progressBar.style.background = 'var(--accent-orange)';
+            } else if (percentage < 100) {
+                progressBar.style.background = 'var(--accent-blue)';
+            } else {
+                progressBar.style.background = 'var(--accent-green)';
+            }
+            
+            saveProgress();
+        }
+
+        // ===== 优化新增: 键盘快捷键 =====
+        document.addEventListener('keydown', (e) => {
+            // 数字键 1-4 切换 Tab
+            if (e.key >= '1' && e.key <= '4') {
+                const tabs = ['setup', 'deploy', 'test', 'cleanup'];
+                switchTab(tabs[e.key - 1]);
+                e.preventDefault();
+                showToast(`切换到 ${tabs[e.key - 1]}`, 'info');
+            }
+            
+            // Esc 返回列表
+            if (e.key === 'Escape') {
+                window.location.href = 'cookbook-patterns.html';
+            }
+            
+            // 左右箭头切换 Tab
+            const currentTab = document.querySelector('.tab-button.active')?.getAttribute('data-tab');
+            if (currentTab) {
+                if (e.key === 'ArrowLeft') {
+                    prevTab(currentTab);
+                } else if (e.key === 'ArrowRight') {
+                    nextTab(currentTab);
+                }
+            }
+        });
+
+        // ===== 优化新增: 移动端手势支持 =====
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const minSwipeDistance = 50;
+
+        document.getElementById('stepGuideSection')?.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        document.getElementById('stepGuideSection')?.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleGesture();
+        }, { passive: true });
+
+        function handleGesture() {
+            const diff = touchEndX - touchStartX;
+            
+            if (Math.abs(diff) > minSwipeDistance) {
+                const currentTab = document.querySelector('.tab-button.active')?.getAttribute('data-tab');
+                
+                if (diff < 0) {
+                    nextTab(currentTab);
+                } else {
+                    prevTab(currentTab);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
