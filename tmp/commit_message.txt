@@ -1,0 +1,28 @@
+feat: implement cookbook detail page with full README rendering
+
+- Created cookbook-detail.html with comprehensive layout
+- Left content area: title, meta tags, architecture diagram, full README
+- Right action panel: GitHub link, download/deploy/cleanup commands, resources
+- Auto-fetch README from GitHub repositories using Raw Content API
+- Markdown rendering with Marked.js and code highlighting with Highlight.js
+- Extract deploy and cleanup commands from README automatically
+- Copy-to-clipboard functionality for all code blocks
+- Responsive design for desktop/tablet/mobile devices
+- Sticky sidebar on desktop for easy access to actions
+- Loading states and error handling
+- Modified cookbook-patterns.html to link to detail page
+
+Features:
+- Full README content display with proper Markdown rendering
+- Architecture flow diagram visualization
+- One-click copy for download, deploy, cleanup commands
+- GitHub repository links
+- Additional learning resources
+- Beautiful dark theme with gradient accents
+- Smooth animations and hover effects
+
+Technical stack:
+- Marked.js v11.1.0 for Markdown parsing
+- Highlight.js v11.9.0 for syntax highlighting
+- Vanilla JavaScript (no framework dependencies)
+- CSS Grid for responsive layout

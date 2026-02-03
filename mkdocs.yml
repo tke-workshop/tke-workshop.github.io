@@ -140,6 +140,11 @@ nav:
     - 存储配置: data/storage.md
     - 数据处理: data/data-processing.md
   
+  - 网络 🚧:
+    - networking/index.md
+    - Service 管理:
+      - LoadBalancer Service: networking/service/03-loadbalancer-service.md
+  
   - Cookbook Collection: https://tke-workshop.github.io/cookbook-patterns.html
 
 # ==================== 插件配置 ====================
