@@ -979,337 +979,73 @@
         </div>
     </div>
 
+    <!-- Cookbook 数据加载器 -->
+    <script src="./js/cookbook-loader.js"></script>
+    <script src="./data/cookbook-config.js"></script>
+
     <script>
-        // Cookbook 数据配置 - 每个 cookbook 必须关联唯一的 GitHub 仓库
-        const cookbooks = [
-            // ========== 原有的 Workshop Cookbooks ==========
-            {
-                id: 'create-cluster',
-                title: '创建 TKE 托管集群',
-                description: '加载中...', // 将从 GitHub README 自动加载
-                category: 'cluster',
-                language: 'Python',
-                resources: [],
-                tags: ['TKE API', 'VPC', 'Managed'],
-                // GitHub 仓库配置 (必须)
-                github: {
-                    repo: 'tke-workshop/tke-workshop.github.io',  // 仓库路径
-                    path: 'cookbook/cluster',                      // 子目录路径
-                    branch: 'main'                                 // 分支名
-                },
-                url: 'https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook/cluster',
-                services: ['TKE', 'API']
-            },
-            {
-                id: 'deploy-nginx',
-                title: '部署 Nginx 应用',
-                description: '加载中...',
-                category: 'workload',
-                language: 'Python',
-                resources: ['Deployment', 'Service'],
-                tags: ['K8s', 'LB', 'Health'],
-                github: {
-                    repo: 'tke-workshop/tke-workshop.github.io',
-                    path: 'cookbook/workload',
-                    branch: 'main'
-                },
-                url: 'https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook/workload',
-                services: ['DEP', 'SVC']
-            },
-            {
-                id: 'deploy-gpu-pod',
-                title: '部署 GPU 工作负载',
-                description: '加载中...',
-                category: 'gpu',
-                language: 'Python',
-                resources: ['Pod', 'SuperNode'],
-                tags: ['GPU', 'AI/ML', 'Cache'],
-                github: {
-                    repo: 'tke-workshop/tke-workshop.github.io',
-                    path: 'cookbook/supernode',
-                    branch: 'main'
-                },
-                url: 'https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook/supernode',
-                services: ['GPU', 'POD']
-            },
+        // ===== 全局变量 =====
+        let allCookbooks = []; // 所有加载的 cookbooks (原始数据)
+        let filteredCookbooks = []; // 当前筛选后的 cookbooks
+        const loader = new CookbookLoader();
 
-            // ========== TKEStack Playbook Cookbooks ==========
-            {
-                id: 'tke-ai-playbook',
-                title: 'TKE AI Playbook',
-                description: '加载中...',
-                category: 'gpu',
-                language: 'YAML',
-                resources: ['AI', 'ML'],
-                tags: ['AI/ML', 'GPU', 'Training'],
-                github: {
-                    repo: 'tkestack/tke-playbook',
-                    path: 'tke-ai-playbook',
-                    branch: 'main'
-                },
-                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-ai-playbook',
-                services: ['AI', 'TKE']
-            },
-            {
-                id: 'tke-chaos-playbook',
-                title: 'TKE Chaos Playbook',
-                description: '加载中...',
-                category: 'testing',
-                language: 'YAML',
-                resources: ['Chaos', 'Testing'],
-                tags: ['Chaos', 'Fault', 'Resilience'],
-                github: {
-                    repo: 'tkestack/tke-playbook',
-                    path: 'tke-chaos-playbook',
-                    branch: 'main'
-                },
-                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-chaos-playbook',
-                services: ['CHO', 'TST']
-            },
-            {
-                id: 'tke-direct-upgrade',
-                title: 'TKE Direct Upgrade',
-                description: '加载中...',
-                category: 'cluster',
-                language: 'Bash',
-                resources: ['Upgrade'],
-                tags: ['Upgrade', 'Migration', 'Version'],
-                github: {
-                    repo: 'tkestack/tke-playbook',
-                    path: 'tke-direct-upgrade',
-                    branch: 'main'
-                },
-                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-direct-upgrade',
-                services: ['TKE', 'UPG']
-            },
-            {
-                id: 'tke-get-client-ip',
-                title: 'TKE Get Client IP',
-                description: '加载中...',
-                category: 'networking',
-                language: 'YAML',
-                resources: ['Service', 'Ingress'],
-                tags: ['Network', 'Client IP', 'LB'],
-                github: {
-                    repo: 'tkestack/tke-playbook',
-                    path: 'tke-get-client-ip',
-                    branch: 'main'
-                },
-                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-get-client-ip',
-                services: ['NET', 'LB']
-            },
-            {
-                id: 'tke-hybrid-node-architecture',
-                title: 'TKE Hybrid Node Architecture',
-                description: '加载中...',
-                category: 'cluster',
-                language: 'YAML',
-                resources: ['Node', 'Architecture'],
-                tags: ['Hybrid', 'Node', 'Multi-Arch'],
-                github: {
-                    repo: 'tkestack/tke-playbook',
-                    path: 'tke-hybrid-node-architecture',
-                    branch: 'main'
-                },
-                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-hybrid-node-architecture',
-                services: ['NOD', 'ARC']
-            },
-            {
-                id: 'tke-karpenter',
-                title: 'TKE Karpenter',
-                description: '加载中...',
-                category: 'cluster',
-                language: 'YAML',
-                resources: ['Autoscaling', 'Node'],
-                tags: ['Karpenter', 'Autoscaling', 'Node'],
-                github: {
-                    repo: 'tkestack/tke-playbook',
-                    path: 'tke-karpenter',
-                    branch: 'main'
-                },
-                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-karpenter',
-                services: ['KAR', 'NOD']
-            },
-            {
-                id: 'tke-terraform-examples',
-                title: 'TKE Terraform Examples',
-                description: '加载中...',
-                category: 'cluster',
-                language: 'Terraform',
-                resources: ['IaC'],
-                tags: ['Terraform', 'IaC', 'Automation'],
-                github: {
-                    repo: 'tkestack/tke-playbook',
-                    path: 'tke-terraform-examples',
-                    branch: 'main'
-                },
-                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-terraform-examples',
-                services: ['TF', 'IAC']
-            },
-            {
-                id: 'tke-to-community-ingress',
-                title: 'TKE to Community Ingress',
-                description: '加载中...',
-                category: 'networking',
-                language: 'YAML',
-                resources: ['Ingress'],
-                tags: ['Ingress', 'Migration', 'Community'],
-                github: {
-                    repo: 'tkestack/tke-playbook',
-                    path: 'tke-to-community-ingress',
-                    branch: 'main'
-                },
-                url: 'https://github.com/tkestack/tke-playbook/tree/main/tke-to-community-ingress',
-                services: ['ING', 'NET']
-            }
-        ];
-
-        // GitHub API 配置
-        const GITHUB_API_BASE = 'https://api.github.com';
-        const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com';
-        
-        // 缓存机制 - 避免频繁请求 GitHub API
-        const readmeCache = new Map();
-        const CACHE_DURATION = 5 * 60 * 1000; // 5分钟缓存
-
-        /**
-         * 从 GitHub 仓库获取 README 内容
-         * @param {Object} github - GitHub 配置对象
-         * @returns {Promise<string>} - README 文本内容
-         */
-        async function fetchGitHubReadme(github) {
-            const { repo, path, branch = 'main' } = github;
-            const cacheKey = `${repo}/${path}/${branch}`;
-            
-            // 检查缓存
-            const cached = readmeCache.get(cacheKey);
-            if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-                return cached.content;
-            }
-
+        // ===== 初始化函数 =====
+        async function init() {
             try {
-                // 优先尝试获取 README.md
-                const readmeUrl = `${GITHUB_RAW_BASE}/${repo}/${branch}/${path}/README.md`;
-                const response = await fetch(readmeUrl);
+                console.log('🚀 Initializing Cookbook Collection...');
+                console.log('📦 Cookbook config loaded:', cookbookConfig.length, 'items');
                 
-                if (!response.ok) {
-                    // 如果 README.md 不存在，尝试其他常见文件名
-                    const alternatives = ['readme.md', 'Readme.md', 'README.MD'];
-                    for (const alt of alternatives) {
-                        const altUrl = `${GITHUB_RAW_BASE}/${repo}/${branch}/${path}/${alt}`;
-                        const altResponse = await fetch(altUrl);
-                        if (altResponse.ok) {
-                            const content = await altResponse.text();
-                            return parseReadmeDescription(content);
-                        }
-                    }
-                    throw new Error(`README not found in ${repo}/${path}`);
-                }
+                // 1. 从配置文件加载所有 Cookbook (先用占位描述渲染)
+                allCookbooks = cookbookConfig.map(config => ({
+                    ...config,
+                    description: '⏳ 正在从 GitHub 加载描述...',
+                    loaded: false,
+                    url: `https://github.com/${config.github.repo}/tree/${config.github.branch}/${config.github.path || ''}`
+                }));
                 
-                const readmeContent = await response.text();
-                const description = parseReadmeDescription(readmeContent);
+                filteredCookbooks = [...allCookbooks];
                 
-                // 缓存结果
-                readmeCache.set(cacheKey, {
-                    content: description,
-                    timestamp: Date.now()
-                });
+                // 2. 先渲染初始状态
+                renderCookbooks(filteredCookbooks);
+                updateCount(filteredCookbooks.length);
                 
-                return description;
+                // 3. 并行加载所有 Cookbook 的详细信息
+                console.log('📡 Loading cookbook details from GitHub...');
+                const enrichedCookbooks = await loader.loadAll(cookbookConfig);
+                
+                // 4. 更新全局数据
+                allCookbooks = enrichedCookbooks.map(cb => ({
+                    ...cb,
+                    loaded: true
+                }));
+                
+                filteredCookbooks = [...allCookbooks];
+                
+                // 5. 重新渲染 (显示真实描述)
+                renderCookbooks(filteredCookbooks);
+                updateCount(filteredCookbooks.length);
+                
+                console.log('✅ Cookbook Collection initialized successfully!');
+                console.log('📊 Loaded cookbooks:', allCookbooks.length);
+                
             } catch (error) {
-                console.error(`Failed to fetch README for ${repo}/${path}:`, error);
-                return '无法加载描述信息。请查看 GitHub 仓库获取详细信息。';
+                console.error('❌ Failed to initialize Cookbook Collection:', error);
+                
+                // 降级处理: 使用配置文件中的基础信息
+                allCookbooks = cookbookConfig.map(config => ({
+                    ...config,
+                    description: '无法从 GitHub 加载描述。请查看仓库获取详细信息。',
+                    loaded: false,
+                    url: `https://github.com/${config.github.repo}/tree/${config.github.branch}/${config.github.path || ''}`
+                }));
+                
+                filteredCookbooks = [...allCookbooks];
+                renderCookbooks(filteredCookbooks);
+                updateCount(filteredCookbooks.length);
             }
         }
 
-        /**
-         * 解析 Markdown README 内容，提取描述信息
-         * @param {string} markdown - Markdown 原始内容
-         * @returns {string} - 提取的描述文本
-         */
-        function parseReadmeDescription(markdown) {
-            // 移除 YAML front matter (如果存在)
-            let content = markdown.replace(/^---\n[\s\S]*?\n---\n/, '');
-            
-            // 移除标题 (# 开头的行)
-            content = content.replace(/^#+\s+.*$/gm, '');
-            
-            // 移除代码块
-            content = content.replace(/```[\s\S]*?```/g, '');
-            
-            // 移除行内代码
-            content = content.replace(/`[^`]+`/g, '');
-            
-            // 移除 Markdown 链接，保留链接文本
-            content = content.replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1');
-            
-            // 移除图片
-            content = content.replace(/!\[([^\]]*)\]\([^\)]+\)/g, '');
-            
-            // 移除 HTML 标签
-            content = content.replace(/<[^>]+>/g, '');
-            
-            // 移除多余的空行和空格
-            content = content.replace(/\n{3,}/g, '\n\n').trim();
-            
-            // 提取前 200 个字符作为描述
-            const lines = content.split('\n').filter(line => line.trim().length > 20);
-            let description = '';
-            
-            for (const line of lines) {
-                description += line.trim() + ' ';
-                if (description.length > 200) break;
-            }
-            
-            // 截断到合适的长度
-            description = description.substring(0, 200).trim();
-            if (description.length === 200) {
-                description += '...';
-            }
-            
-            return description || '暂无描述信息。';
-        }
-
-        /**
-         * 初始化所有 Cookbook 的描述信息
-         */
-        async function initializeCookbooks() {
-            // 先渲染初始状态（显示"加载中..."）
-            renderCookbooks(cookbooks);
-            updateCount(cookbooks.length);
-            
-            // 并行加载所有 README
-            const promises = cookbooks.map(async (cookbook) => {
-                if (cookbook.github) {
-                    try {
-                        const description = await fetchGitHubReadme(cookbook.github);
-                        cookbook.description = description;
-                        cookbook.loaded = true;
-                    } catch (error) {
-                        console.error(`Failed to load README for ${cookbook.id}:`, error);
-                        cookbook.description = '加载失败。请查看 GitHub 仓库获取详细信息。';
-                        cookbook.loaded = false;
-                    }
-                } else {
-                    console.warn(`Cookbook ${cookbook.id} missing GitHub configuration`);
-                    cookbook.description = '⚠️ 配置错误：缺少 GitHub 仓库信息';
-                    cookbook.loaded = false;
-                }
-            });
-            
-            // 等待所有加载完成
-            await Promise.all(promises);
-            
-            // 重新渲染，显示实际内容
-            renderCookbooks(cookbooks);
-        }
-
-        // 初始化
-        function init() {
-            initializeCookbooks();
-        }
-
-        // 渲染卡片
+        // ===== 渲染函数 =====
         function renderCookbooks(items) {
             const grid = document.getElementById('cookbookGrid');
             const emptyState = document.getElementById('emptyState');
@@ -1324,37 +1060,76 @@
             emptyState.style.display = 'none';
             
             grid.innerHTML = items.map(cookbook => {
-                // 判断描述状态
+                // 判断描述加载状态
                 let descriptionClass = '';
-                let description = cookbook.description;
+                let description = cookbook.description || '暂无描述';
                 
-                if (description === '加载中...') {
+                if (!cookbook.loaded && description.includes('加载')) {
                     descriptionClass = 'loading';
-                } else if (description.includes('加载失败') || description.includes('配置错误')) {
+                } else if (description.includes('失败') || description.includes('错误') || description.includes('无法')) {
                     descriptionClass = 'error';
                 }
                 
+                // 获取架构图的服务节点 (新结构是对象数组)
+                const services = cookbook.services || [];
+                const service1 = services[0]?.icon || services[0] || '☁️';
+                const service2 = services[1]?.icon || services[1] || '🚀';
+                
+                // Badge 和来源标识
+                let badgeHTML = '';
+                if (cookbook.badge) {
+                    const badgeColors = {
+                        'NEW': 'background: rgba(34, 211, 238, 0.1); border-color: rgba(34, 211, 238, 0.5); color: #0891b2;',
+                        'HOT': 'background: rgba(245, 87, 108, 0.1); border-color: rgba(245, 87, 108, 0.5); color: #f5576c;',
+                        'UPDATED': 'background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.5); color: #3b82f6;'
+                    };
+                    const style = badgeColors[cookbook.badge] || badgeColors['NEW'];
+                    badgeHTML = `<span class="card-badge" style="${style}">${cookbook.badge}</span>`;
+                } else {
+                    badgeHTML = `<span class="card-badge">${getCategoryName(cookbook.category)}</span>`;
+                }
+                
+                // 项目来源标识
+                const repoName = cookbook.github.repo;
+                const isOfficial = repoName.includes('tke-workshop');
+                const sourceLabel = isOfficial ? 
+                    '<span style="color: #3b82f6; font-weight: 600;">📘 官方</span>' : 
+                    '<span style="color: #0891b2; font-weight: 600;">🌟 社区</span>';
+                
+                // 验证徽章
+                const verifiedBadge = cookbook.verified ? 
+                    '<span style="color: #10b981; font-size: 0.875rem;">✓ 已验证</span>' : '';
+                
+                // 预计时间
+                const timeEstimate = cookbook.estimatedTime ? 
+                    `<span style="color: var(--text-secondary); font-size: 0.875rem;">⏱️ ${cookbook.estimatedTime}</span>` : '';
+                
                 return `
                 <div class="cookbook-card" data-cookbook-id="${cookbook.id}">
-                    <span class="card-badge">${getCategoryName(cookbook.category)}</span>
+                    ${badgeHTML}
                     
                     <div class="card-diagram">
                         <div class="diagram-flow">
-                            <div class="service-icon">${cookbook.services[0]}</div>
+                            <div class="service-icon">${service1}</div>
                             <span class="flow-arrow">→</span>
-                            <div class="service-icon">${cookbook.services[1] || '?'}</div>
+                            <div class="service-icon">${service2}</div>
                         </div>
                     </div>
 
                     <div class="card-content">
-                        <h3 class="card-title">${cookbook.title}</h3>
+                        <h3 class="card-title">${cookbook.icon || ''} ${cookbook.title}</h3>
+                        
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; font-size: 0.875rem;">
+                            ${sourceLabel}
+                            ${verifiedBadge}
+                            ${timeEstimate}
+                        </div>
                         
                         <p class="card-description ${descriptionClass}">${description}</p>
                         
                         <div class="card-tags">
                             <span class="tag language">${cookbook.language}</span>
-                            ${cookbook.resources.map(res => `<span class="tag resource">${res}</span>`).join('')}
-                            ${cookbook.tags.slice(0, 2).map(tag => `<span class="tag category">${tag}</span>`).join('')}
+                            ${(cookbook.tags || []).slice(0, 3).map(tag => `<span class="tag category">${tag}</span>`).join('')}
                         </div>
                         
                         <a href="cookbook-detail-v2.html?id=${cookbook.id}" class="view-pattern">查看详情 View Details</a>
@@ -1364,6 +1139,7 @@
             }).join('');
         }
 
+        // ===== 工具函数 =====
         function getCategoryName(cat) {
             const names = {
                 'cluster': 'CLUSTER',
@@ -1380,57 +1156,89 @@
             document.getElementById('totalCount').textContent = `${count} patterns`;
         }
 
+        // ===== 筛选函数 =====
         function filterCookbooks() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const selectedCategories = Array.from(document.querySelectorAll('[id^="cat-"]:checked')).map(cb => cb.value);
             const selectedLanguages = Array.from(document.querySelectorAll('[id^="lang-"]:checked')).map(cb => cb.value);
             const selectedResources = Array.from(document.querySelectorAll('[id^="res-"]:checked')).map(cb => cb.value);
             
-            const filtered = cookbooks.filter(cookbook => {
+            filteredCookbooks = allCookbooks.filter(cookbook => {
+                // 搜索匹配
                 const matchesSearch = !searchTerm || 
                     cookbook.title.toLowerCase().includes(searchTerm) ||
-                    cookbook.description.toLowerCase().includes(searchTerm) ||
-                    cookbook.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+                    (cookbook.description || '').toLowerCase().includes(searchTerm) ||
+                    (cookbook.tags || []).some(tag => tag.toLowerCase().includes(searchTerm));
                 
-                const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(cookbook.category);
-                const matchesLanguage = selectedLanguages.length === 0 || selectedLanguages.includes(cookbook.language);
+                // 分类匹配
+                const matchesCategory = selectedCategories.length === 0 || 
+                    selectedCategories.includes(cookbook.category);
+                
+                // 语言匹配
+                const matchesLanguage = selectedLanguages.length === 0 || 
+                    selectedLanguages.includes(cookbook.language);
+                
+                // 资源类型匹配 (注意: 新配置没有 resources 字段,使用 tags)
                 const matchesResource = selectedResources.length === 0 || 
-                    cookbook.resources.some(res => selectedResources.includes(res));
+                    (cookbook.tags || []).some(tag => selectedResources.some(res => tag.includes(res)));
                 
                 return matchesSearch && matchesCategory && matchesLanguage && matchesResource;
             });
             
-            renderCookbooks(filtered);
-            updateCount(filtered.length);
+            renderCookbooks(filteredCookbooks);
+            updateCount(filteredCookbooks.length);
         }
 
         function resetFilters() {
             document.getElementById('searchInput').value = '';
             document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-            filterCookbooks();
+            filteredCookbooks = [...allCookbooks];
+            renderCookbooks(filteredCookbooks);
+            updateCount(filteredCookbooks.length);
         }
 
-        /**
-         * 刷新所有 README 描述（清除缓存）
-         */
+        // ===== 刷新函数 =====
         async function refreshAllReadmes() {
-            // 清除缓存
-            readmeCache.clear();
+            console.log('🔄 Refreshing all cookbook descriptions...');
             
-            // 重置所有描述为"加载中..."
-            cookbooks.forEach(cookbook => {
-                cookbook.description = '加载中...';
+            // 清除缓存
+            loader.clearCache();
+            
+            // 重置所有描述
+            allCookbooks.forEach(cookbook => {
+                cookbook.description = '⏳ 正在重新加载...';
                 cookbook.loaded = false;
             });
             
-            // 重新渲染
-            renderCookbooks(cookbooks);
+            filteredCookbooks = [...allCookbooks];
+            renderCookbooks(filteredCookbooks);
             
             // 重新加载
-            await initializeCookbooks();
+            try {
+                const enrichedCookbooks = await loader.loadAll(cookbookConfig);
+                allCookbooks = enrichedCookbooks.map(cb => ({ ...cb, loaded: true }));
+                filteredCookbooks = [...allCookbooks];
+                renderCookbooks(filteredCookbooks);
+                updateCount(filteredCookbooks.length);
+                console.log('✅ Refresh completed!');
+            } catch (error) {
+                console.error('❌ Refresh failed:', error);
+            }
         }
 
-        // 初始化页面
+        // ===== 搜索框回车支持 =====
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        filterCookbooks();
+                    }
+                });
+            }
+        });
+
+        // ===== 页面加载时初始化 =====
         init();
     </script>
 </body>

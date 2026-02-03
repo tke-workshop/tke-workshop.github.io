@@ -165,6 +165,37 @@ python3 workload/deploy_nginx.py \
 
 See [Cookbook README](cookbook/README.md) for more examples.
 
+### Cookbook Web Interface
+
+The project includes a **dynamic Cookbook aggregation platform** that showcases executable examples from multiple GitHub repositories:
+
+**Features**:
+- 🔗 **Dynamic Content Loading** — Aggregates cookbooks from external GitHub repos
+- 📦 **Multi-Level Caching** — LocalStorage (1 hour) + GitHub API fallback
+- 🚀 **Zero Maintenance** — Auto-syncs with source repositories
+- 🎯 **Easy Extension** — Add new projects by editing config file
+
+**Access**:
+- **List Page**: [https://tke-workshop.github.io/cookbook-patterns.html](https://tke-workshop.github.io/cookbook-patterns.html)
+- **Add New Cookbook**: Edit `docs/data/cookbook-config.js`
+
+**Example Configuration**:
+```javascript
+{
+  id: 'your-cookbook',
+  title: 'Your TKE Cookbook',
+  category: 'cluster|workload|gpu|networking|storage|testing',
+  language: 'Python|Go|Bash|YAML',
+  tags: ['tag1', 'tag2'],
+  github: {
+    repo: 'owner/repo-name',
+    path: 'subfolder',  // Optional
+    branch: 'main'
+  },
+  icon: '🚀'
+}
+```
+
 ## Contributing
 
 We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
@@ -183,7 +214,13 @@ tke-workshop.github.io/
 │   ├── security/        # Security module (RBAC, policies)
 │   ├── ai-ml/           # AI/ML module (GPU scheduling)
 │   ├── data/            # Data module (storage, databases)
-│   └── control-plane/   # Control plane module (upgrades, HA)
+│   ├── control-plane/   # Control plane module (upgrades, HA)
+│   ├── cookbook-patterns.html      # 🍳 Cookbook list page
+│   ├── cookbook-detail-v2.html     # Cookbook detail page
+│   ├── data/
+│   │   └── cookbook-config.js      # Cookbook configuration
+│   └── js/
+│       └── cookbook-loader.js      # Dynamic GitHub content loader
 ├── cookbook/            # 🍳 Executable scripts (Agent-ready)
 │   ├── cluster/         # Cluster operations (create, delete)
 │   ├── node/            # Node management (add, remove)
