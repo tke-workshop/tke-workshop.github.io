@@ -165,6 +165,37 @@ python3 workload/deploy_nginx.py \
 
 更多示例请参考 [Cookbook README](cookbook/README.md)。
 
+### Cookbook 网页界面
+
+本项目包含一个**动态 Cookbook 聚合平台**，展示来自多个 GitHub 仓库的可执行示例：
+
+**核心特性**:
+- 🔗 **动态内容加载** — 聚合来自外部 GitHub 仓库的 Cookbook
+- 📦 **多级缓存机制** — LocalStorage（1小时） + GitHub API 降级
+- 🚀 **零维护成本** — 自动同步源仓库内容
+- 🎯 **轻松扩展** — 通过编辑配置文件即可添加新项目
+
+**访问入口**:
+- **列表页**: [https://tke-workshop.github.io/cookbook-patterns.html](https://tke-workshop.github.io/cookbook-patterns.html)
+- **添加新 Cookbook**: 编辑 `docs/data/cookbook-config.js`
+
+**配置示例**:
+```javascript
+{
+  id: 'your-cookbook',
+  title: '你的 TKE Cookbook',
+  category: 'cluster|workload|gpu|networking|storage|testing',
+  language: 'Python|Go|Bash|YAML',
+  tags: ['标签1', '标签2'],
+  github: {
+    repo: 'owner/repo-name',
+    path: 'subfolder',  // 可选
+    branch: 'main'
+  },
+  icon: '🚀'
+}
+```
+
 ## 参与贡献
 
 欢迎各种形式的贡献！详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
@@ -183,7 +214,13 @@ tke-workshop.github.io/
 │   ├── security/        # 安全（RBAC、策略）
 │   ├── ai-ml/           # AI/ML（GPU 调度）
 │   ├── data/            # Data（存储、数据库）
-│   └── control-plane/   # 控制面（升级、高可用）
+│   ├── control-plane/   # 控制面（升级、高可用）
+│   ├── cookbook-patterns.html      # 🍳 Cookbook 列表页
+│   ├── cookbook-detail-v2.html     # Cookbook 详情页
+│   ├── data/
+│   │   └── cookbook-config.js      # Cookbook 配置文件
+│   └── js/
+│       └── cookbook-loader.js      # 动态 GitHub 内容加载器
 ├── cookbook/            # 🍳 可执行脚本（Agent 就绪）
 │   ├── cluster/         # 集群操作（创建、删除）
 │   ├── node/            # 节点管理（添加、移除）

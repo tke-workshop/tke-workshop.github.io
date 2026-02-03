@@ -1205,87 +1205,83 @@
         <span><kbd>Esc</kbd> 返回</span>
     </div>
 
+    <!-- Cookbook 数据加载器 -->
+    <script src="./js/cookbook-loader.js"></script>
+    <script src="./data/cookbook-config.js"></script>
+
     <script>
-        // Cookbook 数据
-        const cookbooks = [
-            {
-                id: 'create-cluster',
-                title: '创建 TKE 托管集群',
-                description: '使用 Python SDK 创建 TKE 集群，配置网络、安全组，并验证节点就绪状态',
-                category: 'cluster',
-                language: 'Python',
-                tags: ['TKE API', 'VPC', 'Managed'],
-                estimatedTime: '15 分钟',
-                github: {
-                    repo: 'tke-workshop/tke-workshop.github.io',
-                    path: 'cookbook/cluster',
-                    branch: 'main'
-                },
-                url: 'https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook/cluster',
-                services: [
-                    { label: 'Python SDK', icon: '🐍' },
-                    { label: 'TKE API', icon: '☁️' },
-                    { label: 'K8s 集群', icon: '🚢' }
-                ]
-            },
-            {
-                id: 'deploy-nginx',
-                title: '部署 Nginx 应用',
-                description: '使用 Python SDK 部署 Nginx 应用到 TKE 集群，配置 LoadBalancer Service 和健康检查',
-                category: 'workload',
-                language: 'Python',
-                tags: ['K8s', 'LB', 'Health Check'],
-                estimatedTime: '10 分钟',
-                github: {
-                    repo: 'tke-workshop/tke-workshop.github.io',
-                    path: 'cookbook/workload',
-                    branch: 'main'
-                },
-                url: 'https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook/workload',
-                services: [
-                    { label: 'kubectl', icon: '⚙️' },
-                    { label: 'Deployment', icon: '📦' },
-                    { label: 'LoadBalancer', icon: '🔀' }
-                ]
-            },
-            {
-                id: 'deploy-gpu-pod',
-                title: '部署 GPU 工作负载',
-                description: '在 TKE SuperNode 上部署 GPU Pod，使用镜像缓存加速，验证 GPU 可用性',
-                category: 'gpu',
-                language: 'Python',
-                tags: ['GPU', 'AI/ML', 'SuperNode'],
-                estimatedTime: '20 分钟',
-                github: {
-                    repo: 'tke-workshop/tke-workshop.github.io',
-                    path: 'cookbook/supernode',
-                    branch: 'main'
-                },
-                url: 'https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook/supernode',
-                services: [
-                    { label: 'SuperNode', icon: '🚀' },
-                    { label: 'GPU Pod', icon: '🎮' },
-                    { label: 'AI Training', icon: '🤖' }
-                ]
+        // ===== 全局变量 =====
+        const loader = new CookbookLoader();
+        let currentCookbook = null;
+
+        // ===== 页面初始化 =====
+        async function init() {
+            try {
+                console.log('🚀 Initializing Cookbook Detail Page...');
+                
+                // 1. 获取 URL 参数
+                const urlParams = new URLSearchParams(window.location.search);
+                const cookbookId = urlParams.get('id');
+                
+                if (!cookbookId) {
+                    showErrorPage('缺少 Cookbook ID 参数');
+                    return;
+                }
+                
+                // 2. 显示加载状态
+                showLoadingState();
+                
+                // 3. 查找配置
+                const config = cookbookConfig.find(c => c.id === cookbookId);
+                
+                if (!config) {
+                    showErrorPage(`未找到 ID 为 "${cookbookId}" 的 Cookbook`);
+                    return;
+                }
+                
+                // 4. 加载完整数据
+                console.log('📡 Loading cookbook details from GitHub...');
+                currentCookbook = await loader.loadOne(config);
+                
+                // 5. 初始化页面内容
+                await initializePage(currentCookbook);
+                
+                console.log('✅ Cookbook detail page initialized successfully!');
+                
+            } catch (error) {
+                console.error('❌ Failed to initialize cookbook detail page:', error);
+                showErrorPage('加载失败：' + error.message);
             }
-        ];
+        }
+        
+        // 等待 DOM 加载完成后执行
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            // DOM 已经加载完成,直接执行
+            init();
+        }
 
-        // 当前 cookbook
-        const urlParams = new URLSearchParams(window.location.search);
-        const cookbookId = urlParams.get('id');
-        const currentCookbook = cookbooks.find(c => c.id === cookbookId);
+        /**
+         * 显示加载状态
+         */
+        function showLoadingState() {
+            document.getElementById('cookbookTitle').textContent = '⏳ 加载中...';
+            document.getElementById('cookbookDescription').textContent = '正在从 GitHub 加载 Cookbook 详细信息...';
+        }
 
-        if (!currentCookbook) {
+        /**
+         * 显示错误页面
+         */
+        function showErrorPage(message) {
             document.body.innerHTML = `
                 <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
                     <h1 style="font-size: 3rem; margin-bottom: 1rem;">❌</h1>
-                    <h2>Cookbook 不存在</h2>
-                    <p style="margin: 1rem 0;">未找到 ID 为 "${cookbookId}" 的 Cookbook</p>
-                    <a href="cookbook-patterns.html" style="color: var(--accent-blue);">返回列表</a>
+                    <h2>加载失败</h2>
+                    <p style="margin: 1rem 0;">${message}</p>
+                    <a href="cookbook-patterns.html" style="color: var(--accent-blue); text-decoration: none; font-weight: 600;">← 返回列表</a>
                 </div>
             `;
-        } else {
-            initializePage(currentCookbook);
         }
 
         /**
