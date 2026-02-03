@@ -9,19 +9,20 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0f1419;
-            --bg-secondary: #161b22;
-            --bg-tertiary: #1c2128;
-            --accent-blue: #1e88e5;
-            --accent-purple: #9c27b0;
-            --accent-cyan: #00bcd4;
-            --text-primary: #e6edf3;
-            --text-secondary: #8b949e;
-            --border-color: #30363d;
-            --card-hover: #21262d;
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --accent: #22d3ee;
+            --accent-dark: #0891b2;
+            --bg-light: #f8fafc;
+            --bg-white: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --card-hover: #f1f5f9;
             --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-2: linear-gradient(135deg, #1e3a8a 0%, #22d3ee 100%);
+            --gradient-3: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
 
         * {
@@ -31,11 +32,84 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--bg-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-light);
             color: var(--text-primary);
             line-height: 1.6;
             overflow-x: hidden;
+        }
+
+        /* ===== Navigation Bar ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--accent-dark);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-btn, .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            transition: color 0.3s;
+        }
+
+        .search-btn:hover, .theme-toggle:hover {
+            color: var(--accent-dark);
         }
 
         /* Animated Background */
@@ -48,6 +122,7 @@
             z-index: 0;
             overflow: hidden;
             pointer-events: none;
+            background: var(--bg-light);
         }
 
         .bg-animation::before {
@@ -58,9 +133,9 @@
             width: 200%;
             height: 200%;
             background: 
-                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(156, 39, 176, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 20%, rgba(0, 188, 212, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(34, 211, 238, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
             animation: float 20s ease-in-out infinite;
         }
 
@@ -80,8 +155,8 @@
             z-index: 0;
             pointer-events: none;
             background-image: 
-                linear-gradient(rgba(102, 126, 234, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(102, 126, 234, 0.03) 1px, transparent 1px);
+                linear-gradient(rgba(30, 58, 138, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 58, 138, 0.03) 1px, transparent 1px);
             background-size: 50px 50px;
         }
 
@@ -90,11 +165,12 @@
             position: relative;
             z-index: 1;
             min-height: 100vh;
+            padding-top: 5rem;
         }
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.05) 0%, rgba(34, 211, 238, 0.05) 100%);
             border-bottom: 1px solid var(--border-color);
             padding: 4rem 2rem 3rem;
             text-align: center;
@@ -109,7 +185,7 @@
             left: 0;
             right: 0;
             height: 2px;
-            background: var(--gradient-1);
+            background: var(--gradient-2);
         }
 
         .header::after {
@@ -119,13 +195,13 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(34, 211, 238, 0.05) 0%, transparent 70%);
             animation: pulse 4s ease-in-out infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.8; }
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.5; }
         }
 
         .header-content {
@@ -139,7 +215,7 @@
             font-size: 3.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            background: var(--gradient-1);
+            background: var(--gradient-2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -173,38 +249,6 @@
             font-size: 1rem;
         }
 
-        /* Back Button */
-        .back-button {
-            position: fixed;
-            top: 2rem;
-            left: 2rem;
-            z-index: 1000;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
-            font-weight: 600;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .back-button:hover {
-            background: var(--bg-tertiary);
-            transform: translateX(-4px);
-        }
-
-        .back-button::before {
-            content: '←';
-            font-size: 1.25rem;
-        }
-
         /* Search Section */
         .search-section {
             max-width: 1200px;
@@ -215,11 +259,11 @@
         }
 
         .search-wrapper {
-            background: var(--bg-secondary);
+            background: var(--bg-white);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 1.5rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
             backdrop-filter: blur(10px);
         }
 
@@ -294,13 +338,14 @@
         }
 
         .filter-panel {
-            background: var(--bg-secondary);
+            background: var(--bg-white);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             position: sticky;
-            top: 2rem;
+            top: 5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .filter-header {
@@ -479,13 +524,14 @@
         }
 
         .cookbook-card {
-            background: var(--bg-secondary);
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 0;
             overflow: hidden;
             transition: all 0.3s;
             position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .cookbook-card::before {
@@ -495,15 +541,15 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: var(--gradient-1);
+            background: var(--gradient-2);
             transform: scaleX(0);
             transition: transform 0.3s;
         }
 
         .cookbook-card:hover {
             transform: translateY(-8px);
-            border-color: var(--accent-blue);
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+            border-color: var(--accent);
+            box-shadow: 0 12px 32px rgba(34, 211, 238, 0.15);
         }
 
         .cookbook-card:hover::before {
@@ -514,11 +560,11 @@
             position: absolute;
             top: 1.5rem;
             right: 1.5rem;
-            background: rgba(102, 126, 234, 0.2);
-            border: 1px solid rgba(102, 126, 234, 0.5);
-            color: var(--accent-blue);
+            background: rgba(30, 58, 138, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: var(--primary);
             padding: 0.375rem 0.875rem;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 0.75rem;
             font-weight: 600;
             font-family: 'JetBrains Mono', monospace;
@@ -528,7 +574,7 @@
         }
 
         .card-diagram {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.03) 0%, rgba(34, 211, 238, 0.03) 100%);
             border-bottom: 1px solid var(--border-color);
             padding: 2.5rem 1.5rem;
             display: flex;
@@ -546,8 +592,8 @@
             right: 0;
             bottom: 0;
             background: 
-                linear-gradient(90deg, rgba(102, 126, 234, 0.05) 1px, transparent 1px),
-                linear-gradient(rgba(102, 126, 234, 0.05) 1px, transparent 1px);
+                linear-gradient(90deg, rgba(30, 58, 138, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(30, 58, 138, 0.03) 1px, transparent 1px);
             background-size: 20px 20px;
         }
 
@@ -562,7 +608,7 @@
         .service-icon {
             width: 64px;
             height: 64px;
-            background: var(--gradient-1);
+            background: var(--gradient-2);
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -571,7 +617,7 @@
             font-weight: 700;
             font-size: 1.5rem;
             font-family: 'JetBrains Mono', monospace;
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 24px rgba(30, 58, 138, 0.2);
             position: relative;
         }
 
@@ -581,7 +627,7 @@
             inset: -2px;
             border-radius: 12px;
             padding: 2px;
-            background: var(--gradient-1);
+            background: var(--gradient-2);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
@@ -589,9 +635,9 @@
         }
 
         .flow-arrow {
-            color: var(--accent-blue);
+            color: var(--primary-light);
             font-size: 2rem;
-            opacity: 0.7;
+            opacity: 0.6;
             font-family: 'JetBrains Mono', monospace;
         }
 
@@ -653,7 +699,7 @@
 
         .tag {
             padding: 0.375rem 0.875rem;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 0.8rem;
             font-weight: 600;
             font-family: 'JetBrains Mono', monospace;
@@ -661,28 +707,28 @@
         }
 
         .tag.language {
-            background: rgba(0, 188, 212, 0.1);
-            border-color: rgba(0, 188, 212, 0.3);
-            color: var(--accent-cyan);
+            background: rgba(34, 211, 238, 0.1);
+            border-color: rgba(34, 211, 238, 0.3);
+            color: var(--accent-dark);
         }
 
         .tag.resource {
-            background: rgba(30, 136, 229, 0.1);
-            border-color: rgba(30, 136, 229, 0.3);
-            color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+            color: var(--primary-light);
         }
 
         .tag.category {
-            background: rgba(156, 39, 176, 0.1);
-            border-color: rgba(156, 39, 176, 0.3);
-            color: var(--accent-purple);
+            background: rgba(30, 58, 138, 0.1);
+            border-color: rgba(30, 58, 138, 0.3);
+            color: var(--primary);
         }
 
         .view-pattern {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            color: var(--accent-blue);
+            color: var(--primary-light);
             text-decoration: none;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.95rem;
@@ -691,7 +737,7 @@
         }
 
         .view-pattern:hover {
-            color: var(--accent-cyan);
+            color: var(--accent);
             transform: translateX(4px);
         }
 
@@ -767,8 +813,23 @@
     </style>
 </head>
 <body>
-    <!-- Back Button -->
-    <a href="../" class="back-button">Back to Workshop</a>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="./" class="logo">TKE Workshop</a>
+            <ul class="nav-menu">
+                <li><a href="./#hero">首页</a></li>
+                <li><a href="./#demo">Agent Demo</a></li>
+                <li><a href="./#learning">最佳实践</a></li>
+                <li><a href="./cookbook-patterns.html">Cookbook</a></li>
+                <li><a href="./basics/">文档</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="search-btn" aria-label="搜索">🔍</button>
+                <button class="theme-toggle" aria-label="切换主题">🌙</button>
+            </div>
+        </div>
+    </nav>
 
     <!-- Animated Background -->
     <div class="bg-animation"></div>
@@ -1296,7 +1357,7 @@
                             ${cookbook.tags.slice(0, 2).map(tag => `<span class="tag category">${tag}</span>`).join('')}
                         </div>
                         
-                        <a href="cookbook-detail.html?id=${cookbook.id}" class="view-pattern">查看详情 View Details</a>
+                        <a href="cookbook-detail-v2.html?id=${cookbook.id}" class="view-pattern">查看详情 View Details</a>
                     </div>
                 </div>
             `;
