@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TKE Workshop - Agent-First Cloud Native Learning Platform</title>
+  <meta name="description" content="面向 AI 时代的云原生基础设施实践平台 - Agent-First 设计">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Three.js for 3D animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  
+  <!-- GSAP for scroll animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #3b82f6;
+      --accent: #22d3ee;
+      --accent-dark: #0891b2;
+      --bg-light: #f8fafc;
+      --bg-dark: #0f172a;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-2: linear-gradient(135deg, #1e3a8a 0%, #22d3ee 100%);
+      --gradient-3: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-light);
+      overflow-x: hidden;
+    }
+
+    /* ===== Navigation Bar ===== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .navbar.scrolled {
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: var(--gradient-2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-menu a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-menu a:hover {
+      color: var(--accent-dark);
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .search-btn, .theme-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      transition: color 0.3s;
+    }
+
+    .search-btn:hover, .theme-toggle:hover {
+      color: var(--accent-dark);
+    }
+
+    /* ===== Hero Section ===== */
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    }
+
+    #hero-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      color: white;
+      max-width: 1000px;
+      padding: 2rem;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.5rem;
+      background: rgba(34, 211, 238, 0.15);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      border-radius: 9999px;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .hero-eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.8s ease 0.2s forwards;
+    }
+
+    .hero-gradient-text {
+      background: linear-gradient(135deg, #fff 0%, #22d3ee 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.3rem;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.8s ease 0.4s forwards;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.8s ease 0.6s forwards;
+    }
+
+    .btn {
+      padding: 1rem 2.5rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(255, 255, 255, 0.4);
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      justify-content: center;
+      margin-top: 3rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeIn 1s ease 0.8s forwards;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: var(--gradient-2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 0.5rem;
+    }
+
+    /* ===== Agent Demo Section ===== */
+    .agent-demo {
+      padding: 6rem 2rem;
+      background: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .agent-demo::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-eyebrow {
+      display: inline-block;
+      padding: 0.5rem 1.5rem;
+      background: rgba(34, 211, 238, 0.1);
+      color: var(--accent-dark);
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .section-desc {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .demo-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+      border-radius: 24px;
+      padding: 3rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    }
+
+    @media (max-width: 1024px) {
+      .demo-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .demo-input, .demo-output {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .demo-label {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--accent-dark);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .demo-label::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    .demo-textarea {
+      width: 100%;
+      min-height: 150px;
+      padding: 1.5rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      resize: none;
+      transition: border-color 0.3s;
+    }
+
+    .demo-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .demo-output-content {
+      background: #0f172a;
+      border-radius: 12px;
+      padding: 1.5rem;
+      color: #e2e8f0;
+      font-family: 'Menlo', 'Monaco', monospace;
+      font-size: 0.9rem;
+      min-height: 200px;
+      overflow-x: auto;
+    }
+
+    .demo-output-content pre {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    .code-comment {
+      color: #64748b;
+    }
+
+    .code-string {
+      color: #22d3ee;
+    }
+
+    .code-number {
+      color: #f59e0b;
+    }
+
+    .code-keyword {
+      color: #a78bfa;
+    }
+
+    /* ===== Learning Path Section ===== */
+    .learning-path {
+      padding: 6rem 2rem;
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    }
+
+    .path-visualization {
+      max-width: 1200px;
+      margin: 3rem auto;
+      position: relative;
+    }
+
+    .path-timeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      position: relative;
+    }
+
+    @media (max-width: 1024px) {
+      .path-timeline {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .path-timeline {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .path-stage {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      position: relative;
+      border: 2px solid transparent;
+    }
+
+    .path-stage:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(34, 211, 238, 0.2);
+      border-color: var(--accent);
+    }
+
+    .stage-number {
+      width: 50px;
+      height: 50px;
+      background: var(--gradient-2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: white;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 15px rgba(34, 211, 238, 0.3);
+    }
+
+    .stage-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .stage-desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .stage-modules {
+      list-style: none;
+      margin-bottom: 1.5rem;
+    }
+
+    .stage-modules li {
+      padding: 0.5rem 0;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stage-modules li::before {
+      content: "✓";
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .stage-progress {
+      margin-top: 1.5rem;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--gradient-2);
+      border-radius: 9999px;
+      transition: width 1s ease;
+    }
+
+    .stage-time {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-top: 1rem;
+    }
+
+    /* ===== Cookbook Carousel ===== */
+    .cookbook-section {
+      padding: 6rem 2rem;
+      background: var(--bg-dark);
+      color: white;
+    }
+
+    .cookbook-carousel {
+      max-width: 1400px;
+      margin: 3rem auto;
+      position: relative;
+    }
+
+    .cookbook-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+      .cookbook-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .cookbook-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .cookbook-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cookbook-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-2);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .cookbook-card:hover {
+      transform: translateY(-8px);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent);
+      box-shadow: 0 12px 40px rgba(34, 211, 238, 0.2);
+    }
+
+    .cookbook-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .cookbook-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .cookbook-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--gradient-2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .cookbook-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      padding: 0.3rem 0.8rem;
+      background: rgba(34, 211, 238, 0.15);
+      color: var(--accent);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .cookbook-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .cookbook-desc {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .cookbook-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .cookbook-stars {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+    }
+
+    .cookbook-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    /* ===== Animations ===== */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    /* ===== Footer ===== */
+    .footer {
+      background: #0a0f1f;
+      color: rgba(255, 255, 255, 0.7);
+      padding: 3rem 2rem 2rem;
+    }
+
+    .footer-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+      .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .footer-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .footer-section h4 {
+      color: white;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-links a {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.9rem;
+    }
+
+    /* ===== Scroll to Top Button ===== */
+    .scroll-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 50px;
+      height: 50px;
+      background: var(--gradient-2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 999;
+      box-shadow: 0 4px 20px rgba(34, 211, 238, 0.3);
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .scroll-top:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(34, 211, 238, 0.4);
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="logo">TKE Workshop</div>
+      <ul class="nav-menu">
+        <li><a href="#hero">首页</a></li>
+        <li><a href="#demo">Agent Demo</a></li>
+        <li><a href="#learning">学习路径</a></li>
+        <li><a href="#cookbook">Cookbook</a></li>
+        <li><a href="basics/">文档</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="search-btn" aria-label="搜索">🔍</button>
+        <button class="theme-toggle" aria-label="切换主题">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section with 3D Animation -->
+  <section id="hero" class="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        Tencent Cloud · Agent-Ready Infrastructure
+      </div>
+      <h1>
+        <span class="hero-gradient-text">TKE Workshop</span>
+      </h1>
+      <p class="hero-subtitle">
+        面向 AI 时代的云原生基础设施实践平台<br>
+        <strong>Agent-First</strong> 设计：结构化文档 · 声明式 API · Few-shot Cookbook · 可复现场景
+      </p>
+      <div class="hero-cta">
+        <a href="basics/" class="btn btn-primary">
+          开始实践 →
+        </a>
+        <a href="#cookbook" class="btn btn-ghost">
+          探索 Cookbook
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-number" data-target="150">0</span>
+          <span class="stat-label">文档数</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" data-target="50">0</span>
+          <span class="stat-label">Cookbook</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" data-target="20000">0</span>
+          <span class="stat-label">月活用户</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" data-target="1000">0</span>
+          <span class="stat-label">GitHub Stars</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Agent Demo Section -->
+  <section id="demo" class="agent-demo">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">🤖 Agent-First Design</span>
+        <h2 class="section-title">AI Agent 自动执行演示</h2>
+        <p class="section-desc">
+          输入自然语言指令，看 AI Agent 如何解析、规划并自动调用 TKE API 完成任务
+        </p>
+      </div>
+      <div class="demo-container">
+        <div class="demo-input">
+          <div class="demo-label">💬 用户指令</div>
+          <textarea class="demo-textarea" id="user-input" placeholder="例如：创建一个 TKE 集群，使用 2 核 4G 节点...">创建一个 TKE 集群，region 设为广州，节点规格 2 核 4G，节点数量 3 个</textarea>
+          <button class="btn btn-primary" style="margin-top: 1rem; width: 100%;" onclick="runAgentDemo()">
+            执行 Agent 🚀
+          </button>
+        </div>
+        <div class="demo-output">
+          <div class="demo-label">⚙️ Agent 执行过程</div>
+          <div class="demo-output-content" id="agent-output">
+            <pre><span class="code-comment"># 等待 Agent 执行...</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Learning Path Section -->
+  <section id="learning" class="learning-path">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">🗺️ Learning Path</span>
+        <h2 class="section-title">从新手到专家的学习路径</h2>
+        <p class="section-desc">
+          结构化的学习路径，每个阶段都有明确的目标和可量化的成果
+        </p>
+      </div>
+      <div class="path-visualization">
+        <div class="path-timeline">
+          <!-- Stage 1: Beginner -->
+          <div class="path-stage">
+            <div class="stage-number">1</div>
+            <h3 class="stage-title">🌱 新手入门</h3>
+            <p class="stage-desc">掌握 TKE 基础操作，完成第一个集群部署</p>
+            <ul class="stage-modules">
+              <li>创建集群</li>
+              <li>添加节点</li>
+              <li>部署应用</li>
+              <li>暴露服务</li>
+            </ul>
+            <div class="stage-progress">
+              <div class="progress-label">
+                <span>完成度</span>
+                <span>100%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 100%;"></div>
+              </div>
+            </div>
+            <div class="stage-time">
+              ⏱️ 预计 2-3 小时
+            </div>
+          </div>
+
+          <!-- Stage 2: Intermediate -->
+          <div class="path-stage">
+            <div class="stage-number">2</div>
+            <h3 class="stage-title">🚀 中级开发</h3>
+            <p class="stage-desc">深入网络、存储、工作负载编排</p>
+            <ul class="stage-modules">
+              <li>Service & Ingress</li>
+              <li>持久化存储</li>
+              <li>StatefulSet</li>
+              <li>ConfigMap & Secret</li>
+            </ul>
+            <div class="stage-progress">
+              <div class="progress-label">
+                <span>完成度</span>
+                <span>40%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 40%;"></div>
+              </div>
+            </div>
+            <div class="stage-time">
+              ⏱️ 预计 5-8 小时
+            </div>
+          </div>
+
+          <!-- Stage 3: Advanced -->
+          <div class="path-stage">
+            <div class="stage-number">3</div>
+            <h3 class="stage-title">🎓 高级工程师</h3>
+            <p class="stage-desc">可观测性、安全加固、CI/CD</p>
+            <ul class="stage-modules">
+              <li>Prometheus 监控</li>
+              <li>RBAC 权限</li>
+              <li>Pod Security</li>
+              <li>日志收集</li>
+            </ul>
+            <div class="stage-progress">
+              <div class="progress-label">
+                <span>完成度</span>
+                <span>20%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 20%;"></div>
+              </div>
+            </div>
+            <div class="stage-time">
+              ⏱️ 预计 10-15 小时
+            </div>
+          </div>
+
+          <!-- Stage 4: Expert -->
+          <div class="path-stage">
+            <div class="stage-number">4</div>
+            <h3 class="stage-title">🏆 云原生专家</h3>
+            <p class="stage-desc">控制面管理、AI/ML 工作负载、性能优化</p>
+            <ul class="stage-modules">
+              <li>集群升级</li>
+              <li>GPU 调度</li>
+              <li>模型推理</li>
+              <li>成本优化</li>
+            </ul>
+            <div class="stage-progress">
+              <div class="progress-label">
+                <span>完成度</span>
+                <span>10%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 10%;"></div>
+              </div>
+            </div>
+            <div class="stage-time">
+              ⏱️ 预计 20-30 小时
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cookbook Carousel Section -->
+  <section id="cookbook" class="cookbook-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow" style="background: rgba(34, 211, 238, 0.2);">📚 Cookbook Library</span>
+        <h2 class="section-title" style="color: white;">精选 Cookbook 实战场景</h2>
+        <p class="section-desc" style="color: rgba(255, 255, 255, 0.8);">
+          Few-shot 示例，完整的输入-执行-输出链路，可直接复现的场景
+        </p>
+      </div>
+      <div class="cookbook-carousel">
+        <div class="cookbook-grid" id="cookbook-grid">
+          <!-- Cookbook cards will be dynamically loaded -->
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: 3rem;">
+        <a href="cookbook-patterns.html" class="btn btn-primary">
+          查看全部 50+ Cookbook →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h4>TKE Workshop</h4>
+        <p>面向 AI 时代的云原生基础设施实践平台</p>
+      </div>
+      <div class="footer-section">
+        <h4>学习资源</h4>
+        <ul class="footer-links">
+          <li><a href="basics/">基础操作</a></li>
+          <li><a href="best-practices/">最佳实践</a></li>
+          <li><a href="cookbook-patterns.html">Cookbook</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>社区</h4>
+        <ul class="footer-links">
+          <li><a href="https://github.com/tke-workshop/tke-workshop.github.io">GitHub</a></li>
+          <li><a href="https://github.com/tke-workshop/tke-workshop.github.io/issues">问题反馈</a></li>
+          <li><a href="https://github.com/tke-workshop/tke-workshop.github.io/discussions">讨论区</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>关于</h4>
+        <ul class="footer-links">
+          <li><a href="CONTRIBUTING.md">贡献指南</a></li>
+          <li><a href="https://cloud.tencent.com/product/tke">TKE 官网</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      Copyright © 2024-2026 Tencent Cloud · TKE Workshop
+    </div>
+  </footer>
+
+  <!-- Scroll to Top Button -->
+  <div class="scroll-top" onclick="scrollToTop()">
+    ↑
+  </div>
+
+  <script>
+    // ===== Three.js Hero Animation =====
+    let scene, camera, renderer, particles;
+
+    function initHero() {
+      const canvas = document.getElementById('hero-canvas');
+      scene = new THREE.Scene();
+      
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 5;
+      
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      
+      // Create particles
+      const geometry = new THREE.BufferGeometry();
+      const particleCount = 1000;
+      const positions = new Float32Array(particleCount * 3);
+      
+      for (let i = 0; i < particleCount * 3; i++) {
+        positions[i] = (Math.random() - 0.5) * 10;
+      }
+      
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      
+      const material = new THREE.PointsMaterial({
+        color: 0x22d3ee,
+        size: 0.02,
+        transparent: true,
+        opacity: 0.8
+      });
+      
+      particles = new THREE.Points(geometry, material);
+      scene.add(particles);
+      
+      animateHero();
+    }
+
+    function animateHero() {
+      requestAnimationFrame(animateHero);
+      
+      particles.rotation.x += 0.0005;
+      particles.rotation.y += 0.0008;
+      
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // ===== Counter Animation =====
+    function animateCounter(element) {
+      const target = parseInt(element.getAttribute('data-target'));
+      const duration = 2000;
+      const step = target / (duration / 16);
+      let current = 0;
+      
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+          element.textContent = target.toLocaleString();
+          clearInterval(timer);
+        } else {
+          element.textContent = Math.floor(current).toLocaleString();
+        }
+      }, 16);
+    }
+
+    // ===== Agent Demo =====
+    function runAgentDemo() {
+      const input = document.getElementById('user-input').value;
+      const output = document.getElementById('agent-output');
+      
+      output.innerHTML = '<pre><span class="code-comment"># Agent 正在分析指令...</span></pre>';
+      
+      setTimeout(() => {
+        output.innerHTML = `<pre><span class="code-comment"># Step 1: 解析用户意图</span>
+<span class="code-keyword">Intent:</span> <span class="code-string">"创建 TKE 集群"</span>
+<span class="code-keyword">Parameters:</span>
+  - <span class="code-keyword">region:</span> <span class="code-string">"ap-guangzhou"</span>
+  - <span class="code-keyword">instanceType:</span> <span class="code-string">"S5.MEDIUM4"</span> <span class="code-comment">(2核4G)</span>
+  - <span class="code-keyword">nodeCount:</span> <span class="code-number">3</span>
+
+<span class="code-comment"># Step 2: 生成 API 调用</span>
+<span class="code-keyword">POST</span> /tke/v1/clusters
+{
+  <span class="code-string">"ClusterName"</span>: <span class="code-string">"my-cluster"</span>,
+  <span class="code-string">"ClusterCIDR"</span>: <span class="code-string">"10.244.0.0/16"</span>,
+  <span class="code-string">"Region"</span>: <span class="code-string">"ap-guangzhou"</span>
+}
+
+<span class="code-comment"># Step 3: 等待集群创建...</span>
+<span class="code-keyword">Status:</span> <span class="code-string">"Creating"</span> ⏳
+
+<span class="code-comment"># Step 4: 添加节点池</span>
+<span class="code-keyword">POST</span> /tke/v1/node-pools
+{
+  <span class="code-string">"ClusterId"</span>: <span class="code-string">"cls-xxxxxx"</span>,
+  <span class="code-string">"InstanceType"</span>: <span class="code-string">"S5.MEDIUM4"</span>,
+  <span class="code-string">"DesiredSize"</span>: <span class="code-number">3</span>
+}
+
+<span class="code-comment"># ✅ 完成！集群已创建</span>
+<span class="code-keyword">ClusterId:</span> <span class="code-string">cls-abc123xyz</span>
+<span class="code-keyword">Status:</span> <span class="code-string">"Running"</span> ✅
+<span class="code-keyword">Nodes:</span> <span class="code-number">3</span>/<span class="code-number">3</span> <span class="code-string">"Ready"</span>
+</pre>`;
+      }, 1500);
+    }
+
+    // ===== Load Cookbooks =====
+    const featuredCookbooks = [
+      {
+        icon: '🚀',
+        title: 'TKE 集群创建',
+        desc: '使用 Python SDK 快速创建标准 TKE 集群，包含完整的参数配置和验证步骤',
+        tags: ['Python', '集群', 'API'],
+        stars: 45,
+        link: 'cookbook-detail.html?id=create-cluster'
+      },
+      {
+        icon: '🌐',
+        title: 'Nginx Ingress 部署',
+        desc: '在 TKE 上部署 Nginx Ingress Controller，配置 HTTPS 和域名路由',
+        tags: ['Kubernetes', '网络', 'YAML'],
+        stars: 38,
+        link: 'cookbook-detail.html?id=deploy-nginx'
+      },
+      {
+        icon: '🤖',
+        title: 'GPU Pod 部署',
+        desc: 'AI/ML 工作负载的 GPU 资源调度和最佳实践',
+        tags: ['GPU', 'AI/ML', 'YAML'],
+        stars: 52,
+        link: 'cookbook-detail.html?id=deploy-gpu-pod'
+      },
+      {
+        icon: '🔄',
+        title: '集群升级方案',
+        desc: '零停机升级 Kubernetes 版本，包含回滚方案',
+        tags: ['运维', '升级', 'Bash'],
+        stars: 41,
+        link: 'cookbook-detail.html?id=tke-direct-upgrade'
+      },
+      {
+        icon: '📊',
+        title: 'Prometheus 监控',
+        desc: '部署完整的监控堆栈，包含 Grafana 可视化',
+        tags: ['可观测性', 'Prometheus', 'YAML'],
+        stars: 36,
+        link: 'cookbook-detail.html?id=prometheus-stack'
+      },
+      {
+        icon: '⚡',
+        title: 'Karpenter 自动扩容',
+        desc: '使用 Karpenter 实现智能节点自动扩缩容',
+        tags: ['扩展性', 'Karpenter', 'YAML'],
+        stars: 48,
+        link: 'cookbook-detail.html?id=tke-karpenter'
+      }
+    ];
+
+    function loadCookbooks() {
+      const grid = document.getElementById('cookbook-grid');
+      grid.innerHTML = featuredCookbooks.map(cookbook => `
+        <div class="cookbook-card" onclick="window.location.href='${cookbook.link}'">
+          <div class="cookbook-header">
+            <div class="cookbook-icon">${cookbook.icon}</div>
+          </div>
+          <div class="cookbook-tags">
+            ${cookbook.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+          </div>
+          <h3 class="cookbook-title">${cookbook.title}</h3>
+          <p class="cookbook-desc">${cookbook.desc}</p>
+          <div class="cookbook-footer">
+            <div class="cookbook-stars">
+              ⭐ ${cookbook.stars} Stars
+            </div>
+            <a href="${cookbook.link}" class="cookbook-link">
+              查看详情 →
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ===== Scroll Effects =====
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      const scrollTop = document.querySelector('.scroll-top');
+      
+      if (window.scrollY > 100) {
+        navbar.classList.add('scrolled');
+        scrollTop.classList.add('visible');
+      } else {
+        navbar.classList.remove('scrolled');
+        scrollTop.classList.remove('visible');
+      }
+    });
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ===== Initialize =====
+    document.addEventListener('DOMContentLoaded', () => {
+      initHero();
+      loadCookbooks();
+      
+      // Animate counters when they come into view
+      const counters = document.querySelectorAll('.stat-number');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateCounter(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      });
+      
+      counters.forEach(counter => observer.observe(counter));
+    });
+  </script>
+
+</body>
+</html>
