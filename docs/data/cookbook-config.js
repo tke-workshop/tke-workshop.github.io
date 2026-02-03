@@ -89,8 +89,7 @@ const cookbookConfig = [
         language: 'YAML',
         tags: ['AI/ML', 'GPU', 'Training'],
         github: {
-            repo: 'tkestack/tke-playbook',
-            path: 'tke-ai-playbook',
+            repo: 'tkestack/tke-ai-playbook',
             branch: 'main'
         },
         services: [
@@ -110,8 +109,7 @@ const cookbookConfig = [
         language: 'YAML',
         tags: ['Chaos', 'Fault Injection', 'Resilience'],
         github: {
-            repo: 'tkestack/tke-playbook',
-            path: 'tke-chaos-playbook',
+            repo: 'tkestack/tke-chaos-playbook',
             branch: 'main'
         },
         services: [
