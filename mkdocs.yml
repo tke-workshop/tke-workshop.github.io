@@ -128,12 +128,16 @@ nav:
       - 优化成本 - 规整算力资源碎片: best-practices/cost-optimization/resource-defragmentation.md
       - 优化成本 - 资源动态伸缩: best-practices/cost-optimization/dynamic-scaling.md
   
-  - AI on TKE 🚧:
+  - AI on TKE:
     - ai-ml/index.md
     - GPU 调度: ai-ml/gpu-scheduling.md
     - GPU Pod 最佳实践: ai-ml/04-gpu-pod-best-practices.md
     - 模型推理: ai-ml/model-inference.md
     - 训练任务: ai-ml/training.md
+    - OPEA on TKE:
+      - ai-ml/opea/index.md
+      - 快速开始: ai-ml/opea/quickstart.md
+      - ChatQnA 部署: ai-ml/opea/chatqna-deployment.md
   
   - Data on TKE 🚧:
     - data/index.md
