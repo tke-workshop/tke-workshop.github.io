@@ -130,10 +130,22 @@ nav:
   
   - AI on TKE:
     - ai-ml/index.md
-    - GPU 调度: ai-ml/gpu-scheduling.md
-    - GPU Pod 最佳实践: ai-ml/04-gpu-pod-best-practices.md
-    - 模型推理: ai-ml/model-inference.md
-    - 训练任务: ai-ml/training.md
+    - Training on TKE:
+      - ai-ml/training/index.md
+      - GPU 调度: ai-ml/training/gpu-scheduling.md
+      - 超级节点 GPU: ai-ml/training/supernode-gpu.md
+      - 分布式训练: ai-ml/training/distributed-training.md
+      - Training Operator: ai-ml/training/training-operator.md
+      - 存储优化: ai-ml/training/storage-optimization.md
+      - 监控调优: ai-ml/training/monitoring.md
+    - Inference on TKE:
+      - ai-ml/inference/index.md
+      - 推理框架: ai-ml/inference/inference-frameworks.md
+      - 服务部署: ai-ml/inference/service-deployment.md
+      - LLM 推理: ai-ml/inference/llm-inference.md
+      - 自动扩缩容: ai-ml/inference/autoscaling.md
+      - 性能优化: ai-ml/inference/performance.md
+      - 模型管理: ai-ml/inference/model-management.md
     - OpenClaw on TKE:
       - ai-ml/openclaw/index.md
       - 架构方案: ai-ml/openclaw/architecture.md
