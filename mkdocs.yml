@@ -134,6 +134,7 @@ nav:
     - GPU Pod 最佳实践: ai-ml/04-gpu-pod-best-practices.md
     - 模型推理: ai-ml/model-inference.md
     - 训练任务: ai-ml/training.md
+    - OpenClaw on TKE: ai-ml/openclaw-on-tke.md
     - OPEA on TKE:
       - ai-ml/opea/index.md
       - 快速开始: ai-ml/opea/quickstart.md
