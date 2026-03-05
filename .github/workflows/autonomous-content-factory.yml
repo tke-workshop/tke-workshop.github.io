@@ -81,7 +81,7 @@ jobs:
       # 5. 上传日志
       - name: Upload logs
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: factory-logs-${{ github.run_number }}
           path: |
