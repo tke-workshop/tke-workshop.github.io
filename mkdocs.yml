@@ -134,7 +134,15 @@ nav:
     - GPU Pod 最佳实践: ai-ml/04-gpu-pod-best-practices.md
     - 模型推理: ai-ml/model-inference.md
     - 训练任务: ai-ml/training.md
-    - OpenClaw on TKE: ai-ml/openclaw-on-tke.md
+    - OpenClaw on TKE:
+      - ai-ml/openclaw/index.md
+      - 架构方案: ai-ml/openclaw/architecture.md
+      - 快速开始: ai-ml/openclaw/quickstart.md
+      - 网络方案: ai-ml/openclaw/networking.md
+      - 存储方案: ai-ml/openclaw/storage.md
+      - 安全隔离: ai-ml/openclaw/security.md
+      - 弹性管理: ai-ml/openclaw/elasticity.md
+      - 生产实践: ai-ml/openclaw/production.md
     - OPEA on TKE:
       - ai-ml/opea/index.md
       - 快速开始: ai-ml/opea/quickstart.md
