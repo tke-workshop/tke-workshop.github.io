@@ -159,6 +159,14 @@ nav:
       - ai-ml/opea/index.md
       - 快速开始: ai-ml/opea/quickstart.md
       - ChatQnA 部署: ai-ml/opea/chatqna-deployment.md
+    - KitOps on TKE:
+      - ai-ml/kitops/index.md
+      - 快速开始: ai-ml/kitops/quickstart.md
+      - Kitfile 编写: ai-ml/kitops/kitfile-guide.md
+      - TCR 集成: ai-ml/kitops/tcr-integration.md
+      - TKE 部署: ai-ml/kitops/tke-deployment.md
+      - CI/CD 集成: ai-ml/kitops/cicd-integration.md
+      - 最佳实践: ai-ml/kitops/best-practices.md
   
   - Data on TKE 🚧:
     - data/index.md
