@@ -96,6 +96,7 @@ nav:
     - best-practices/index.md
     - 安全:
       - best-practices/security/index.md
+      - 强化集群安全性: best-practices/security/cluster-hardening.md
       - 身份认证和访问管理: best-practices/security/identity-auth-and-access-management.md
       - 运行时安全: best-practices/security/pod-security.md
       - 网络安全: best-practices/security/network-security.md
