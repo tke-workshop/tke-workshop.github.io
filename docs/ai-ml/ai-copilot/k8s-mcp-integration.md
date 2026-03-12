@@ -8,10 +8,117 @@
 
 **TKE Skill** 擅长腾讯云 TKE 平台层操作（集群管理、kubeconfig 获取），而 **kubernetes-mcp-server** 擅长通用 K8s 集群内操作（部署、日志、Helm）。两者组合可以实现：
 
-- 🚀 **一句话部署到 TKE**：获取集群 → 部署应用 → 验证状态
+- ✅ **已有镜像一键部署**：获取集群 → 部署应用 → 验证状态
 - 🔧 **智能排障**：查看 Events → 分析日志 → 定位问题
 - 📦 **Helm 管理**：在 TKE 集群上安装、升级、卸载 Helm Chart
 - ⚡ **资源运维**：查看资源使用、配置 HPA、滚动更新
+
+---
+
+## ⚠️ 当前能力边界
+
+!!! warning "重要：当前版本的能力限制"
+    
+    在使用 TKE Skill + kubernetes-mcp 之前，请了解当前版本的**能力边界**：
+
+### ✅ 当前可以做到
+
+| 场景 | 说明 | 工具 |
+|------|------|------|
+| **部署已有镜像** | 镜像已在 TCR/CCR/DockerHub，直接部署到 TKE | TKE Skill + k8s-mcp |
+| **Helm Chart 安装** | 从 Helm 仓库安装应用 | k8s-mcp |
+| **排障和日志查看** | Pod 状态、Events、日志、exec 进入容器 | k8s-mcp |
+| **集群管理** | 查看集群、获取 kubeconfig、节点池管理 | TKE Skill |
+| **资源 CRUD** | 创建/修改/删除 Deployment、Service 等 K8s 资源 | k8s-mcp |
+
+### ❌ 当前还不能做到
+
+| 场景 | 缺失能力 | 状态 |
+|------|----------|------|
+| **从代码一键部署到 TKE** | 缺少镜像构建、镜像推送能力 | 🚧 规划中 |
+| **镜像仓库管理** | 无法操作 TCR/CCR（创建仓库、推送镜像等） | 🚧 规划中 |
+| **CI/CD 触发** | 无法触发构建流水线 | 📝 待规划 |
+
+### 📊 完整部署流程分析
+
+```
+项目代码 → [构建镜像] → [推送到镜像仓库] → [部署到 K8s] → [验证]
+            ↑              ↑                  ✅ 已支持    ✅ 已支持
+            ❌ 缺失        ❌ 缺失
+```
+
+**当前的"一句话部署"实际上要求**：
+
+1. 用户**已经有构建好的镜像**（在 TCR/CCR/DockerHub）
+2. 或者使用**公开镜像**（如 nginx:alpine）
+3. AI 负责生成 K8s YAML 并部署
+
+---
+
+## 🗺️ 未来计划：代码到部署全流程
+
+我们计划通过以下方式实现"从代码一键部署到 TKE"的完整体验：
+
+### Phase 1: TCR Skill（规划中）
+
+新增 **TCR Skill** 支持腾讯云容器镜像服务：
+
+```
+预期能力:
+├── 镜像仓库管理
+│   ├── create_namespace    # 创建命名空间
+│   ├── create_repository   # 创建镜像仓库
+│   └── list_images         # 列出镜像和标签
+├── 镜像操作
+│   ├── get_login_command   # 获取 docker login 命令
+│   └── delete_image        # 删除镜像
+└── 云端构建（TCR 企业版）
+    ├── create_build_rule   # 创建构建规则
+    └── trigger_build       # 触发构建
+```
+
+### Phase 2: 构建能力集成
+
+**方案 A: 本地 Docker 构建**
+- AI 生成 Dockerfile
+- 调用本地 Docker CLI 构建和推送
+- 适合有 Docker 环境的开发者
+
+**方案 B: 云端构建**
+- 使用 TCR 企业版的自动构建能力
+- 关联代码仓库，自动触发
+- 无需本地 Docker 环境
+
+### Phase 3: 完整一句话部署
+
+```
+用户: 把当前项目部署到 TKE 集群 cls-xxx
+
+AI 执行:
+  1. [Agent] 分析项目，生成 Dockerfile
+  2. [TCR Skill] 创建镜像仓库（如果不存在）
+  3. [TCR Skill] 获取登录凭证
+  4. [本地/云端] 构建镜像并推送
+  5. [TKE Skill] 获取 kubeconfig
+  6. [kubernetes-mcp] 生成并部署 K8s 资源
+  7. [kubernetes-mcp] 验证 Pod 状态
+  ✅ 部署完成，返回访问地址
+```
+
+### 📅 预计时间线
+
+| 阶段 | 内容 | 预计时间 |
+|------|------|----------|
+| Phase 1 | TCR Skill 基础能力 | Q2 2026 |
+| Phase 2 | 本地构建集成 | Q2 2026 |
+| Phase 3 | 云端构建集成 | Q3 2026 |
+
+!!! info "临时方案"
+    在完整能力上线前，推荐使用以下方式：
+    
+    1. **手动构建镜像**后，让 AI 部署
+    2. 使用 **GitHub Actions** 等 CI 自动构建，AI 负责部署
+    3. 使用 **Helm Chart** 部署（公共镜像场景）
 
 ```
 ┌───────────────────────────────────────────────────────────┐
@@ -81,15 +188,57 @@
 
 ## 🚀 快速开始
 
-### Step 1: 安装 kubernetes-mcp-server
+### Step 1: 配置 CodeBuddy MCP
 
-=== "Go Install (推荐)"
+编辑 MCP 配置文件 `~/.codebuddy/mcp.json`，添加 kubernetes-mcp-server：
+
+=== "npx 运行 (推荐)"
+
+    最简单的方式，无需预先安装，自动下载最新版本：
+
+    ```json
+    {
+      "mcpServers": {
+        "kubernetes": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "kubernetes-mcp-server@latest"
+          ]
+        }
+      }
+    }
+    ```
+
+    !!! tip "推荐理由"
+        - 无需手动安装，`npx` 会自动下载
+        - `-y` 参数跳过确认提示
+        - `@latest` 确保使用最新版本
+
+=== "Go Install"
+
+    如果你有 Go 环境，可以先安装再配置：
 
     ```bash
+    # 1. 安装
     go install github.com/containers/kubernetes-mcp-server/cmd/kubernetes-mcp-server@latest
     ```
 
+    ```json
+    // 2. 配置 mcp.json
+    {
+      "mcpServers": {
+        "kubernetes": {
+          "command": "kubernetes-mcp-server",
+          "args": []
+        }
+      }
+    }
+    ```
+
 === "容器运行"
+
+    适合不想在本地安装的场景：
 
     ```bash
     docker run -it --rm \
@@ -97,46 +246,27 @@
       ghcr.io/containers/kubernetes-mcp-server:latest
     ```
 
-=== "源码编译"
+    !!! warning "注意"
+        容器方式需要额外配置才能与 CodeBuddy 集成，一般用于独立测试。
 
-    ```bash
-    git clone https://github.com/containers/kubernetes-mcp-server.git
-    cd kubernetes-mcp-server
-    make build
-    ./bin/kubernetes-mcp-server
-    ```
+### Step 2: 配置腾讯云凭证 (使用 TKE Skill)
 
-### Step 2: 配置 CodeBuddy MCP
+TKE Skill 通过 **环境变量** 获取腾讯云凭证：
 
-编辑 MCP 配置文件 `~/.codebuddy/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "kubernetes": {
-      "command": "kubernetes-mcp-server",
-      "args": [],
-      "env": {
-        "KUBECONFIG": "${HOME}/.kube/config"
-      }
-    }
-  }
-}
+```bash
+# 在 ~/.zshrc 或 ~/.bashrc 中添加
+export TENCENTCLOUD_SECRET_ID="YOUR_SECRET_ID"
+export TENCENTCLOUD_SECRET_KEY="YOUR_SECRET_KEY"
+export TENCENTCLOUD_REGION="ap-guangzhou"  # 可选，默认 ap-guangzhou
 ```
 
-### Step 3: 配置 TKE Skill
+!!! tip "凭证获取"
+    前往 [腾讯云 API 密钥管理](https://console.cloud.tencent.com/cam/capi) 创建或查看密钥。
 
-确保 TKE Skill 已配置腾讯云凭证：
+!!! info "其他方式"
+    TKE Skill 也支持通过命令行参数传入凭证（`--secret-id` / `--secret-key`），但推荐使用环境变量更方便。
 
-```yaml
-# ~/.codebuddy/skills/tke/config.yaml
-tencent_cloud:
-  secret_id: "YOUR_SECRET_ID"
-  secret_key: "YOUR_SECRET_KEY"
-  region: "ap-guangzhou"
-```
-
-### Step 4: 验证配置
+### Step 3: 验证配置
 
 在 CodeBuddy 中测试：
 
@@ -152,11 +282,16 @@ tencent_cloud:
 
 ## 📝 使用场景
 
-### 场景 1: 一句话部署应用到 TKE
+### 场景 1: 部署已有镜像到 TKE
+
+!!! note "前提条件"
+    此场景要求你**已经有构建好的容器镜像**（在 TCR/CCR/DockerHub/其他镜像仓库）。
+    
+    如果还没有镜像，请先手动构建推送，或参考"临时方案"部分。
 
 **用户输入**:
 ```
-把当前项目部署到广州 TKE 集群 cls-abc123，3 副本高可用
+把镜像 ccr.ccs.tencentyun.com/myrepo/myapp:v1.0 部署到广州 TKE 集群 cls-abc123，3 副本高可用
 ```
 
 **AI 执行流程**:
@@ -168,9 +303,9 @@ Step 1: [TKE Skill] 获取 kubeconfig
 返回: kubeconfig YAML 内容
 配置到本地 ~/.kube/config
 
-Step 2: [Agent] 分析项目，生成 K8s 配置
+Step 2: [Agent] 根据镜像生成 K8s 配置
 ────────────────────────────────────────
-识别项目类型: Node.js 应用
+识别镜像: ccr.ccs.tencentyun.com/myrepo/myapp:v1.0
 生成配置:
   - Deployment (3 副本 + 反亲和性)
   - Service (ClusterIP)
@@ -184,7 +319,7 @@ Step 3: [kubernetes-mcp] 部署资源
 
 Step 4: [kubernetes-mcp] 验证部署
 ──────────────────────────────────
-调用: pods_list(label_selector="app=my-app")
+调用: pods_list(label_selector="app=myapp")
 返回: 3 个 Pod Running
 ```
 
@@ -194,16 +329,16 @@ Step 4: [kubernetes-mcp] 验证部署
 ✅ 部署完成！
 
 📦 已创建资源:
-  - Deployment: my-app (3 副本)
-  - Service: my-app (ClusterIP)
+  - Deployment: myapp (3 副本)
+  - Service: myapp (ClusterIP)
 
 🔗 Pod 状态:
-  - my-app-7d9f8b6c5d-abc12: Running
-  - my-app-7d9f8b6c5d-def34: Running
-  - my-app-7d9f8b6c5d-ghi56: Running
+  - myapp-7d9f8b6c5d-abc12: Running
+  - myapp-7d9f8b6c5d-def34: Running
+  - myapp-7d9f8b6c5d-ghi56: Running
 
 💡 访问方式:
-  kubectl port-forward svc/my-app 8080:80
+  kubectl port-forward svc/myapp 8080:80
 ```
 
 ---
@@ -472,10 +607,11 @@ rules:
 | 获取 kubeconfig | ✅ | - | - |
 | 创建/删除集群 | ✅ | - | - |
 | 管理节点池 | ✅ | - | - |
-| 部署应用 | - | ✅ | ✅ |
+| 部署已有镜像 | - | ✅ | ✅ |
 | 查看 Pod 日志 | - | ✅ | ✅ |
 | 执行容器命令 | - | ✅ | ✅ |
 | Helm 管理 | - | ✅ | ✅ |
 | 查看 Events | - | ✅ | ✅ |
 | 智能排障 | - | - | ✅ |
-| 一句话部署 | - | - | ✅ |
+| 从代码一键部署 | - | - | 🚧 规划中 |
+| 镜像构建/推送 | - | - | 🚧 规划中 |

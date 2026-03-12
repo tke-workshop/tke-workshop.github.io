@@ -4,13 +4,64 @@
 
 ---
 
+## ⚠️ 当前能力边界说明
+
+!!! warning "阅读前必看"
+    
+    在开始 POC 验证之前，请了解当前工具链的**能力边界**：
+    
+    ### ✅ 本 POC 可以验证的场景
+    
+    | 场景 | 说明 |
+    |------|------|
+    | TKE 集群管理 | 列出集群、获取状态、查看节点池 |
+    | kubeconfig 获取 | 通过 TKE API 获取集群访问凭证 |
+    | K8s 资源部署 | 部署 Deployment/Service（**使用已有镜像**） |
+    | Pod 操作 | 列出、查看详情、查看日志、执行命令 |
+    | Helm 管理 | 安装/升级/卸载 Helm Chart |
+    | 事件查看 | 查看 K8s Events 用于排障 |
+    
+    ### ❌ 本 POC 暂不支持的场景
+    
+    | 场景 | 原因 | 状态 |
+    |------|------|------|
+    | 从代码一键部署 | 缺少镜像构建和推送能力 | 🚧 规划中 |
+    | 镜像仓库管理 | 无 TCR/CCR Skill | 🚧 规划中 |
+    
+    **简单来说**：POC 中的部署场景需要使用**已经存在的容器镜像**（如 `nginx:alpine`），无法直接从项目代码构建镜像。
+
+---
+
+## 🗺️ 未来计划
+
+### TCR Skill 开发规划
+
+我们计划开发 **TCR Skill** 来补充镜像仓库能力，届时将支持：
+
+```
+完整部署流程:
+项目代码 → [构建镜像] → [推送到 TCR] → [部署到 TKE] → [验证]
+              ↓              ↓                ↓            ↓
+           Dockerfile     TCR Skill      k8s-mcp      k8s-mcp
+             (AI生成)      (规划中)       (已支持)     (已支持)
+```
+
+**预计时间线**：
+
+| 阶段 | 内容 | 预计时间 |
+|------|------|----------|
+| Phase 1 | TCR Skill 基础能力 | Q2 2026 |
+| Phase 2 | 本地 Docker 构建集成 | Q2 2026 |
+| Phase 3 | 云端构建集成 | Q3 2026 |
+
+---
+
 ## 📁 POC 目录结构
 
 ```
 poc-tke-k8s-mcp/
 ├── config/
 │   ├── mcp-config.json           # MCP Server 配置
-│   ├── tke-skill-config.yaml     # TKE Skill 配置
 │   └── kubeconfig-template.yaml  # kubeconfig 模板
 ├── scripts/
 │   ├── setup.sh                  # 环境初始化脚本
@@ -21,6 +72,7 @@ poc-tke-k8s-mcp/
 │   ├── deployment.yaml           # 测试 Deployment
 │   ├── service.yaml              # 测试 Service
 │   └── hpa.yaml                  # 测试 HPA
+├── .env                          # 环境变量 (腾讯云凭证)
 └── README.md                     # 本文档
 ```
 
@@ -32,20 +84,51 @@ poc-tke-k8s-mcp/
 
 **文件**: `config/mcp-config.json`
 
-```json
-{
-  "mcpServers": {
-    "kubernetes": {
-      "command": "kubernetes-mcp-server",
-      "args": [],
-      "env": {
-        "KUBECONFIG": "${HOME}/.kube/config",
-        "LOG_LEVEL": "info"
+=== "npx 运行 (推荐)"
+
+    最简单的方式，无需预先安装：
+
+    ```json
+    {
+      "mcpServers": {
+        "kubernetes": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "kubernetes-mcp-server@latest"
+          ]
+        }
       }
     }
-  }
-}
-```
+    ```
+
+    !!! tip "推荐理由"
+        - 无需手动安装，`npx` 会自动下载
+        - `-y` 参数跳过确认提示
+        - `@latest` 确保使用最新版本
+
+=== "Go Install"
+
+    如果你有 Go 环境：
+
+    ```json
+    {
+      "mcpServers": {
+        "kubernetes": {
+          "command": "kubernetes-mcp-server",
+          "args": [],
+          "env": {
+            "KUBECONFIG": "${HOME}/.kube/config"
+          }
+        }
+      }
+    }
+    ```
+
+    需要先安装：
+    ```bash
+    go install github.com/containers/kubernetes-mcp-server/cmd/kubernetes-mcp-server@latest
+    ```
 
 **使用方式**:
 ```bash
@@ -53,61 +136,17 @@ poc-tke-k8s-mcp/
 cp config/mcp-config.json ~/.codebuddy/mcp.json
 ```
 
-### 2. TKE Skill 配置
+### 2. TKE Skill 凭证配置
 
-**文件**: `config/tke-skill-config.yaml`
+TKE Skill 通过 **环境变量** 获取腾讯云凭证，不需要额外的配置文件。
 
-```yaml
-# TKE Skill 配置
-name: tke
-version: 1.0.0
-description: 腾讯云 TKE 容器服务运维能力
+在 `.env` 文件中配置（见下方环境变量部分）。
 
-# 腾讯云凭证
-tencent_cloud:
-  secret_id: "${TENCENTCLOUD_SECRET_ID}"
-  secret_key: "${TENCENTCLOUD_SECRET_KEY}"
-  region: "ap-guangzhou"
-
-# 支持的工具
-tools:
-  - name: list_clusters
-    description: 列出指定地域的 TKE 集群
-    parameters:
-      - name: region
-        type: string
-        required: false
-        description: 地域，如 ap-guangzhou
-        
-  - name: get_cluster_status
-    description: 获取集群详细状态
-    parameters:
-      - name: cluster_id
-        type: string
-        required: true
-        description: 集群 ID
-        
-  - name: get_kubeconfig
-    description: 获取集群的 kubeconfig
-    parameters:
-      - name: cluster_id
-        type: string
-        required: true
-        description: 集群 ID
-      - name: is_external
-        type: boolean
-        required: false
-        default: true
-        description: 是否获取外网访问配置
-        
-  - name: list_node_pools
-    description: 列出集群的节点池
-    parameters:
-      - name: cluster_id
-        type: string
-        required: true
-        description: 集群 ID
-```
+!!! info "凭证传入方式"
+    TKE Skill 支持两种凭证传入方式：
+    
+    1. **环境变量** (推荐)：`TENCENTCLOUD_SECRET_ID` / `TENCENTCLOUD_SECRET_KEY`
+    2. **命令行参数**：`--secret-id` / `--secret-key`
 
 ### 3. 环境变量
 
@@ -162,14 +201,23 @@ if ! command -v kubectl &> /dev/null; then
 fi
 echo "✅ kubectl: $(kubectl version --client --short 2>/dev/null || echo 'installed')"
 
-# 2. 安装 kubernetes-mcp-server
+# 2. 安装 kubernetes-mcp-server (可选，推荐使用 npx 方式)
 echo ""
-echo "📦 安装 kubernetes-mcp-server..."
-if ! command -v kubernetes-mcp-server &> /dev/null; then
-    go install github.com/containers/kubernetes-mcp-server/cmd/kubernetes-mcp-server@latest
-    echo "✅ kubernetes-mcp-server 安装完成"
+echo "📦 检查 kubernetes-mcp-server..."
+echo "   推荐方式: 使用 npx 自动下载运行 (无需预安装)"
+echo "   配置 mcp.json 使用 npx -y kubernetes-mcp-server@latest"
+
+# 如果需要本地安装 (可选)
+if command -v go &> /dev/null; then
+    if ! command -v kubernetes-mcp-server &> /dev/null; then
+        echo "   (可选) 安装本地版本..."
+        go install github.com/containers/kubernetes-mcp-server/cmd/kubernetes-mcp-server@latest
+        echo "✅ kubernetes-mcp-server 本地安装完成"
+    else
+        echo "✅ kubernetes-mcp-server 已本地安装"
+    fi
 else
-    echo "✅ kubernetes-mcp-server 已安装"
+    echo "ℹ️  Go 未安装，将使用 npx 方式运行 kubernetes-mcp-server"
 fi
 
 # 3. 安装 Python 依赖
@@ -661,15 +709,16 @@ def main():
     
     info(f"使用 kubeconfig: {kubeconfig}")
     
-    # 检查 kubernetes-mcp-server
+    # 检查 kubernetes-mcp-server (如果使用本地安装方式)
+    # 注意: 如果使用 npx 方式，可以跳过此检查
     try:
         subprocess.run(["kubernetes-mcp-server", "--version"], 
                       capture_output=True, check=True)
-        success("kubernetes-mcp-server 已安装")
+        success("kubernetes-mcp-server 已安装 (本地版本)")
     except (subprocess.CalledProcessError, FileNotFoundError):
-        error("kubernetes-mcp-server 未安装")
-        info("请运行: go install github.com/containers/kubernetes-mcp-server/cmd/kubernetes-mcp-server@latest")
-        sys.exit(1)
+        info("kubernetes-mcp-server 未本地安装")
+        info("推荐: 在 mcp.json 中配置 npx -y kubernetes-mcp-server@latest")
+        info("或安装: go install github.com/containers/kubernetes-mcp-server/cmd/kubernetes-mcp-server@latest")
     
     # 运行测试
     test_list_tools()
@@ -1153,10 +1202,19 @@ python3 scripts/test-integration.py     # 集成测试
 ### Q: kubernetes-mcp-server 连接失败
 
 ```
-A: 检查 kubeconfig 配置:
-   1. 确认 KUBECONFIG 环境变量已设置
-   2. 运行 kubectl cluster-info 验证连接
-   3. 检查 kubeconfig 中的 Token 是否过期
+A: 检查配置和连接:
+   1. 推荐使用 npx 方式运行，配置 mcp.json:
+      {
+        "mcpServers": {
+          "kubernetes": {
+            "command": "npx",
+            "args": ["-y", "kubernetes-mcp-server@latest"]
+          }
+        }
+      }
+   2. 确认 KUBECONFIG 环境变量已设置或 ~/.kube/config 存在
+   3. 运行 kubectl cluster-info 验证连接
+   4. 检查 kubeconfig 中的 Token 是否过期
 ```
 
 ### Q: TKE API 认证失败
@@ -1181,11 +1239,26 @@ A: 检查集群资源:
 
 ## 📊 POC 验证清单
 
+### ✅ 当前已支持（可验证）
+
 - [x] TKE Skill 集群查询
 - [x] TKE Skill kubeconfig 获取
 - [x] kubernetes-mcp Pod 操作
-- [x] kubernetes-mcp 资源部署
+- [x] kubernetes-mcp 资源部署（**需使用已有镜像**）
 - [x] kubernetes-mcp Events 查看
-- [x] 集成工作流：获取凭证 → 部署 → 验证
-- [ ] Helm Chart 安装 (可选)
-- [ ] 排障流程演示 (可选)
+- [x] 集成工作流：获取凭证 → 部署已有镜像 → 验证
+- [ ] Helm Chart 安装 (可选扩展)
+- [ ] 排障流程演示 (可选扩展)
+
+### 🚧 规划中（暂不可验证）
+
+- [ ] 从项目代码构建镜像
+- [ ] 镜像推送到 TCR/CCR
+- [ ] 完整的"代码 → 部署"流程
+
+!!! tip "临时方案"
+    在镜像构建能力上线前，你可以：
+    
+    1. **手动构建镜像**：`docker build && docker push` 后让 AI 部署
+    2. **使用 CI/CD**：通过 GitHub Actions 构建镜像，AI 负责部署
+    3. **使用公开镜像**：如本 POC 示例使用的 `nginx:alpine`
