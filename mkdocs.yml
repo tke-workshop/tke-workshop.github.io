@@ -171,6 +171,8 @@ nav:
     - TKE with AI Copilot:
       - ai-ml/ai-copilot/index.md
       - TKE Skill: ai-ml/ai-copilot/tke-skill.md
+      - kubernetes-mcp 集成: ai-ml/ai-copilot/k8s-mcp-integration.md
+      - POC 示例: ai-ml/ai-copilot/poc-examples.md
   
   - Data on TKE 🚧:
     - data/index.md

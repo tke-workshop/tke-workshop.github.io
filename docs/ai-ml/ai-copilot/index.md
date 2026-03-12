@@ -21,7 +21,11 @@
 | 章节 | 内容 | 状态 |
 |------|------|------|
 | [TKE Skill](tke-skill.md) | AI Agent 扩展能力，集群查询、一句话部署、智能排障 | 🚧 建设中 |
+| [kubernetes-mcp 集成](k8s-mcp-integration.md) | 与 k8s-mcp-server 组合，实现 AI + K8s 完整闭环 | 🆕 新增 |
+| [POC 示例](poc-examples.md) | 完整的配置和测试脚本，快速验证集成效果 | 🆕 新增 |
 
 ## 开始学习
 
 [:octicons-arrow-right-24: TKE Skill](tke-skill.md)
+
+[:octicons-arrow-right-24: kubernetes-mcp 集成](k8s-mcp-integration.md)
