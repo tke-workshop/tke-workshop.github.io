@@ -168,7 +168,10 @@ nav:
       - TKE 部署: ai-ml/kitops/tke-deployment.md
       - CI/CD 集成: ai-ml/kitops/cicd-integration.md
       - 最佳实践: ai-ml/kitops/best-practices.md
-    - TKE Skill: ai-ml/tke-skill.md
+  
+  - TKE with AI Copilot:
+    - ai-copilot/index.md
+    - TKE Skill: ai-copilot/tke-skill.md
   
   - Data on TKE 🚧:
     - data/index.md

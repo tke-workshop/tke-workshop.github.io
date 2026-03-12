@@ -19,7 +19,6 @@
 | [OpenClaw on TKE](openclaw/index.md) | 百万级 AI 助手实例架构方案（含 7 个子章节） | ✅ 已完成 |
 | [OPEA on TKE](opea/index.md) | 企业级 AI 应用平台部署（含 2 个子章节） | ✅ 已完成 |
 | [KitOps on TKE](kitops/index.md) | 模型打包、TCR 存储、跨环境复现（含 6 个子章节） | ✅ 已完成 |
-| [TKE Skill](tke-skill.md) | AI Agent 扩展能力，一句话部署、智能排障、运维增强 | 🚧 建设中 |
 
 ## 开始学习
 
