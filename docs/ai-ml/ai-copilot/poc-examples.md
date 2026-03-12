@@ -4,55 +4,110 @@
 
 ---
 
-## ⚠️ 当前能力边界说明
+## 📋 能力说明
 
-!!! warning "阅读前必看"
-    
-    在开始 POC 验证之前，请了解当前工具链的**能力边界**：
-    
-    ### ✅ 本 POC 可以验证的场景
-    
-    | 场景 | 说明 |
-    |------|------|
-    | TKE 集群管理 | 列出集群、获取状态、查看节点池 |
-    | kubeconfig 获取 | 通过 TKE API 获取集群访问凭证 |
-    | K8s 资源部署 | 部署 Deployment/Service（**使用已有镜像**） |
-    | Pod 操作 | 列出、查看详情、查看日志、执行命令 |
-    | Helm 管理 | 安装/升级/卸载 Helm Chart |
-    | 事件查看 | 查看 K8s Events 用于排障 |
-    
-    ### ❌ 本 POC 暂不支持的场景
-    
-    | 场景 | 原因 | 状态 |
-    |------|------|------|
-    | 从代码一键部署 | 缺少镜像构建和推送能力 | 🚧 规划中 |
-    | 镜像仓库管理 | 无 TCR/CCR Skill | 🚧 规划中 |
-    
-    **简单来说**：POC 中的部署场景需要使用**已经存在的容器镜像**（如 `nginx:alpine`），无法直接从项目代码构建镜像。
+### ✅ 本 POC 可以验证的场景
+
+| 场景 | 说明 |
+|------|------|
+| TKE 集群管理 | 列出集群、获取状态、查看节点池 |
+| kubeconfig 获取 | 通过 TKE API 获取集群访问凭证 |
+| **本地构建 + TCR 部署** | 本地 Docker 构建镜像，推送到 TCR，部署到 TKE |
+| K8s 资源部署 | 部署 Deployment/Service |
+| Pod 操作 | 列出、查看详情、查看日志、执行命令 |
+| Helm 管理 | 安装/升级/卸载 Helm Chart |
+| 事件查看 | 查看 K8s Events 用于排障 |
 
 ---
 
-## 🗺️ 未来计划
+## 🚀 推荐方案：本地 Docker + TCR 部署
 
-### TCR Skill 开发规划
-
-我们计划开发 **TCR Skill** 来补充镜像仓库能力，届时将支持：
+这是目前最科学、可行的"代码到部署"方式：
 
 ```
 完整部署流程:
-项目代码 → [构建镜像] → [推送到 TCR] → [部署到 TKE] → [验证]
-              ↓              ↓                ↓            ↓
-           Dockerfile     TCR Skill      k8s-mcp      k8s-mcp
-             (AI生成)      (规划中)       (已支持)     (已支持)
+项目代码 → [本地Docker构建] → [推送到TCR] → [部署到TKE] → [验证]
+              ✅ 已支持        ✅ 已支持      ✅ 已支持    ✅ 已支持
 ```
 
-**预计时间线**：
+### 流程详解
 
-| 阶段 | 内容 | 预计时间 |
-|------|------|----------|
-| Phase 1 | TCR Skill 基础能力 | Q2 2026 |
-| Phase 2 | 本地 Docker 构建集成 | Q2 2026 |
-| Phase 3 | 云端构建集成 | Q3 2026 |
+```bash
+# Step 1: 本地构建镜像
+docker build -t my-app:v1.0 .
+
+# Step 2: 登录 TCR 个人版（免费）
+docker login ccr.ccs.tencentyun.com -u <腾讯云账号ID>
+
+# Step 3: 打标签并推送
+docker tag my-app:v1.0 ccr.ccs.tencentyun.com/<namespace>/my-app:v1.0
+docker push ccr.ccs.tencentyun.com/<namespace>/my-app:v1.0
+
+# Step 4: AI 辅助部署到 TKE
+# 使用 TKE Skill 获取 kubeconfig
+# 使用 kubernetes-mcp 部署应用
+```
+
+### TCR 个人版配置
+
+!!! tip "TCR 个人版优势"
+    - ✅ **免费**：个人版完全免费
+    - ✅ **国内访问快**：无需担心 DockerHub 网络问题
+    - ✅ **与 TKE 无缝集成**：同一腾讯云账号，权限自动打通
+
+**配置步骤**：
+
+1. 登录 [腾讯云容器镜像服务控制台](https://console.cloud.tencent.com/tcr/repository)
+2. 选择"个人版"实例
+3. 创建命名空间（如 `myproject`）
+4. 点击右上角"登录指令"获取 docker login 命令
+
+**地域对应的 Registry 地址**：
+
+| 地域 | Registry 地址 |
+|------|--------------|
+| 广州 | `ccr.ccs.tencentyun.com` |
+| 上海 | `ccr.ccs.tencentyun.com` |
+| 北京 | `ccr.ccs.tencentyun.com` |
+| 香港 | `hkccr.ccs.tencentyun.com` |
+| 新加坡 | `sgccr.ccs.tencentyun.com` |
+
+### AI 辅助完整部署示例
+
+```
+用户: 把当前项目部署到 TKE 集群 cls-abc123
+
+AI 执行流程:
+  1. 📝 检查项目，发现/生成 Dockerfile
+  2. 🔨 执行: docker build -t my-app:v1.0 .
+  3. 🏷️ 执行: docker tag my-app:v1.0 ccr.ccs.tencentyun.com/myns/my-app:v1.0
+  4. 📤 执行: docker push ccr.ccs.tencentyun.com/myns/my-app:v1.0
+  5. 🔑 [TKE Skill] 获取 kubeconfig
+  6. 📦 [kubernetes-mcp] 生成并部署 Deployment + Service
+  7. ✅ [kubernetes-mcp] 验证 Pod 状态
+  
+  部署完成！
+```
+
+---
+
+## 🗺️ 未来计划：TCR Skill
+
+当前需要手动执行 docker login，未来计划开发 **TCR Skill** 实现自动化：
+
+```
+预期能力:
+├── 镜像仓库管理
+│   ├── create_namespace    # 创建命名空间
+│   ├── create_repository   # 创建镜像仓库
+│   └── list_images         # 列出镜像和标签
+├── 镜像操作
+│   ├── get_login_command   # 获取 docker login 命令
+│   └── delete_image        # 删除镜像
+└── 云端构建（TCR 企业版）
+    ├── create_build_rule   # 创建构建规则
+    └── trigger_build       # 触发构建
+```
 
 ---
 
@@ -1243,22 +1298,34 @@ A: 检查集群资源:
 
 - [x] TKE Skill 集群查询
 - [x] TKE Skill kubeconfig 获取
+- [x] **本地 Docker 构建镜像**
+- [x] **推送镜像到 TCR 个人版**
 - [x] kubernetes-mcp Pod 操作
-- [x] kubernetes-mcp 资源部署（**需使用已有镜像**）
+- [x] kubernetes-mcp 资源部署
 - [x] kubernetes-mcp Events 查看
-- [x] 集成工作流：获取凭证 → 部署已有镜像 → 验证
+- [x] **完整工作流：构建 → 推送 → 部署 → 验证**
 - [ ] Helm Chart 安装 (可选扩展)
 - [ ] 排障流程演示 (可选扩展)
 
-### 🚧 规划中（暂不可验证）
+### 🚧 规划中（TCR Skill 自动化）
 
-- [ ] 从项目代码构建镜像
-- [ ] 镜像推送到 TCR/CCR
-- [ ] 完整的"代码 → 部署"流程
+- [ ] 自动获取 TCR 登录凭证
+- [ ] 自动创建镜像仓库
+- [ ] 云端构建（TCR 企业版）
 
-!!! tip "临时方案"
-    在镜像构建能力上线前，你可以：
+!!! success "推荐方案"
+    **本地 Docker + TCR 个人版** 是目前最科学、可行的部署方式：
     
-    1. **手动构建镜像**：`docker build && docker push` 后让 AI 部署
-    2. **使用 CI/CD**：通过 GitHub Actions 构建镜像，AI 负责部署
-    3. **使用公开镜像**：如本 POC 示例使用的 `nginx:alpine`
+    ```bash
+    # 1. 构建
+    docker build -t my-app:v1.0 .
+    
+    # 2. 登录 TCR（一次性配置）
+    docker login ccr.ccs.tencentyun.com -u <账号ID>
+    
+    # 3. 推送
+    docker tag my-app:v1.0 ccr.ccs.tencentyun.com/<ns>/my-app:v1.0
+    docker push ccr.ccs.tencentyun.com/<ns>/my-app:v1.0
+    
+    # 4. AI 辅助部署到 TKE
+    ```

@@ -43,25 +43,88 @@
 
 ```
 项目代码 → [构建镜像] → [推送到镜像仓库] → [部署到 K8s] → [验证]
-            ↑              ↑                  ✅ 已支持    ✅ 已支持
-            ❌ 缺失        ❌ 缺失
+            ✅ 本地Docker  ✅ TCR个人版      ✅ 已支持    ✅ 已支持
 ```
 
-**当前的"一句话部署"实际上要求**：
+**当前推荐方案：本地 Docker + TCR 个人版**
 
-1. 用户**已经有构建好的镜像**（在 TCR/CCR/DockerHub）
-2. 或者使用**公开镜像**（如 nginx:alpine）
-3. AI 负责生成 K8s YAML 并部署
+通过本地 Docker 构建镜像并推送到 TCR（腾讯云容器镜像服务）个人版，是目前最科学、可行的部署方式：
+
+1. ✅ 本地 Docker 构建（大部分开发者都有 Docker 环境）
+2. ✅ 推送到 TCR 个人版（免费、国内访问快）
+3. ✅ AI 部署到 TKE 集群
 
 ---
 
-## 🗺️ 未来计划：代码到部署全流程
+## 🚀 推荐方案：本地构建 + TCR 部署
 
-我们计划通过以下方式实现"从代码一键部署到 TKE"的完整体验：
+### 完整流程
 
-### Phase 1: TCR Skill（规划中）
+```
+用户: 把当前项目部署到 TKE 集群 cls-xxx
 
-新增 **TCR Skill** 支持腾讯云容器镜像服务：
+AI 执行:
+  1. [Agent] 分析项目，生成 Dockerfile（如果不存在）
+  2. [终端] docker build -t 镜像名:tag .
+  3. [终端] docker tag + docker push 到 TCR
+  4. [TKE Skill] 获取 kubeconfig
+  5. [kubernetes-mcp] 生成并部署 K8s 资源
+  6. [kubernetes-mcp] 验证 Pod 状态
+  ✅ 部署完成，返回访问地址
+```
+
+### TCR 个人版配置
+
+TCR 个人版是免费的镜像托管服务，推荐用于开发测试：
+
+```bash
+# 1. 登录 TCR 个人版
+# 地域格式: ccr.ccs.tencentyun.com (广州)
+#          hkccr.ccs.tencentyun.com (香港)
+#          usw.tencentcloudcr.com (美西)
+docker login ccr.ccs.tencentyun.com -u <腾讯云账号ID>
+# 密码使用腾讯云控制台生成的镜像仓库密码
+
+# 2. 构建镜像
+docker build -t my-app:v1.0 .
+
+# 3. 打标签
+docker tag my-app:v1.0 ccr.ccs.tencentyun.com/<namespace>/my-app:v1.0
+
+# 4. 推送
+docker push ccr.ccs.tencentyun.com/<namespace>/my-app:v1.0
+```
+
+!!! tip "获取 TCR 登录凭证"
+    1. 登录 [腾讯云容器镜像服务控制台](https://console.cloud.tencent.com/tcr/repository)
+    2. 选择"个人版"
+    3. 点击"镜像仓库" → "新建"创建命名空间和仓库
+    4. 点击右上角"登录指令"获取 docker login 命令
+
+### AI 辅助部署示例
+
+```
+用户: 帮我把当前项目部署到 TKE 集群 cls-1l0io2fu
+
+AI: 好的，我来帮你完成部署。首先检查项目结构...
+
+    1. ✅ 发现 Dockerfile，直接使用
+    2. 🔨 构建镜像: docker build -t tke-workshop:v1.0 .
+    3. 📤 推送到 TCR: 
+       docker tag tke-workshop:v1.0 ccr.ccs.tencentyun.com/myns/tke-workshop:v1.0
+       docker push ccr.ccs.tencentyun.com/myns/tke-workshop:v1.0
+    4. 🔑 获取集群 kubeconfig
+    5. 📦 部署 Deployment + Service
+    6. ✅ 验证 Pod 状态
+
+    部署完成！访问地址: http://x.x.x.x:80
+```
+
+---
+
+## 🗺️ 未来计划：TCR Skill 自动化
+
+当前需要手动登录 TCR，未来计划开发 **TCR Skill** 实现全自动化：
 
 ```
 预期能力:
@@ -77,40 +140,12 @@
     └── trigger_build       # 触发构建
 ```
 
-### Phase 2: 构建能力集成
-
-**方案 A: 本地 Docker 构建**
-- AI 生成 Dockerfile
-- 调用本地 Docker CLI 构建和推送
-- 适合有 Docker 环境的开发者
-
-**方案 B: 云端构建**
-- 使用 TCR 企业版的自动构建能力
-- 关联代码仓库，自动触发
-- 无需本地 Docker 环境
-
-### Phase 3: 完整一句话部署
-
-```
-用户: 把当前项目部署到 TKE 集群 cls-xxx
-
-AI 执行:
-  1. [Agent] 分析项目，生成 Dockerfile
-  2. [TCR Skill] 创建镜像仓库（如果不存在）
-  3. [TCR Skill] 获取登录凭证
-  4. [本地/云端] 构建镜像并推送
-  5. [TKE Skill] 获取 kubeconfig
-  6. [kubernetes-mcp] 生成并部署 K8s 资源
-  7. [kubernetes-mcp] 验证 Pod 状态
-  ✅ 部署完成，返回访问地址
-```
-
-!!! info "临时方案"
-    在完整能力上线前，推荐使用以下方式：
+!!! info "当前推荐做法"
+    在 TCR Skill 上线前，推荐：
     
-    1. **手动构建镜像**后，让 AI 部署
-    2. 使用 **GitHub Actions** 等 CI 自动构建，AI 负责部署
-    3. 使用 **Helm Chart** 部署（公共镜像场景）
+    1. **本地 Docker + TCR 个人版**（最推荐，简单高效）
+    2. 使用 **GitHub Actions** 等 CI 自动构建推送
+    3. 使用 **Helm Chart** 部署公共镜像
 
 ```
 ┌───────────────────────────────────────────────────────────┐
@@ -274,44 +309,53 @@ export TENCENTCLOUD_REGION="ap-guangzhou"  # 可选，默认 ap-guangzhou
 
 ## 📝 使用场景
 
-### 场景 1: 部署已有镜像到 TKE
-
-!!! note "前提条件"
-    此场景要求你**已经有构建好的容器镜像**（在 TCR/CCR/DockerHub/其他镜像仓库）。
-    
-    如果还没有镜像，请先手动构建推送，或参考"临时方案"部分。
+### 场景 1: 项目代码部署到 TKE（推荐流程）
 
 **用户输入**:
 ```
-把镜像 ccr.ccs.tencentyun.com/myrepo/myapp:v1.0 部署到广州 TKE 集群 cls-abc123，3 副本高可用
+把当前项目部署到广州 TKE 集群 cls-abc123，3 副本高可用
 ```
 
 **AI 执行流程**:
 
 ```
-Step 1: [TKE Skill] 获取 kubeconfig
+Step 1: [Agent] 分析项目，生成/检查 Dockerfile
+──────────────────────────────────────────────
+检查项目根目录是否有 Dockerfile
+如果没有，根据项目类型生成 Dockerfile
+
+Step 2: [终端] 本地构建镜像
+─────────────────────────────
+执行: docker build -t my-app:v1.0 .
+等待构建完成
+
+Step 3: [终端] 推送到 TCR
+─────────────────────────────
+执行: docker tag my-app:v1.0 ccr.ccs.tencentyun.com/myns/my-app:v1.0
+执行: docker push ccr.ccs.tencentyun.com/myns/my-app:v1.0
+(需要提前登录 TCR: docker login ccr.ccs.tencentyun.com)
+
+Step 4: [TKE Skill] 获取 kubeconfig
 ────────────────────────────────────
 调用: get_kubeconfig(cluster_id="cls-abc123")
 返回: kubeconfig YAML 内容
 配置到本地 ~/.kube/config
 
-Step 2: [Agent] 根据镜像生成 K8s 配置
+Step 5: [Agent] 生成 K8s 配置
 ────────────────────────────────────────
-识别镜像: ccr.ccs.tencentyun.com/myrepo/myapp:v1.0
 生成配置:
   - Deployment (3 副本 + 反亲和性)
-  - Service (ClusterIP)
-  - Ingress (可选)
+  - Service (ClusterIP 或 LoadBalancer)
 
-Step 3: [kubernetes-mcp] 部署资源
+Step 6: [kubernetes-mcp] 部署资源
 ──────────────────────────────────
 调用: resources_create_or_update(yaml=Deployment)
 调用: resources_create_or_update(yaml=Service)
 返回: 资源创建成功
 
-Step 4: [kubernetes-mcp] 验证部署
+Step 7: [kubernetes-mcp] 验证部署
 ──────────────────────────────────
-调用: pods_list(label_selector="app=myapp")
+调用: pods_list(label_selector="app=my-app")
 返回: 3 个 Pod Running
 ```
 
@@ -320,18 +364,28 @@ Step 4: [kubernetes-mcp] 验证部署
 ```
 ✅ 部署完成！
 
+🔨 构建信息:
+  - 镜像: ccr.ccs.tencentyun.com/myns/my-app:v1.0
+  - 构建时间: 45s
+
 📦 已创建资源:
-  - Deployment: myapp (3 副本)
-  - Service: myapp (ClusterIP)
+  - Deployment: my-app (3 副本)
+  - Service: my-app (LoadBalancer)
 
 🔗 Pod 状态:
-  - myapp-7d9f8b6c5d-abc12: Running
-  - myapp-7d9f8b6c5d-def34: Running
-  - myapp-7d9f8b6c5d-ghi56: Running
+  - my-app-7d9f8b6c5d-abc12: Running
+  - my-app-7d9f8b6c5d-def34: Running
+  - my-app-7d9f8b6c5d-ghi56: Running
 
-💡 访问方式:
-  kubectl port-forward svc/myapp 8080:80
+💡 外网访问地址: http://119.91.xxx.xxx:80
 ```
+
+!!! tip "首次使用需登录 TCR"
+    ```bash
+    # 登录 TCR 个人版（一次性操作）
+    docker login ccr.ccs.tencentyun.com -u <腾讯云账号ID>
+    # 密码从腾讯云控制台获取
+    ```
 
 ---
 
@@ -599,11 +653,13 @@ rules:
 | 获取 kubeconfig | ✅ | - | - |
 | 创建/删除集群 | ✅ | - | - |
 | 管理节点池 | ✅ | - | - |
-| 部署已有镜像 | - | ✅ | ✅ |
+| 本地 Docker 构建 | - | - | ✅ (终端) |
+| 推送到 TCR | - | - | ✅ (终端) |
+| 部署镜像 | - | ✅ | ✅ |
 | 查看 Pod 日志 | - | ✅ | ✅ |
 | 执行容器命令 | - | ✅ | ✅ |
 | Helm 管理 | - | ✅ | ✅ |
 | 查看 Events | - | ✅ | ✅ |
 | 智能排障 | - | - | ✅ |
-| 从代码一键部署 | - | - | 🚧 规划中 |
-| 镜像构建/推送 | - | - | 🚧 规划中 |
+| **代码→部署完整流程** | - | - | ✅ |
+| TCR 自动化管理 | - | - | 🚧 规划中 |
