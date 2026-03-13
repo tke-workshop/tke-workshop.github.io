@@ -2,6 +2,10 @@
 
 本文档介绍如何将 **TKE Skill** 与 **kubernetes-mcp-server** 组合使用，实现 AI + K8s 运维的完整闭环。
 
+!!! tip "🔗 获取工具"
+    - **TKE Skill**：[https://github.com/tkestack/tke-skill](https://github.com/tkestack/tke-skill)
+    - **kubernetes-mcp-server**：[https://github.com/manusa/kubernetes-mcp-server](https://github.com/manusa/kubernetes-mcp-server)
+
 ---
 
 ## 📋 概述
@@ -639,6 +643,7 @@ rules:
 ## 🔗 相关链接
 
 - [kubernetes-mcp-server GitHub](https://github.com/containers/kubernetes-mcp-server)
+- [TKE Skill GitHub](https://github.com/tkestack/tke-skill) - 源码和安装说明
 - [MCP Protocol 文档](https://modelcontextprotocol.io/)
 - [TKE Skill 介绍](tke-skill.md)
 - [TKE API 文档](https://cloud.tencent.com/document/api/457)
