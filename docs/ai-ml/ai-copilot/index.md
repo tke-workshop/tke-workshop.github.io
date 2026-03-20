@@ -1,6 +1,6 @@
 # TKE with AI Copilot
 
-本模块介绍如何利用 AI 能力增强 TKE 的使用体验，让 AI 成为你的 K8s 运维助手。
+本模块介绍如何利用 AI 能力增强 TKE 的使用体验，让 AI 成为你的 K8s 全栈运维助手。
 
 ## 核心理念
 
@@ -13,7 +13,7 @@
 
 - [ ] 了解 AI Agent 如何与 TKE 集成
 - [ ] 使用自然语言查询和管理 K8s 集群
-- [ ] 实现一句话部署应用到 TKE
+- [ ] 使用 Helm 一键部署应用到 TKE
 - [ ] 借助 AI 进行智能运维和排障
 - [ ] 使用 RBAC 多租户管理为团队分配权限
 
@@ -21,12 +21,44 @@
 
 | 章节 | 内容 | 状态 |
 |------|------|------|
-| [TKE Skill](tke-skill.md) | AI Agent 扩展能力，集群管理、K8s 资源操作、Helm 部署、TCR 镜像仓库、RBAC 多租户管理 | ✅ v2.0 |
-| [使用场景指南](user-stories.md) | 7 个典型使用场景，从新员工接入到多租户管理 | ✅ 完成 |
-| [kubernetes-mcp 集成](k8s-mcp-integration.md) | 与 k8s-mcp-server 组合，实现 AI + K8s 完整闭环 | 🆕 新增 |
-| [POC 示例](poc-examples.md) | 完整的配置和测试脚本，快速验证集成效果 | 🆕 新增 |
+| [TKE Skill](tke-skill.md) | AI Agent 扩展能力，TKE 集群管理、K8s 资源操作、Helm 部署、TCR 镜像仓库、RBAC 多租户管理 | ✅ v2.0 |
+| [使用场景指南](user-stories.md) | 8 个典型使用场景，从新员工接入到多租户管理 | ✅ 完成 |
 
-## TKE Skill v2.0 新增能力
+## TKE Skill v2.0 能力概览
+
+TKE Skill 通过两个 CLI 工具提供完整的云原生运维能力：
+
+- **tke_cli.py** — 腾讯云 API 操作（集群管理、TCR 镜像仓库）
+- **k8s_cli.py** — Kubernetes 集群内操作（资源管理、Pod 操作、Helm 部署、RBAC 租户管理）
+
+### 📋 TKE 集群管理
+
+```
+帮我查一下广州地域的 TKE 集群
+获取集群 cls-xxx 的 kubeconfig
+```
+
+### ☸️ K8s 资源操作
+
+```
+帮我查看 default 命名空间的 Pod 状态
+帮我部署 nginx 到 production 命名空间
+查看 my-app Pod 的日志
+```
+
+### ⛵ Helm 包管理
+
+```
+帮我用 Helm 安装 nginx，3 副本，开启等待
+帮我列出所有已安装的 Helm Release
+```
+
+### 🐳 TCR 镜像仓库
+
+```
+帮我查看广州地域的 TCR 实例
+创建一个镜像仓库 my-app
+```
 
 ### 🔐 多租户 RBAC 管理
 
@@ -34,36 +66,18 @@
 
 ```
 帮我创建一个账号 team-frontend，权限级别 developer，可以访问 frontend 命名空间
+帮我生成 team-frontend 的安装 Prompt
 ```
 
 AI 将自动创建：
 - ServiceAccount
-- Role（基于预定义模板）
+- Role（基于预定义模板：readonly/developer/admin）
 - RoleBinding
 
 并可生成一键安装 Prompt，发给租户直接使用。
 
-### ⛵ Helm 包管理
-
-用自然语言部署 Helm Chart：
-
-```
-帮我用 Helm 安装 nginx，3 副本，开启等待
-```
-
-### 🐳 TCR 镜像仓库
-
-完整的 TCR 镜像仓库管理：
-
-```
-帮我查看广州地域的 TCR 实例
-创建一个镜像仓库 my-app
-```
-
 ## 开始学习
 
-[:octicons-arrow-right-24: TKE Skill](tke-skill.md)
+[:octicons-arrow-right-24: TKE Skill 详细介绍](tke-skill.md)
 
 [:octicons-arrow-right-24: 使用场景指南](user-stories.md)
-
-[:octicons-arrow-right-24: kubernetes-mcp 集成](k8s-mcp-integration.md)
