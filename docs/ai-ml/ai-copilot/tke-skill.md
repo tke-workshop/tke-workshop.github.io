@@ -320,6 +320,6 @@ AI 自动执行金丝雀发布：
 
 ### 外部链接
 
-- [TKE Skill GitHub](https://github.com/tkestack/tke-skill) - 源码和安装说明
+- [TKE Skill 下载](https://clawhub.ai/archerlliu/tke-skill) - 源码和安装说明
 - [TKE 产品文档](https://cloud.tencent.com/document/product/457)
 - [Kubernetes 官方文档](https://kubernetes.io/docs/)

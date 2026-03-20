@@ -3,7 +3,7 @@
 本文档从 **TKE Skill 用户的真实使用场景** 出发，定义端到端的 User Story。每个 Story 代表一个完整的业务场景，展示 AI + TKE Skill 如何协同完成复杂任务。
 
 !!! tip "🔗 获取 TKE Skill"
-    **GitHub 地址**：[https://github.com/tkestack/tke-skill](https://github.com/tkestack/tke-skill)
+    **下载地址**：[https://clawhub.ai/archerlliu/tke-skill](https://clawhub.ai/archerlliu/tke-skill)
 
 ---
 
