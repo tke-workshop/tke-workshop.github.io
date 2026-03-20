@@ -572,12 +572,174 @@ SRE 需要定期（每天/每周）对集群进行巡检：
 
 ---
 
+## 场景 8: 多租户权限管理与 Agent 分发（🆕 新场景）
+
+### 场景描述
+
+**作为** 一名集群管理员  
+**我想要** 快速为新团队创建 K8s 访问权限并生成 AI Agent 安装 Prompt  
+**以便于** 租户无需学习 kubectl 就能用自然语言管理自己的命名空间
+
+### 业务背景
+
+企业 K8s 集群通常是多团队共享的，集群管理员面临以下挑战：
+
+1. **权限配置繁琐**：为每个租户创建 RBAC 角色、RoleBinding、ServiceAccount 需要大量手工操作
+2. **凭证分发困难**：生成 kubeconfig 后，如何安全、便捷地交付给租户是个问题
+3. **知识门槛高**：即使有了凭证，租户（尤其是开发者）也不一定会用 kubectl
+
+TKE Skill v2.0 的多租户 RBAC 管理功能，可以将这三个问题一次性解决。
+
+### AI 执行步骤
+
+```
+1. 解析用户权限需求
+   - 租户名称（如 team-frontend）
+   - 目标命名空间（如 frontend, frontend-staging）
+   - 权限级别（readonly/developer/admin/custom）
+
+2. 创建 RBAC 资源
+   - ServiceAccount: tke-tenant-{租户名}
+   - Role: 基于权限级别模板
+   - RoleBinding: 绑定 SA 和 Role
+
+3. 获取租户 Token
+   - 使用 kubectl create token
+   - 支持设置过期时间
+
+4. 生成一键安装 Prompt
+   - 包含 kubeconfig 配置
+   - 包含 Token
+   - 包含使用说明
+   - 可直接发给租户执行
+
+5. 输出安装指南
+   - 租户粘贴 Prompt 到自己的 Agent
+   - 自动完成配置
+   - 开始使用自然语言操作 K8s
+```
+
+### 验收标准
+
+| AC | 描述 | 验证方法 |
+|----|------|----------|
+| AC1 | 能够创建完整的 RBAC 资源 | SA + Role + RoleBinding 都已创建 |
+| AC2 | 权限级别正确 | readonly/developer/admin 权限符合预期 |
+| AC3 | 能够获取有效 Token | Token 可用于 API 认证 |
+| AC4 | 能够生成可执行的 Prompt | 租户可直接使用 |
+| AC5 | 租户能够正常操作 | 权限范围内的操作都能成功 |
+
+### 预期输出示例
+
+**管理员创建租户：**
+
+```
+管理员：帮我创建一个账号 team-frontend，权限级别 developer，可以访问 frontend 命名空间
+
+Agent：
+正在创建租户 RBAC 资源...
+
+✅ 已创建以下资源：
+┌─────────────────────────────────────────────────────────────────┐
+│ ServiceAccount: tke-tenant-team-frontend                        │
+│ Namespace: frontend                                             │
+├─────────────────────────────────────────────────────────────────┤
+│ Role: tke-tenant-team-frontend-role                             │
+│ 权限级别: developer                                              │
+│ 权限:                                                           │
+│   - pods: get, list, watch, create, update, patch, delete       │
+│   - deployments: get, list, watch, create, update, patch, delete│
+│   - services: get, list, watch, create, update, patch, delete   │
+│   - configmaps/secrets: get, list, watch, create, update, patch │
+├─────────────────────────────────────────────────────────────────┤
+│ RoleBinding: tke-tenant-team-frontend-binding                   │
+│ 绑定命名空间: frontend                                           │
+└─────────────────────────────────────────────────────────────────┘
+
+需要我生成该租户的安装 Prompt 吗？
+```
+
+**管理员生成安装 Prompt：**
+
+```
+管理员：帮我生成 team-frontend 的安装 Prompt
+
+Agent：
+📋 已生成安装 Prompt，请将以下内容发送给 team-frontend 团队成员：
+
+---
+# TKE Skill 一键安装 Prompt
+# 租户: team-frontend | 命名空间: frontend | 集群: my-tke-cluster
+
+## 步骤 1：保存 kubeconfig
+将以下内容保存到 ~/.kube/tke-tenant-team-frontend.config：
+
+```yaml
+apiVersion: v1
+kind: Config
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1...
+    server: https://xx.xx.xx.xx:443
+  name: my-tke-cluster
+contexts:
+- context:
+    cluster: my-tke-cluster
+    namespace: frontend
+    user: tke-tenant-team-frontend
+  name: tke-tenant-team-frontend@my-tke-cluster
+current-context: tke-tenant-team-frontend@my-tke-cluster
+users:
+- name: tke-tenant-team-frontend
+  user:
+    token: eyJhbGciOiJSUzI1...
+```
+
+## 步骤 2：配置环境变量
+```bash
+export KUBECONFIG=~/.kube/tke-tenant-team-frontend.config
+```
+
+## 步骤 3：验证连接
+```bash
+kubectl get pods -n frontend
+```
+---
+```
+
+**租户使用 Agent：**
+
+```
+租户：帮我查看 frontend 命名空间的 Pod 状态
+
+Agent：
+📋 frontend 命名空间 Pod 列表：
+┌───────────────────────┬─────────┬──────────┬──────────┐
+│ Pod 名称              │ 状态    │ 重启次数 │ 运行时间 │
+├───────────────────────┼─────────┼──────────┼──────────┤
+│ frontend-web-abc123   │ Running │ 0        │ 2d       │
+│ frontend-api-def456   │ Running │ 1        │ 1d       │
+└───────────────────────┴─────────┴──────────┴──────────┘
+```
+
+### 核心价值
+
+| 传统方式 | TKE Skill 多租户管理 |
+|---------|---------------------|
+| 手写 RBAC YAML | **一句话描述权限** |
+| 手动分发 kubeconfig | **生成一键安装 Prompt** |
+| 培训租户使用 kubectl | **租户直接用自然语言操作** |
+| 权限变更需要重新配置 | **修改 RBAC 后重新生成 Prompt** |
+
+---
+
 ## 场景优先级
 
 | 优先级 | 场景 | 说明 |
 |--------|------|------|
 | P0 | 场景 1 新员工集群接入 | 最常见场景 |
 | P0 | 场景 2 集群资源巡检 | 运维必备 |
+| P0 | 场景 8 多租户权限管理 | 🆕 v2.0 新增核心能力 |
 | P1 | 场景 3 新项目环境规划 | 规划场景 |
 | P1 | 场景 4 集群访问故障排查 | 故障场景 |
 | P2 | 场景 5 多集群资源对比 | 管理场景 |

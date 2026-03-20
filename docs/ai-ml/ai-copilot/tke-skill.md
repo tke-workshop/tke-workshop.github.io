@@ -1,8 +1,8 @@
 # TKE Skill：让 AI 成为你的 K8s 运维助手
 
-TKE Skill 是一个 **AI Agent 扩展能力**，让任何支持 Skill/Tool 机制的 AI Agent（如 CodeBuddy、Claude、GPT 等）可以直接调用腾讯云 TKE API，完成 K8s 集群的查询、部署和运维任务。
+TKE Skill 是一个 **AI Agent 扩展能力**，让任何支持 Skill/Tool 机制的 AI Agent（如 CodeBuddy、Claude、GPT 等）可以直接调用腾讯云 TKE API 和 Kubernetes 集群，完成 K8s 集群的查询、部署和运维任务。
 
-**简单说：给 AI 装上 K8s 运维能力。**
+**简单说：给 AI 装上 K8s 全栈运维能力。**
 
 !!! tip "🔗 获取 TKE Skill"
     **GitHub 地址**：[https://github.com/tkestack/tke-skill](https://github.com/tkestack/tke-skill)
@@ -19,31 +19,103 @@ AI Coding 已经能帮我们写出很不错的代码了。但写完之后呢？
 - 部署上去了，怎么配置高可用？
 - 跑起来了，出问题怎么排查？
 - 流量上来了，怎么自动扩容？
+- 多个团队共享集群，怎么快速分配权限？
 
 **AI 能帮你写代码，但写完代码只是开始。**
 
-TKE Skill 要解决的问题——让 AI 不仅能写代码，还能帮你部署、运维、排障。
+TKE Skill 要解决的问题——让 AI 不仅能写代码，还能帮你部署、运维、排障、管理权限。
 
 ---
 
-## 🛠️ 当前能力（v1.0）
+## 🛠️ 当前能力（v2.0）
 
-当前版本主要支持**只读查询**，为后续部署和运维能力打基础：
+TKE Skill 通过两个 CLI 工具提供完整的云原生运维能力：
 
-| 能力 | 说明 |
-|------|------|
-| 集群列表/状态查询 | 查看所有集群、运行状态、版本信息 |
-| kubeconfig 获取 | 一句话获取集群访问凭证 |
-| 节点池查询 | 查看节点池配置和节点状态 |
+- **tke_cli.py** — 腾讯云 API 操作（集群管理、TCR 镜像仓库）
+- **k8s_cli.py** — Kubernetes 集群内操作（资源管理、Pod 操作、Helm 部署、RBAC 租户管理）
+
+### 📋 TKE 集群管理
+
+| 能力 | 说明 | 状态 |
+|------|------|------|
+| 集群列表/状态查询 | 查看所有集群、运行状态、版本信息 | ✅ |
+| kubeconfig 获取 | 一句话获取集群访问凭证 | ✅ |
+| 节点池查询 | 查看节点池配置和节点状态 | ✅ |
+| 集群规格查询 | 查看集群资源限制和配置 | ✅ |
+| 访问端点管理 | 开启/关闭内网/外网访问 | ✅ |
+
+### 🐳 TCR 镜像仓库管理
+
+| 能力 | 说明 | 状态 |
+|------|------|------|
+| 实例管理 | 创建/删除/查询 TCR 实例 | ✅ |
+| 命名空间管理 | 创建/删除/查询命名空间 | ✅ |
+| 镜像仓库管理 | 创建/删除/查询镜像仓库 | ✅ |
+| 镜像版本查询 | 查看镜像 Tag 列表 | ✅ |
+
+### ☸️ Kubernetes 资源操作
+
+| 能力 | 说明 | 状态 |
+|------|------|------|
+| 资源查询 | get/describe 各类 K8s 资源 | ✅ |
+| 资源创建 | apply/create 部署应用 | ✅ |
+| 资源删除 | delete 清理资源 | ✅ |
+| Pod 日志 | logs 查看应用日志 | ✅ |
+| Pod 执行 | exec 进入容器执行命令 | ✅ |
+| 事件查看 | events 监控集群事件 | ✅ |
+| 资源监控 | top 查看资源使用情况 | ✅ |
+
+### ⛵ Helm 包管理
+
+| 能力 | 说明 | 状态 |
+|------|------|------|
+| Chart 安装 | helm-install 部署 Chart | ✅ |
+| Release 升级 | helm-upgrade 更新版本 | ✅ |
+| Release 卸载 | helm-uninstall 清理 | ✅ |
+| Release 列表 | helm-list 查看已部署 | ✅ |
+| Release 状态 | helm-status 查看详情 | ✅ |
+
+### 🔐 多租户 RBAC 管理（🆕 新功能）
+
+| 能力 | 说明 | 状态 |
+|------|------|------|
+| 租户创建 | 一句话创建 ServiceAccount + Role + RoleBinding | ✅ |
+| 租户列表 | 查看所有已创建的租户 | ✅ |
+| 租户删除 | 清理租户 RBAC 资源 | ✅ |
+| Token 获取 | 获取租户访问 Token | ✅ |
+| Prompt 生成 | 为租户生成一键安装 Prompt | ✅ |
+| Context 管理 | 多集群上下文切换 | ✅ |
+| Kubeconfig 合并 | 合并多个 kubeconfig 文件 | ✅ |
+
+### 🎯 角色模板
+
+RBAC 租户管理支持 4 种预定义角色：
+
+| 角色 | 权限范围 | 适用场景 |
+|------|----------|----------|
+| `readonly` | get/list/watch | 只读访问，适合查看和调试 |
+| `developer` | 完整的工作负载管理权限 | 开发者日常操作 |
+| `admin` | 命名空间管理员权限 | 团队负责人 |
+| `custom` | 自定义规则 | 特殊需求（需 --rules-file）|
 
 **示例**：
 
-```
+```bash
+# 集群管理
 帮我查一下广州地域的 TKE 集群
 获取集群 cls-xxx 的 kubeconfig
-```
 
-这些基础能力已经能解决一些日常痛点（比如新入职配置 N 个集群的 kubeconfig），但这只是开始。
+# K8s 资源操作
+帮我查看 default 命名空间的 Pod 状态
+帮我部署 nginx 到 production 命名空间
+
+# Helm 部署
+帮我用 Helm 安装 nginx，3 副本
+
+# 多租户管理
+帮我创建一个账号 team-frontend，权限级别 developer，可以访问 frontend 命名空间
+帮我生成 team-frontend 的安装 Prompt
+```
 
 ---
 
@@ -221,9 +293,13 @@ AI 自动执行金丝雀发布：
 
 | 能力 | 状态 |
 |------|------|
-| 集群查询（列表/状态/kubeconfig） | ✅ 已发布 |
-| 节点池查询 | ✅ 已发布 |
-| 一句话部署应用 | 🚧 开发中 |
+| TKE 集群管理（列表/状态/kubeconfig） | ✅ 已发布 |
+| TCR 镜像仓库管理 | ✅ 已发布 |
+| K8s 资源操作（get/apply/delete/logs/exec） | ✅ 已发布 |
+| Helm 包管理（install/upgrade/uninstall） | ✅ 已发布 |
+| 多租户 RBAC 管理 | ✅ 已发布 |
+| Context/Kubeconfig 管理 | ✅ 已发布 |
+| 一句话部署应用 | 📝 规划中 |
 | 智能运维排障 | 📝 规划中 |
 | 自动伸缩/故障自愈 | 📝 规划中 |
 | 资源优化建议 | 📝 规划中 |
