@@ -311,7 +311,14 @@ AI 自动执行金丝雀发布：
 
 ---
 
-## 🔗 相关链接
+## 🔗 相关文档
+
+- [AI Copilot 概述](index.md) - 模块介绍和学习目标
+- [用户故事](user-stories.md) - TKE Skill 使用场景和验收标准
+- [POC 演示案例](poc-examples.md) - 实际验证案例（一句话部署、智能排障）
+- [kubernetes-mcp-server 集成](k8s-mcp-integration.md) - MCP 协议集成方案
+
+### 外部链接
 
 - [TKE Skill GitHub](https://github.com/tkestack/tke-skill) - 源码和安装说明
 - [TKE 产品文档](https://cloud.tencent.com/document/product/457)
