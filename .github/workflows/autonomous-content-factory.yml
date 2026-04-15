@@ -1,9 +1,9 @@
 name: Autonomous Content Factory
 
 on:
-  # 定时触发：每天 UTC 时间 00:00（北京时间 08:00）运行
+  # 定时触发：每周一 UTC 00:00（北京时间 08:00）运行，降低频率避免无意义失败
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * 1'
   
   # 手动触发（用于测试）
   workflow_dispatch:
@@ -12,13 +12,6 @@ on:
         description: '运行原因'
         required: false
         default: 'Manual trigger'
-
-  # 当 main 分支有更新时触发（可选）
-  push:
-    branches: [main]
-    paths:
-      - '.codebuddy/agents/**'
-      - '.github/workflows/autonomous-content-factory.yml'
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -54,15 +47,31 @@ jobs:
           cd .codebuddy/agents
           pip install -r requirements.txt || pip install requests
 
-      # 4. 运行自主内容工厂
+      # 4. 检查 LLM API Key
+      - name: Check LLM API Key
+        id: check_api_key
+        run: |
+          if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ] && [ -z "${{ secrets.OPENAI_API_KEY }}" ]; then
+            echo "⚠️ No LLM API key configured (ANTHROPIC_API_KEY or OPENAI_API_KEY)"
+            echo "Please add at least one key in: Settings → Secrets and variables → Actions"
+            echo "has_api_key=false" >> $GITHUB_OUTPUT
+          else
+            echo "✅ LLM API key found"
+            echo "has_api_key=true" >> $GITHUB_OUTPUT
+          fi
+
+      # 5. 运行自主内容工厂
       - name: Run Autonomous Content Factory
+        if: steps.check_api_key.outputs.has_api_key == 'true'
         id: factory
         run: |
           cd .codebuddy/agents
           
           # 设置环境变量
-          export GITHUB_TOKEN="${{ secrets.GH_PAT }}"
+          export GITHUB_TOKEN="${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}"
           export GITHUB_REPO="${{ github.repository }}"
+          export ANTHROPIC_API_KEY="${{ secrets.ANTHROPIC_API_KEY }}"
+          export OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
           
           # 运行自主内容工厂
           python3 run_autonomous_factory.py 2>&1 | tee factory_output.log
@@ -78,7 +87,7 @@ jobs:
           fi
         continue-on-error: true
 
-      # 5. 上传日志
+      # 6. 上传日志
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -89,7 +98,7 @@ jobs:
             .codebuddy/agents/factory_output.log
           retention-days: 30
 
-      # 6. 创建 Issue（如果失败）
+      # 7. 创建 Issue（如果失败）
       - name: Create issue on failure
         if: failure()
         uses: actions/github-script@v6
@@ -120,14 +129,14 @@ jobs:
               labels: ['bug', 'autonomous-factory']
             });
 
-      # 7. 发送通知（可选）
+      # 8. 发送通知
       - name: Send notification
         if: always()
         run: |
           if [ "${{ steps.factory.outputs.status }}" == "success" ]; then
             echo "✅ 自主内容工厂运行成功"
           else
-            echo "❌ 自主内容工厂运行失败"
+            echo "❌ 自主内容工厂运行失败（或因缺少 API Key 跳过）"
           fi
 
   # 自动合并审核通过的 PR（可选）
