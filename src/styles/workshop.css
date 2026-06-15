@@ -1,0 +1,408 @@
+:root {
+  --tke-ink: #182033;
+  --tke-muted: #667085;
+  --tke-line: #dde5f2;
+  --tke-bg: #f6f8fb;
+  --tke-panel: #ffffff;
+  --tke-blue: #1769e0;
+  --tke-cyan: #13b5c8;
+  --tke-green: #1b8f68;
+  --tke-violet: #6b5cff;
+  --tke-amber: #b7791f;
+  --tke-radius: 8px;
+  --sl-color-accent-low: #e7f0ff;
+  --sl-color-accent: #1769e0;
+  --sl-color-accent-high: #0e3b82;
+}
+
+:root[data-theme='dark'] {
+  --tke-ink: #f7f9fc;
+  --tke-muted: #a8b3c7;
+  --tke-line: #28364f;
+  --tke-bg: #0d1320;
+  --tke-panel: #141c2b;
+  --sl-color-accent-low: #102b55;
+  --sl-color-accent: #63b3ff;
+  --sl-color-accent-high: #d7ebff;
+}
+
+body {
+  letter-spacing: 0;
+}
+
+.sl-markdown-content a:not(:where(.not-content *)) {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.sl-markdown-content table {
+  font-size: 0.92rem;
+}
+
+.workshop-shell {
+  min-height: 100vh;
+  color: var(--tke-ink);
+  background:
+    linear-gradient(180deg, rgba(23, 105, 224, 0.08), transparent 420px),
+    var(--tke-bg);
+}
+
+.workshop-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid color-mix(in srgb, var(--tke-line), transparent 18%);
+  background: color-mix(in srgb, var(--tke-panel), transparent 8%);
+  backdrop-filter: blur(18px);
+}
+
+.workshop-nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1180px;
+  min-height: 64px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.workshop-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--tke-ink);
+  font-weight: 760;
+  text-decoration: none;
+}
+
+.workshop-brand__mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 10px;
+  color: white;
+  background: linear-gradient(135deg, var(--tke-blue), var(--tke-cyan));
+  font-size: 0.78rem;
+}
+
+.workshop-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.workshop-nav__links a,
+.workshop-button {
+  border-radius: 999px;
+  color: var(--tke-muted);
+  font-size: 0.92rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.workshop-nav__links a {
+  padding: 9px 13px;
+}
+
+.workshop-nav__links a:hover {
+  color: var(--tke-blue);
+  background: color-mix(in srgb, var(--tke-blue), transparent 91%);
+}
+
+.workshop-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--tke-line);
+  color: var(--tke-ink);
+  background: var(--tke-panel);
+}
+
+.workshop-button--primary {
+  border-color: transparent;
+  color: white;
+  background: var(--tke-blue);
+}
+
+.workshop-main {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 56px 24px 80px;
+}
+
+.workshop-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  gap: 36px;
+  align-items: center;
+  min-height: calc(100vh - 180px);
+}
+
+.workshop-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 6px 12px;
+  border: 1px solid color-mix(in srgb, var(--tke-blue), transparent 68%);
+  border-radius: 999px;
+  color: var(--tke-blue);
+  background: color-mix(in srgb, var(--tke-blue), transparent 93%);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.workshop-hero h1 {
+  max-width: 820px;
+  margin: 0;
+  font-size: clamp(2.7rem, 7vw, 5.9rem);
+  line-height: 0.96;
+  letter-spacing: 0;
+}
+
+.workshop-hero p {
+  max-width: 680px;
+  margin: 22px 0 0;
+  color: var(--tke-muted);
+  font-size: clamp(1.04rem, 2vw, 1.24rem);
+  line-height: 1.8;
+}
+
+.workshop-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.workshop-panel {
+  border: 1px solid var(--tke-line);
+  border-radius: var(--tke-radius);
+  background: color-mix(in srgb, var(--tke-panel), transparent 4%);
+  box-shadow: 0 24px 70px rgba(24, 32, 51, 0.09);
+}
+
+.workshop-panel__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px;
+  border-bottom: 1px solid var(--tke-line);
+}
+
+.workshop-panel__body {
+  padding: 20px;
+}
+
+.workshop-stat-grid,
+.workshop-card-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.workshop-stat-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.workshop-stat {
+  padding: 16px;
+  border: 1px solid var(--tke-line);
+  border-radius: var(--tke-radius);
+  background: var(--tke-panel);
+}
+
+.workshop-stat strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--tke-ink);
+  font-size: 1.4rem;
+}
+
+.workshop-stat span,
+.workshop-card p,
+.recipe-card p {
+  color: var(--tke-muted);
+}
+
+.workshop-section {
+  padding: 36px 0;
+}
+
+.workshop-section__head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.workshop-section h2 {
+  margin: 0;
+  font-size: clamp(1.65rem, 3vw, 2.35rem);
+  letter-spacing: 0;
+}
+
+.workshop-section__head p {
+  max-width: 620px;
+  margin: 8px 0 0;
+  color: var(--tke-muted);
+}
+
+.workshop-card-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.workshop-card,
+.recipe-card {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid var(--tke-line);
+  border-radius: var(--tke-radius);
+  color: var(--tke-ink);
+  background: var(--tke-panel);
+  text-decoration: none;
+}
+
+.workshop-card:hover,
+.recipe-card:hover {
+  border-color: color-mix(in srgb, var(--tke-blue), transparent 38%);
+  transform: translateY(-2px);
+  transition: transform 0.16s ease, border-color 0.16s ease;
+}
+
+.workshop-card h3,
+.recipe-card h2,
+.recipe-card h3 {
+  margin: 10px 0 8px;
+  font-size: 1.08rem;
+  letter-spacing: 0;
+}
+
+.workshop-card__icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 10px;
+  color: white;
+  background: var(--tke-blue);
+  font-weight: 800;
+}
+
+.workshop-card:nth-child(2) .workshop-card__icon { background: var(--tke-green); }
+.workshop-card:nth-child(3) .workshop-card__icon { background: var(--tke-violet); }
+.workshop-card:nth-child(4) .workshop-card__icon { background: var(--tke-amber); }
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.recipe-card__meta,
+.recipe-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 9px;
+  border: 1px solid var(--tke-line);
+  border-radius: 999px;
+  color: var(--tke-muted);
+  background: color-mix(in srgb, var(--tke-panel), var(--tke-bg) 35%);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.recipe-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+.recipe-section {
+  padding: 22px;
+  border: 1px solid var(--tke-line);
+  border-radius: var(--tke-radius);
+  background: var(--tke-panel);
+}
+
+.recipe-section + .recipe-section {
+  margin-top: 16px;
+}
+
+.recipe-section h2 {
+  margin-top: 0;
+}
+
+.command-block {
+  overflow-x: auto;
+  padding: 16px;
+  border-radius: var(--tke-radius);
+  color: #e8eef8;
+  background: #101828;
+  font-size: 0.9rem;
+}
+
+.workshop-footer {
+  border-top: 1px solid var(--tke-line);
+  background: var(--tke-panel);
+}
+
+.workshop-footer__inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 24px;
+  color: var(--tke-muted);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 920px) {
+  .workshop-hero,
+  .recipe-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .workshop-card-grid,
+  .recipe-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .workshop-nav__links {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .workshop-main {
+    padding: 34px 16px 56px;
+  }
+
+  .workshop-nav__inner {
+    padding: 0 16px;
+  }
+
+  .workshop-card-grid,
+  .recipe-grid,
+  .workshop-stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .workshop-section__head {
+    align-items: start;
+    flex-direction: column;
+  }
+}

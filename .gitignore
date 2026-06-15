@@ -8,6 +8,12 @@ __pycache__/
 
 # MkDocs
 site/
+.worktrees/
+
+# Astro / Node
+dist/
+node_modules/
+.astro/
 
 # IDE
 .idea/

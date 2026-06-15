@@ -1,0 +1,47 @@
+---
+import MarketingLayout from '../../layouts/MarketingLayout.astro';
+import { cookbooks } from '../../data/cookbooks';
+
+const categories = [
+  { id: 'cluster', label: 'Cluster' },
+  { id: 'workload', label: 'Workload' },
+  { id: 'gpu', label: 'GPU' },
+];
+---
+
+<MarketingLayout title="TKE Cookbooks - 可执行实践集合">
+  <section class="workshop-section">
+    <span class="workshop-kicker">Executable Practice</span>
+    <div class="workshop-section__head">
+      <div>
+        <h2>Cookbooks</h2>
+        <p>
+          Cookbook 是 Workshop 的执行层。每个 Recipe 都连接真实脚本、输入条件、执行命令、
+          验证步骤和可交给 Agent 的 Prompt。
+        </p>
+      </div>
+      <a class="workshop-button" href="/start/environment/">环境准备</a>
+    </div>
+
+    <div class="workshop-actions" style="margin: 0 0 22px;">
+      {categories.map((category) => <span class="pill">{category.label}</span>)}
+    </div>
+
+    <div class="recipe-grid">
+      {
+        cookbooks.map((cookbook) => (
+          <a class="recipe-card" href={`/cookbooks/${cookbook.id}/`}>
+            <span class="pill">{cookbook.verified ? 'Verified' : 'Draft'}</span>
+            <h2>{cookbook.title}</h2>
+            <p>{cookbook.description}</p>
+            <div class="recipe-card__meta">
+              <span class="pill">{cookbook.category}</span>
+              <span class="pill">{cookbook.language}</span>
+              <span class="pill">{cookbook.estimatedTime}</span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</MarketingLayout>

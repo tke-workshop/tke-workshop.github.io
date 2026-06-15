@@ -1,0 +1,127 @@
+---
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+
+const paths = [
+  {
+    icon: '01',
+    title: '从零上手 TKE',
+    description: '准备环境、理解集群边界，并完成第一个托管集群和工作负载。',
+    href: '/start/',
+  },
+  {
+    icon: '02',
+    title: '执行日常操作',
+    description: '按集群、节点、节点池、工作负载和 Service 的任务路径查找操作手册。',
+    href: '/operate/',
+  },
+  {
+    icon: '03',
+    title: '走向生产实践',
+    description: '围绕安全、可用性、扩展、成本和升级建立生产集群治理能力。',
+    href: '/practice/',
+  },
+  {
+    icon: '04',
+    title: '运行 AI 工作负载',
+    description: '覆盖训练、推理、GPU 调度、OpenClaw、OPEA、KitOps 和 AI Copilot。',
+    href: '/ai-on-tke/',
+  },
+];
+
+const cookbookHighlights = [
+  '创建 TKE 托管集群',
+  '部署 Nginx 应用',
+  '部署 GPU 工作负载',
+];
+---
+
+<MarketingLayout
+  title="TKE Workshop - 云原生实践工作台"
+  description="面向 TKE 的学习路径、操作指南、生产实践和可执行 Cookbook。"
+>
+  <section class="workshop-hero">
+    <div>
+      <span class="workshop-kicker">Agent-First Cloud Native Workshop</span>
+      <h1>把 TKE 学习、操作和自动化放进同一个工作台。</h1>
+      <p>
+        TKE Workshop 面向云原生工程师、平台团队和 AI Agent。你可以按任务学习基础操作，
+        按生产目标查找最佳实践，也可以直接运行 Cookbook 里的脚本完成验证。
+      </p>
+      <div class="workshop-actions">
+        <a class="workshop-button workshop-button--primary" href="/start/">开始学习</a>
+        <a class="workshop-button" href="/cookbooks/">打开 Cookbooks</a>
+      </div>
+    </div>
+
+    <aside class="workshop-panel" aria-label="Workshop 概览">
+      <div class="workshop-panel__header">
+        <div>
+          <strong>Workshop map</strong>
+          <p style="margin: 6px 0 0; color: var(--tke-muted);">从学习路径到可执行实践。</p>
+        </div>
+        <span class="pill">2026</span>
+      </div>
+      <div class="workshop-panel__body">
+        <div class="workshop-stat-grid">
+          <div class="workshop-stat">
+            <strong>4</strong>
+            <span>学习路径</span>
+          </div>
+          <div class="workshop-stat">
+            <strong>8+</strong>
+            <span>实践主题</span>
+          </div>
+          <div class="workshop-stat">
+            <strong>3</strong>
+            <span>官方 Recipe</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="workshop-section">
+    <div class="workshop-section__head">
+      <div>
+        <h2>选择你的路径</h2>
+        <p>不再从目录里猜页面。先选择目标，再进入对应的操作指南、生产实践或可执行 Cookbook。</p>
+      </div>
+    </div>
+    <div class="workshop-card-grid">
+      {
+        paths.map((path) => (
+          <a class="workshop-card" href={path.href}>
+            <span class="workshop-card__icon">{path.icon}</span>
+            <h3>{path.title}</h3>
+            <p>{path.description}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="workshop-section">
+    <div class="workshop-section__head">
+      <div>
+        <h2>Cookbook 是实践层，不是另一个站</h2>
+        <p>每个 Recipe 都包含脚本入口、前置条件、执行命令、验证步骤和 Agent Prompt。</p>
+      </div>
+      <a class="workshop-button" href="/cookbooks/">查看全部</a>
+    </div>
+    <div class="workshop-panel">
+      <div class="workshop-panel__body">
+        <div class="recipe-grid">
+          {
+            cookbookHighlights.map((title) => (
+              <div class="recipe-card">
+                <span class="pill">Official</span>
+                <h3>{title}</h3>
+                <p>面向真实 TKE 环境的可执行示例，适合手工验证，也适合交给 Agent 执行。</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</MarketingLayout>
