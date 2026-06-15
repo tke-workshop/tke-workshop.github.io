@@ -22,7 +22,7 @@ export default defineConfig({
         },
       ],
       editLink: {
-        baseUrl: 'https://github.com/tke-workshop/tke-workshop.github.io/edit/main/src/content/docs/',
+        baseUrl: 'https://github.com/tke-workshop/tke-workshop.github.io/edit/main/',
       },
       customCss: ['./src/styles/workshop.css'],
       sidebar: [
@@ -34,16 +34,28 @@ export default defineConfig({
           ],
         },
         {
-          label: 'Operate',
-          items: [{ label: '基础操作路径', slug: 'operate' }],
+          label: '基础操作',
+          items: [{ autogenerate: { directory: 'basics' } }],
         },
         {
-          label: 'Practice',
-          items: [{ label: '生产实践路径', slug: 'practice' }],
+          label: '最佳实践',
+          items: [{ autogenerate: { directory: 'best-practices' } }],
         },
         {
           label: 'AI on TKE',
-          items: [{ label: 'AI 工作负载路径', slug: 'ai-on-tke' }],
+          items: [{ autogenerate: { directory: 'ai-ml' } }],
+        },
+        {
+          label: 'Data on TKE',
+          items: [{ autogenerate: { directory: 'data' } }],
+        },
+        {
+          label: 'Workshop Paths',
+          items: [
+            { label: '基础操作路径', slug: 'operate' },
+            { label: '生产实践路径', slug: 'practice' },
+            { label: 'AI 工作负载路径', slug: 'ai-on-tke' },
+          ],
         },
         {
           label: 'Contribute',
