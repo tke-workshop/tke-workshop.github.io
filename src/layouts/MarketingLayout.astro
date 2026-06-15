@@ -1,0 +1,47 @@
+---
+import '../styles/workshop.css';
+
+const navItems = [
+  { label: 'Start', href: '/start/' },
+  { label: 'Operate', href: '/operate/' },
+  { label: 'Practice', href: '/practice/' },
+  { label: 'AI on TKE', href: '/ai-on-tke/' },
+  { label: 'Cookbooks', href: '/cookbooks/' },
+];
+
+const { title = 'TKE Workshop', description = '面向 TKE 云原生实践的学习路径、操作指南和可执行 Cookbook。' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="workshop-shell">
+      <header class="workshop-nav">
+        <div class="workshop-nav__inner">
+          <a class="workshop-brand" href="/">
+            <span class="workshop-brand__mark">TKE</span>
+            <span>TKE Workshop</span>
+          </a>
+          <nav class="workshop-nav__links" aria-label="主导航">
+            {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+          </nav>
+          <a class="workshop-button" href="https://github.com/tke-workshop/tke-workshop.github.io">GitHub</a>
+        </div>
+      </header>
+      <main class="workshop-main">
+        <slot />
+      </main>
+      <footer class="workshop-footer">
+        <div class="workshop-footer__inner">
+          Copyright &copy; 2024-2026 Tencent Cloud. Built with Astro and Starlight.
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

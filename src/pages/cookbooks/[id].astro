@@ -1,0 +1,78 @@
+---
+import MarketingLayout from '../../layouts/MarketingLayout.astro';
+import { cookbooks, getCookbook } from '../../data/cookbooks';
+
+export function getStaticPaths() {
+  return cookbooks.map((cookbook) => ({
+    params: { id: cookbook.id },
+  }));
+}
+
+const cookbook = getCookbook(Astro.params.id ?? '');
+
+if (!cookbook) {
+  throw new Error(`Cookbook not found: ${Astro.params.id}`);
+}
+---
+
+<MarketingLayout title={`${cookbook.title} - TKE Cookbook`}>
+  <section class="workshop-section">
+    <a class="workshop-button" href="/cookbooks/">返回 Cookbooks</a>
+    <div style="margin-top: 24px;">
+      <span class="workshop-kicker">{cookbook.category} recipe</span>
+      <h1 style="max-width: 820px; margin: 0; font-size: clamp(2.1rem, 5vw, 4rem); line-height: 1.05;">
+        {cookbook.title}
+      </h1>
+      <p style="max-width: 760px; color: var(--tke-muted); font-size: 1.1rem; line-height: 1.8;">
+        {cookbook.description}
+      </p>
+      <div class="recipe-meta">
+        <span class="pill">{cookbook.language}</span>
+        <span class="pill">{cookbook.estimatedTime}</span>
+        <span class="pill">{cookbook.verified ? 'Verified' : 'Draft'}</span>
+        {cookbook.tags.map((tag) => <span class="pill">{tag}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <div class="recipe-layout">
+    <article>
+      <section class="recipe-section">
+        <h2>前置条件</h2>
+        <ul>
+          {cookbook.prerequisites.map((item) => <li>{item}</li>)}
+        </ul>
+      </section>
+
+      <section class="recipe-section">
+        <h2>执行命令</h2>
+        <pre class="command-block"><code>{cookbook.commands.join('\n')}</code></pre>
+      </section>
+
+      <section class="recipe-section">
+        <h2>验证步骤</h2>
+        <ul>
+          {cookbook.verification.map((item) => <li><code>{item}</code></li>)}
+        </ul>
+      </section>
+
+      <section class="recipe-section">
+        <h2>Agent Prompt</h2>
+        <p>{cookbook.prompt}</p>
+      </section>
+    </article>
+
+    <aside class="recipe-section">
+      <h2>相关文件</h2>
+      <ul>
+        {
+          cookbook.files.map((file) => (
+            <li>
+              <a href={`https://github.com/tke-workshop/tke-workshop.github.io/blob/main/${file}`}>{file}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </aside>
+  </div>
+</MarketingLayout>
