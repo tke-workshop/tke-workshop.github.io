@@ -22,7 +22,7 @@ title: "创建节点池"
 - ✅ 需要成本优化的场景（竞价实例）
 
 **相关文档**：
-- [扩容节点池](./02-scale-out-nodepool.md)
+- 扩容节点池
 - [创建集群](../cluster/01-create-cluster.md)
 
 ---
@@ -453,7 +453,7 @@ sudo journalctl -u kubelet -f
 
 创建节点池时启用自动伸缩：
 
-```json
+```text
 {
   "ClusterId": "cls-abc123",
   "Name": "auto-scaling-nodepool",
@@ -495,7 +495,7 @@ sudo journalctl -u kubelet -f
 
 ### 4. 使用竞价实例（降低成本）
 
-```json
+```text
 {
   "AutoScalingGroupPara": {
     "InstanceMarketOptions": {
@@ -571,7 +571,7 @@ sudo journalctl -u kubelet -f
 
 ## 参考 Cookbook
 
-完整可执行示例：[Cookbook - 创建节点池](../../cookbook/create-nodepool-example.py)
+完整可执行示例：Cookbook - 创建节点池
 
 ---
 

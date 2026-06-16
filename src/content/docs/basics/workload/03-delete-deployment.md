@@ -527,7 +527,7 @@ kubectl delete namespace <namespace>
 
 ## 参考 Cookbook
 
-完整可执行示例：[Cookbook - 删除 Deployment](../../cookbook/delete-deployment-example.py)
+完整可执行示例：Cookbook - 删除 Deployment
 
 ---
 

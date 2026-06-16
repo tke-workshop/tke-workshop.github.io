@@ -450,7 +450,7 @@ kubectl delete deployment -l app=myapp,env=dev -n <namespace>
 
 ### Prompt 1: 基础删除
 
-```prompt
+```text
 请删除 TKE 集群中的 Deployment：
 - 集群 ID: {{cluster_id}}
 - 命名空间: {{namespace}}
@@ -460,7 +460,7 @@ kubectl delete deployment -l app=myapp,env=dev -n <namespace>
 
 ### Prompt 2: 安全删除
 
-```prompt
+```text
 请安全删除 TKE 集群中的 Deployment：
 - 集群 ID: {{cluster_id}}
 - 命名空间: {{namespace}}
@@ -475,7 +475,7 @@ kubectl delete deployment -l app=myapp,env=dev -n <namespace>
 
 ### Prompt 3: 批量删除
 
-```prompt
+```text
 请批量删除 TKE 集群中的 Deployment：
 - 集群 ID: {{cluster_id}}
 - 命名空间: {{namespace}}
@@ -497,7 +497,7 @@ kubectl delete deployment -l app=myapp,env=dev -n <namespace>
 
 ## Cookbook 示例
 
-完整可执行示例：[delete-deployment-example.py](../../cookbook/delete-deployment-example.py)
+完整可执行示例：delete-deployment-example.py
 
 ---
 

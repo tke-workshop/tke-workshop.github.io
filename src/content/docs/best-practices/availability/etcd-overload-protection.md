@@ -177,7 +177,7 @@ data:
 
 ### 示例
 
-```json
+```text
 # 比如 readcache 配置了以下规则
 
 # 正向匹配，表示针对 kubectl 和 okhttp 这两个 userAgent 的 list pod 走 readcache

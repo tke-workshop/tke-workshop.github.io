@@ -681,7 +681,7 @@ kubectl describe quota -n default
 
 ### Prompt 1: 基础部署
 
-```prompt
+```text
 请在 TKE 集群中部署一个 Nginx 应用：
 - 集群 ID: {{cluster_id}}
 - 命名空间: default
@@ -693,7 +693,7 @@ kubectl describe quota -n default
 
 ### Prompt 2: 生产环境部署
 
-```prompt
+```text
 请在 TKE 集群中部署一个生产环境应用：
 - 集群 ID: {{cluster_id}}
 - 命名空间: production
@@ -711,7 +711,7 @@ kubectl describe quota -n default
 
 ### Prompt 3: 微服务部署
 
-```prompt
+```text
 请在 TKE 集群中部署一个微服务应用：
 - 集群 ID: {{cluster_id}}
 - 命名空间: microservices
@@ -741,7 +741,7 @@ kubectl describe quota -n default
 
 ## Cookbook 示例
 
-完整可执行示例：[create-deployment-example.py](../../cookbook/create-deployment-example.py)
+完整可执行示例：create-deployment-example.py
 
 ---
 

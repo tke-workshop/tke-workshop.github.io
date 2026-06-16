@@ -555,7 +555,7 @@ kubectl apply -f nginx-service-lb.yaml
 
 ### 创建基础 LoadBalancer Service
 
-```prompt
+```text
 请在 TKE 集群的 default 命名空间中创建一个 LoadBalancer Service:
 - Service 名称: my-app-lb
 - 选择器: app=my-app
@@ -572,7 +572,7 @@ kubectl apply -f nginx-service-lb.yaml
 
 ### 创建带注解的高级 Service
 
-```prompt
+```text
 请创建一个内网 LoadBalancer Service:
 - Service 名称: internal-api
 - 命名空间: production
@@ -590,7 +590,7 @@ kubectl apply -f nginx-service-lb.yaml
 
 ### 故障排查
 
-```prompt
+```text
 我的 LoadBalancer Service 创建后 External IP 一直是 Pending 状态，请帮我:
 1. 检查 Service Events 中的错误信息
 2. 确认 VPC 和子网配置正确
@@ -617,10 +617,10 @@ kubectl apply -f nginx-service-lb.yaml
 
 ## 🔗 相关文档
 
-- [ClusterIP Service](01-clusterip-service.md)
-- [NodePort Service](02-nodeport-service.md)
-- [Ingress 配置](../ingress/01-nginx-ingress.md)
-- [网络故障排查](../troubleshooting/02-connectivity-issues.md)
+- ClusterIP Service
+- NodePort Service
+- Ingress 配置
+- 网络故障排查
 - [最佳实践 - 网络安全](../../best-practices/security/network-security.md)
 
 ---

@@ -489,7 +489,7 @@ delete_nodes_by_label(client, "cls-xxxxxxxx", "env=test")
 
 ### 基础删除 Prompt
 
-```prompt
+```text
 请帮我从 TKE 集群中删除节点：
 - 集群 ID：{{cluster_id}}
 - 节点 ID：{{instance_id}}
@@ -499,7 +499,7 @@ delete_nodes_by_label(client, "cls-xxxxxxxx", "env=test")
 
 ### 安全删除 Prompt
 
-```prompt
+```text
 请帮我安全地删除 TKE 集群节点（避免服务中断）：
 - 集群 ID：cls-xxxxxxxx
 - 节点 ID：ins-xxxxxxxx
@@ -513,7 +513,7 @@ delete_nodes_by_label(client, "cls-xxxxxxxx", "env=test")
 
 ### 批量删除 Prompt
 
-```prompt
+```text
 请帮我批量删除 TKE 集群中的测试节点：
 - 集群 ID：cls-xxxxxxxx
 - 节点标签：env=test
@@ -560,7 +560,7 @@ delete_nodes_by_label(client, "cls-xxxxxxxx", "env=test")
 
 - [添加节点到集群](./01-add-node.md)
 - [查询节点列表](./04-describe-nodes.md)
-- [驱逐节点 Pod](./03-drain-node.md)
+- 驱逐节点 Pod
 - [节点池管理](../nodepool/01-create-nodepool.md)
 
 ---
@@ -575,7 +575,7 @@ delete_nodes_by_label(client, "cls-xxxxxxxx", "env=test")
 
 ## Cookbook 示例
 
-完整可执行代码示例: [TKE 节点删除 Cookbook](../../cookbook/delete-node-example.py)
+完整可执行代码示例: TKE 节点删除 Cookbook
 
 ---
 

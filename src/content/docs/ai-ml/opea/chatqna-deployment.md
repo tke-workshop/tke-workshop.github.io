@@ -434,13 +434,13 @@ python cookbook/scenarios/chatqna_e2e.py \
 ## 相关资源
 
 - [快速开始](quickstart.md) - 5 分钟快速部署
-- [架构详解](architecture.md) - OPEA 架构说明
-- [自动化部署](automation.md) - Cookbook 脚本详解
-- [生产实践](production.md) - 生产环境优化
+- 架构详解 - OPEA 架构说明
+- 自动化部署 - Cookbook 脚本详解
+- 生产实践 - 生产环境优化
 - [OPEA 官方文档](https://opea-project.github.io/)
 
 ---
 
 **部署时间估算**: 手动部署 ~30 分钟，自动化部署 ~20 分钟（不含集群创建）
 
-[:octicons-arrow-right-24: 下一步：架构详解](architecture.md)
+:octicons-arrow-right-24: 下一步：架构详解

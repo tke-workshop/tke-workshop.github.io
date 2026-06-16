@@ -312,7 +312,7 @@ kubectl logs -n kube-system -l app=virtual-kubelet
 
 ### 创建超级节点池 Prompt
 
-```prompt
+```text
 请在集群中创建超级节点池:
 - 集群ID: {{cluster_id}}
 - 节点池名称: vk-nodepool-prod
@@ -325,7 +325,7 @@ kubectl logs -n kube-system -l app=virtual-kubelet
 
 ### 创建带污点的节点池 Prompt
 
-```prompt
+```text
 请创建一个带污点的超级节点池，用于运行特定工作负载:
 - 集群ID: cls-xxxxxxxx
 - 名称: vk-nodepool-dedicated
@@ -367,7 +367,7 @@ kubectl logs -n kube-system -l app=virtual-kubelet
 
 - [创建按量超级节点](./02-create-supernode.md)
 - [删除超级节点](./03-delete-supernode.md)
-- [查询超级节点池](./04-describe-supernode-pools.md)
+- 查询超级节点池
 - [普通节点管理](../node/01-add-node.md)
 
 ---
@@ -381,7 +381,7 @@ kubectl logs -n kube-system -l app=virtual-kubelet
 
 ## Cookbook 示例
 
-完整可执行代码示例: [TKE 超级节点池创建 Cookbook](../../cookbook/create-supernode-pool-example.py)
+完整可执行代码示例: TKE 超级节点池创建 Cookbook
 
 ---
 

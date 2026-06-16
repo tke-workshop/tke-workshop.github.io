@@ -409,7 +409,7 @@ kind: PlacementPolicy
 metadata:
   name: direct
 spec:
-  targets:[]
+  targets: []
   nodeGroups:
     - name: native
       nodeType: native
@@ -458,7 +458,7 @@ spec:
     - topologyKey: topology.kubernetes.io/zone
       maxSkew: 1
       whenUnsatisfiable: ScheduleAnyway
-      matchLabelKeys：
+      matchLabelKeys:
       - k8s-app
 ```
 
@@ -482,11 +482,11 @@ spec:
     - topologyKey: kubernetes.io/hostname
       maxReplicas: 2
       whenUnsatisfiable: DoNotSchedule
-      matchLabelKeys：
+      matchLabelKeys:
       - user-id
     - topologyKey: topology.kubernetes.io/zone
       maxSkew: 1
       whenUnsatisfiable: DoNotSchedule
-      matchLabelKeys：
+      matchLabelKeys:
       - user-id
 ```

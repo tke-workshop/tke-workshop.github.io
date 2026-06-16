@@ -336,7 +336,7 @@ spec:
 
 ### 创建虚拟节点 Prompt
 
-```prompt
+```text
 请在超级节点池中创建虚拟节点:
 - 集群ID: {{cluster_id}}
 - 节点池ID: {{nodepool_id}}
@@ -345,7 +345,7 @@ spec:
 
 ### 批量创建虚拟节点 Prompt
 
-```prompt
+```text
 请批量创建虚拟节点用于多可用区部署:
 - 集群ID: cls-xxxxxxxx
 - 节点池ID: np-xxxxxxxx
@@ -387,7 +387,7 @@ spec:
 
 - [创建超级节点池](./01-create-supernode-pool.md)
 - [删除超级节点](./03-delete-supernode.md)
-- [超级节点计费说明](./05-supernode-billing.md)
+- 超级节点计费说明
 - [普通节点管理](../node/01-add-node.md)
 
 ---
@@ -401,7 +401,7 @@ spec:
 
 ## Cookbook 示例
 
-完整可执行代码示例: [TKE 超级节点创建 Cookbook](../../cookbook/create-supernode-example.py)
+完整可执行代码示例: TKE 超级节点创建 Cookbook
 
 ---
 

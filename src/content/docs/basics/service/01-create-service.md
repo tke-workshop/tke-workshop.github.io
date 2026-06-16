@@ -518,7 +518,7 @@ kubectl logs -n kube-system -l component=service-controller
 
 ### 创建内部服务 Prompt
 
-```prompt
+```text
 请创建一个 ClusterIP Service:
 - 服务名称: {{service_name}}
 - 命名空间: {{namespace}}
@@ -529,7 +529,7 @@ kubectl logs -n kube-system -l component=service-controller
 
 ### 创建公网服务 Prompt
 
-```prompt
+```text
 请创建一个公网可访问的 LoadBalancer Service:
 - 服务名称: my-web-app
 - 选择器: app=nginx
@@ -541,7 +541,7 @@ kubectl logs -n kube-system -l component=service-controller
 
 ### 使用已有 CLB Prompt
 
-```prompt
+```text
 请创建 Service 并使用已有 CLB:
 - 服务名称: existing-lb-svc
 - CLB ID: lb-abc12345
@@ -579,10 +579,10 @@ kubectl logs -n kube-system -l component=service-controller
 
 ## 相关文档
 
-- [删除 Service](./02-delete-service.md)
-- [更新 Service](./03-update-service.md)
-- [Service 负载均衡配置](./04-service-lb-config.md)
-- [创建 Ingress](./05-create-ingress.md)
+- 删除 Service
+- 更新 Service
+- Service 负载均衡配置
+- 创建 Ingress
 
 ---
 
@@ -596,7 +596,7 @@ kubectl logs -n kube-system -l component=service-controller
 
 ## Cookbook 示例
 
-完整可执行代码示例: [TKE Service 创建 Cookbook](../../cookbook/create-service-example.sh)
+完整可执行代码示例: TKE Service 创建 Cookbook
 
 ---
 

@@ -102,7 +102,7 @@ curl -X POST http://${GATEWAY_IP}:8888/v1/chatqna \
 
 预期返回：
 
-```json
+```text
 {
   "response": "Kubernetes is an open-source container orchestration platform...",
   "retrieval_context": [...],
@@ -297,9 +297,9 @@ kubectl delete -f manifests/chatqna/
 ## 进一步学习
 
 - [ChatQnA 完整部署指南](chatqna-deployment.md) - 详细配置和自定义
-- [架构详解](architecture.md) - 了解 OPEA 内部工作原理
-- [自动化部署](automation.md) - 使用脚本批量部署
-- [生产实践](production.md) - 生产环境优化建议
+- 架构详解 - 了解 OPEA 内部工作原理
+- 自动化部署 - 使用脚本批量部署
+- 生产实践 - 生产环境优化建议
 
 ---
 

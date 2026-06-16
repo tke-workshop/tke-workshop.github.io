@@ -522,7 +522,7 @@ def auto_scale_by_time():
 
 ### 4. 设置合理的伸缩范围
 
-```json
+```text
 {
   "MinSize": 3,    // 保证基本可用性
   "MaxSize": 50,   // 防止成本失控
@@ -543,7 +543,7 @@ def auto_scale_by_time():
 
 ### Prompt 1: 扩容节点池
 
-```prompt
+```text
 请扩容 TKE 节点池：
 - 集群 ID: {{cluster_id}}
 - 节点池 ID: {{node_pool_id}}
@@ -554,7 +554,7 @@ def auto_scale_by_time():
 
 ### Prompt 2: 缩容节点池（安全）
 
-```prompt
+```text
 请安全缩容 TKE 节点池：
 - 集群 ID: {{cluster_id}}
 - 节点池 ID: {{node_pool_id}}
@@ -569,7 +569,7 @@ def auto_scale_by_time():
 
 ### Prompt 3: 调整伸缩范围
 
-```prompt
+```text
 请调整 TKE 节点池的伸缩范围：
 - 集群 ID: {{cluster_id}}
 - 节点池 ID: {{node_pool_id}}
@@ -580,7 +580,7 @@ def auto_scale_by_time():
 
 ### Prompt 4: 定时扩缩容
 
-```prompt
+```text
 请为 TKE 节点池配置定时扩缩容：
 - 集群 ID: {{cluster_id}}
 - 节点池 ID: {{node_pool_id}}
@@ -604,7 +604,7 @@ def auto_scale_by_time():
 
 ## Cookbook 示例
 
-完整可执行示例：[scale-node-pool-example.py](../../cookbook/scale-node-pool-example.py)
+完整可执行示例：scale-node-pool-example.py
 
 ---
 

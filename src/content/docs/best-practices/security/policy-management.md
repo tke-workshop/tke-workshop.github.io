@@ -679,7 +679,7 @@ spec:
 
 ### 查询策略 Prompt
 
-```prompt
+```text
 请帮我查询 TKE 集群的安全策略：
 - 集群 ID: {{cluster_id}}
 - 地域: {{region}}
@@ -690,7 +690,7 @@ spec:
 
 ### 开启策略 Prompt
 
-```prompt
+```text
 请帮我开启 TKE 集群的安全策略：
 - 集群 ID: {{cluster_id}}
 - 地域: {{region}}
@@ -703,7 +703,7 @@ spec:
 
 ### 批量配置 Prompt
 
-```prompt
+```text
 请帮我为 TKE 集群配置以下安全策略：
 - 集群 ID: cls-xxxxxxxx
 - 地域: ap-guangzhou
@@ -798,7 +798,7 @@ kubectl apply -f test-pod.yaml --dry-run=server
 ## 相关文档
 
 - [Pod 安全](pod-security.md)
-- [RBAC 配置](rbac.md)
+- RBAC 配置
 - [镜像安全](image-security.md)
 
 ---

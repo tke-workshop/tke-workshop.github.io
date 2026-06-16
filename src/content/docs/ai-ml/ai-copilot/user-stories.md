@@ -971,5 +971,5 @@ Agent：
 
 - [AI Copilot 概述](index.md) - 模块介绍和学习目标
 - [TKE Skill 介绍](tke-skill.md) - AI Agent 的 K8s 运维能力
-- [kubernetes-mcp-server 集成](k8s-mcp-integration.md) - MCP 协议集成方案
-- [POC 演示案例](poc-examples.md) - 实际验证案例（一句话部署、智能排障）
+- kubernetes-mcp-server 集成 - MCP 协议集成方案
+- POC 演示案例 - 实际验证案例（一句话部署、智能排障）

@@ -57,7 +57,7 @@
 
 **Filters 结构**:
 
-```json
+```text
 [
   {
     "Name": "ClusterName",      // 按集群名称过滤
@@ -480,7 +480,7 @@ export_clusters_to_csv(resp.Clusters)
 
 ### 基础查询 Prompt
 
-```prompt
+```text
 请帮我查询腾讯云 TKE 集群列表：
 - 地域：{{region}}
 - 显示所有集群的名称、状态、版本和节点数
@@ -488,7 +488,7 @@ export_clusters_to_csv(resp.Clusters)
 
 ### 条件筛选 Prompt
 
-```prompt
+```text
 请帮我查询符合以下条件的 TKE 集群：
 - 地域：ap-guangzhou
 - 集群状态：Running（运行中）
@@ -498,7 +498,7 @@ export_clusters_to_csv(resp.Clusters)
 
 ### 多地域查询 Prompt
 
-```prompt
+```text
 请帮我统计以下地域的 TKE 集群数量：
 - 广州（ap-guangzhou）
 - 北京（ap-beijing）
@@ -509,7 +509,7 @@ export_clusters_to_csv(resp.Clusters)
 
 ### 导出集群信息 Prompt
 
-```prompt
+```text
 请帮我导出所有 TKE 集群的详细信息到 CSV 文件：
 - 地域：ap-guangzhou
 - 包含字段：集群ID、名称、状态、版本、节点数、VPC ID
@@ -533,7 +533,7 @@ export_clusters_to_csv(resp.Clusters)
 
 - [创建集群](./01-create-cluster.md)
 - [删除集群](./02-delete-cluster.md)
-- [获取访问凭证](./03-get-kubeconfig.md)
+- 获取访问凭证
 - [查询节点列表](../node/04-describe-nodes.md)
 
 ---
@@ -548,7 +548,7 @@ export_clusters_to_csv(resp.Clusters)
 
 ## Cookbook 示例
 
-完整可执行代码示例: [TKE 集群查询 Cookbook](../../cookbook/describe-clusters-example.py)
+完整可执行代码示例: TKE 集群查询 Cookbook
 
 ---
 
