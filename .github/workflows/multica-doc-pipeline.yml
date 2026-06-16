@@ -1,0 +1,76 @@
+name: Multica Doc Pipeline
+
+on:
+  workflow_dispatch:
+  issues:
+    types: [opened, edited, labeled, reopened]
+  issue_comment:
+    types: [created]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_run:
+    workflows: ["Deploy TKE Workshop"]
+    types: [completed]
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+  actions: read
+
+jobs:
+  doc-authoring:
+    if: >
+      github.event_name == 'issues' &&
+      contains(join(github.event.issue.labels.*.name, ','), 'doc-authoring')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Multica Doc Authoring
+        env:
+          MULTICA_WEBHOOK_URL: ${{ secrets.MULTICA_DOC_AUTHORING_WEBHOOK_URL }}
+          PAYLOAD: ${{ toJson(github.event) }}
+        run: |
+          curl -fsS -X POST "$MULTICA_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD"
+
+  doc-review:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'pull_request' ||
+      github.event_name == 'workflow_run' ||
+      (
+        github.event_name == 'issue_comment' &&
+        (
+          contains(github.event.comment.body, 'Doc Compile Report') ||
+          contains(github.event.comment.body, 'Doc Authoring Report') ||
+          contains(github.event.comment.body, 'Doc Improvement Report') ||
+          contains(github.event.comment.body, 'Live Execute Report') ||
+          contains(github.event.comment.body, 'github.com/tke-workshop/tke-workshop.github.io/pull/')
+        )
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Multica Doc Review Router
+        env:
+          MULTICA_WEBHOOK_URL: ${{ secrets.MULTICA_DOC_REVIEW_WEBHOOK_URL }}
+          PAYLOAD: ${{ toJson(github.event) }}
+        run: |
+          curl -fsS -X POST "$MULTICA_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD"
+
+  doc-improvement:
+    if: >
+      github.event_name == 'issues' &&
+      contains(join(github.event.issue.labels.*.name, ','), 'doc-improvement')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Multica Doc Improvement
+        env:
+          MULTICA_WEBHOOK_URL: ${{ secrets.MULTICA_DOC_IMPROVEMENT_WEBHOOK_URL }}
+          PAYLOAD: ${{ toJson(github.event) }}
+        run: |
+          curl -fsS -X POST "$MULTICA_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD"
