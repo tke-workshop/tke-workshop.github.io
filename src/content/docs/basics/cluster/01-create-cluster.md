@@ -9,7 +9,7 @@ title: "如何创建 TKE 集群"
 - **功能名称**: 创建 TKE 集群
 - **API 版本**: 2018-05-25
 - **适用集群版本**: 所有版本
-- **文档更新时间**: 2026-01-07
+- **文档更新时间**: 2026-06-16
 - **Agent 友好度**: ⭐⭐⭐⭐⭐
 
 ---
@@ -58,9 +58,7 @@ title: "如何创建 TKE 集群"
   "ClusterCIDR": "172.16.0.0/16",        // 集群容器网络 CIDR
   "MaxNodePodNum": 64,                    // 每个节点最大 Pod 数
   "MaxClusterServiceNum": 256,            // 集群最大 Service 数
-  "ServiceCIDR": "10.96.0.0/16",         // Service CIDR
-  "VpcId": "vpc-xxxxxxxx",                // VPC ID (必填)
-  "CniType": "vpc-cni"                    // CNI 类型: vpc-cni 或 gre
+  "ServiceCIDR": "10.96.0.0/16"          // Service CIDR
 }
 ```
 
@@ -74,7 +72,9 @@ title: "如何创建 TKE 集群"
   "VpcId": "vpc-xxxxxxxx",                // VPC ID
   "ProjectId": 0,                         // 项目ID (默认0)
   "ClusterLevel": "L5",                   // 集群规模: L5/L20/L50/L100/L200/L500
-  "AutoUpgradeClusterLevel": true         // 是否自动升配
+  "AutoUpgradeClusterLevel": {            // 集群规格自动升配配置
+    "IsAutoUpgrade": true                 // 是否自动升配
+  }
 }
 ```
 
@@ -100,19 +100,22 @@ curl -X POST "https://tke.tencentcloudapi.com/" \
       "ClusterName": "my-tke-cluster",
       "ClusterVersion": "1.28.3",
       "VpcId": "vpc-xxxxxxxx",
-      "ClusterLevel": "L5"
+      "ClusterLevel": "L5",
+      "AutoUpgradeClusterLevel": {
+        "IsAutoUpgrade": true
+      }
     },
     "ClusterCIDRSettings": {
       "ClusterCIDR": "172.16.0.0/16",
       "MaxNodePodNum": 64,
-      "ServiceCIDR": "10.96.0.0/16",
-      "VpcId": "vpc-xxxxxxxx",
-      "CniType": "vpc-cni"
+      "ServiceCIDR": "10.96.0.0/16"
     }
   }'
 ```
 
 **注意**: 腾讯云 API 需要 TC3-HMAC-SHA256 签名算法,建议使用 SDK 或 tccli 工具简化调用。签名算法详见: https://cloud.tencent.com/document/api/457/31853
+
+Live Verify 会在执行层为创建类请求注入 `billing:virgilliang` 治理标签；普通读者不需要在下方示例中手工照抄该标签。
 
 **使用腾讯云 CLI (tccli)**:
 
@@ -124,14 +127,15 @@ tccli tke CreateCluster \
     "ClusterName": "my-tke-cluster",
     "ClusterVersion": "1.28.3",
     "VpcId": "vpc-xxxxxxxx",
-    "ClusterLevel": "L5"
+    "ClusterLevel": "L5",
+    "AutoUpgradeClusterLevel": {
+      "IsAutoUpgrade": true
+    }
   }' \
   --ClusterCIDRSettings '{
     "ClusterCIDR": "172.16.0.0/16",
     "MaxNodePodNum": 64,
-    "ServiceCIDR": "10.96.0.0/16",
-    "VpcId": "vpc-xxxxxxxx",
-    "CniType": "vpc-cni"
+    "ServiceCIDR": "10.96.0.0/16"
   }'
 ```
 
@@ -155,14 +159,14 @@ req.ClusterBasicSettings.ClusterName = "my-tke-cluster"
 req.ClusterBasicSettings.ClusterVersion = "1.28.3"
 req.ClusterBasicSettings.VpcId = "vpc-xxxxxxxx"
 req.ClusterBasicSettings.ClusterLevel = "L5"
+req.ClusterBasicSettings.AutoUpgradeClusterLevel = models.AutoUpgradeClusterLevel()
+req.ClusterBasicSettings.AutoUpgradeClusterLevel.IsAutoUpgrade = True
 
 # 网络配置
 req.ClusterCIDRSettings = models.ClusterCIDRSettings()
 req.ClusterCIDRSettings.ClusterCIDR = "172.16.0.0/16"
 req.ClusterCIDRSettings.MaxNodePodNum = 64
 req.ClusterCIDRSettings.ServiceCIDR = "10.96.0.0/16"
-req.ClusterCIDRSettings.VpcId = "vpc-xxxxxxxx"
-req.ClusterCIDRSettings.CniType = "vpc-cni"
 
 # 发起请求
 resp = client.CreateCluster(req)
@@ -194,14 +198,15 @@ func main() {
 		ClusterVersion: common.StringPtr("1.28.3"),
 		VpcId:          common.StringPtr("vpc-xxxxxxxx"),
 		ClusterLevel:   common.StringPtr("L5"),
+		AutoUpgradeClusterLevel: &tke.AutoUpgradeClusterLevel{
+			IsAutoUpgrade: common.BoolPtr(true),
+		},
 	}
 	
 	request.ClusterCIDRSettings = &tke.ClusterCIDRSettings{
 		ClusterCIDR:           common.StringPtr("172.16.0.0/16"),
 		MaxNodePodNum:         common.Uint64Ptr(64),
 		ServiceCIDR:           common.StringPtr("10.96.0.0/16"),
-		VpcId:                 common.StringPtr("vpc-xxxxxxxx"),
-		CniType:               common.StringPtr("vpc-cni"),
 	}
 
 	response, err := client.CreateCluster(request)
@@ -368,10 +373,14 @@ CoreDNS is running at https://cls-xxxxxxxx.ccs.tencent-cloud.com/api/v1/namespac
 ```json
 {
   "ClusterBasicSettings": {
-    "AutoUpgradeClusterLevel": true
+    "AutoUpgradeClusterLevel": {
+      "IsAutoUpgrade": true
+    }
   }
 }
 ```
+
+`AutoUpgradeClusterLevel` 是对象类型,不是布尔值；当前 CreateCluster API 示例使用 `{"IsAutoUpgrade": true}`。
 
 ### 配置集群删除保护
 
@@ -453,8 +462,18 @@ tccli tke EnableClusterDeletionProtection \
 
 完整可执行代码示例: [TKE 集群创建 Cookbook](/cookbooks/create-cluster/)；源码见 [`cookbook/cluster/create_cluster.py`](https://github.com/tke-workshop/tke-workshop.github.io/blob/main/cookbook/cluster/create_cluster.py)。
 
+执行真实创建前,可先运行 dry-run 校验 SDK 请求结构:
+
+```bash
+python3 cookbook/cluster/create_cluster.py \
+  --cluster-name my-tke-cluster \
+  --region ap-guangzhou \
+  --vpc-id vpc-xxxxxxxx \
+  --dry-run
+```
+
 ---
 
-**文档版本**: v1.0  
-**最后更新**: 2026-01-07  
+**文档版本**: v1.0<br>
+**最后更新**: 2026-06-16<br>
 **维护者**: TKE Documentation Team
