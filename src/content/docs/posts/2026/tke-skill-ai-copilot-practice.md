@@ -324,9 +324,9 @@ tke tcr-push --image xxx --namespace xxx
 
 ## 🔗 相关资源
 
-- [TKE Skill + kubernetes-mcp 集成指南](/ai-ml/ai-copilot/k8s-mcp-integration.md)
-- [POC 场景示例](/ai-ml/ai-copilot/poc-examples.md)
-- [TKE Skill 改进建议](/tmp/TKE_Skill_改进建议.md)
+- TKE Skill + kubernetes-mcp 集成指南
+- POC 场景示例
+- TKE Skill 改进建议
 
 ---
 

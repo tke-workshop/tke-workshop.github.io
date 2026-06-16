@@ -28,47 +28,47 @@ Service 是 Kubernetes 中实现服务发现和负载均衡的核心抽象。
 
 | 文档 | 描述 | Agent 友好度 |
 |------|------|-------------|
-| [ClusterIP Service](service/01-clusterip-service.md) | 集群内部服务访问 | ⭐⭐⭐⭐⭐ |
-| [NodePort Service](service/02-nodeport-service.md) | 通过节点端口暴露服务 | ⭐⭐⭐⭐⭐ |
+| ClusterIP Service | 集群内部服务访问 | ⭐⭐⭐⭐⭐ |
+| NodePort Service | 通过节点端口暴露服务 | ⭐⭐⭐⭐⭐ |
 | [LoadBalancer Service](service/03-loadbalancer-service.md) | 使用 CLB 负载均衡器 | ⭐⭐⭐⭐⭐ |
-| [Headless Service](service/04-headless-service.md) | 无头服务与 StatefulSet | ⭐⭐⭐⭐ |
+| Headless Service | 无头服务与 StatefulSet | ⭐⭐⭐⭐ |
 
 ### 2. Ingress 管理
 Ingress 提供 HTTP/HTTPS 路由和 SSL 终止能力。
 
 | 文档 | 描述 | Agent 友好度 |
 |------|------|-------------|
-| [Nginx Ingress Controller](ingress/01-nginx-ingress.md) | 部署 Nginx Ingress | ⭐⭐⭐⭐⭐ |
-| [TKE Ingress](ingress/02-tke-ingress.md) | 使用 TKE 托管 Ingress | ⭐⭐⭐⭐⭐ |
-| [HTTPS Ingress](ingress/03-https-ingress.md) | 配置 SSL/TLS 证书 | ⭐⭐⭐⭐ |
-| [Ingress 路由规则](ingress/04-ingress-rules.md) | 高级路由配置 | ⭐⭐⭐⭐ |
+| Nginx Ingress Controller | 部署 Nginx Ingress | ⭐⭐⭐⭐⭐ |
+| TKE Ingress | 使用 TKE 托管 Ingress | ⭐⭐⭐⭐⭐ |
+| HTTPS Ingress | 配置 SSL/TLS 证书 | ⭐⭐⭐⭐ |
+| Ingress 路由规则 | 高级路由配置 | ⭐⭐⭐⭐ |
 
 ### 3. Network Policy
 Network Policy 实现 Pod 级别的网络隔离和访问控制。
 
 | 文档 | 描述 | Agent 友好度 |
 |------|------|-------------|
-| [默认拒绝策略](network-policy/01-default-deny.md) | 零信任网络架构 | ⭐⭐⭐⭐⭐ |
-| [命名空间隔离](network-policy/02-namespace-isolation.md) | 多租户网络隔离 | ⭐⭐⭐⭐ |
-| [Pod 选择器](network-policy/03-pod-selector.md) | 精细化流量控制 | ⭐⭐⭐⭐ |
+| 默认拒绝策略 | 零信任网络架构 | ⭐⭐⭐⭐⭐ |
+| 命名空间隔离 | 多租户网络隔离 | ⭐⭐⭐⭐ |
+| Pod 选择器 | 精细化流量控制 | ⭐⭐⭐⭐ |
 
 ### 4. VPC-CNI
 VPC-CNI 是 TKE 提供的高性能容器网络插件，支持固定 IP、ENI 直通等特性。
 
 | 文档 | 描述 | Agent 友好度 |
 |------|------|-------------|
-| [启用 VPC-CNI](vpc-cni/01-enable-vpc-cni.md) | 集群启用 VPC-CNI 模式 | ⭐⭐⭐⭐⭐ |
-| [固定 IP](vpc-cni/02-static-ip.md) | Pod 使用固定 IP 地址 | ⭐⭐⭐⭐ |
-| [ENI 分配策略](vpc-cni/03-eni-allocation.md) | 弹性网卡管理 | ⭐⭐⭐ |
+| 启用 VPC-CNI | 集群启用 VPC-CNI 模式 | ⭐⭐⭐⭐⭐ |
+| 固定 IP | Pod 使用固定 IP 地址 | ⭐⭐⭐⭐ |
+| ENI 分配策略 | 弹性网卡管理 | ⭐⭐⭐ |
 
 ### 5. 故障排查
 网络问题是 Kubernetes 最常见的故障类型之一。
 
 | 文档 | 描述 | Agent 友好度 |
 |------|------|-------------|
-| [DNS 故障排查](troubleshooting/01-dns-issues.md) | CoreDNS 问题诊断 | ⭐⭐⭐⭐⭐ |
-| [连通性问题](troubleshooting/02-connectivity-issues.md) | Pod/Service 不可达 | ⭐⭐⭐⭐ |
-| [性能调优](troubleshooting/03-performance-tuning.md) | 网络性能优化 | ⭐⭐⭐ |
+| DNS 故障排查 | CoreDNS 问题诊断 | ⭐⭐⭐⭐⭐ |
+| 连通性问题 | Pod/Service 不可达 | ⭐⭐⭐⭐ |
+| 性能调优 | 网络性能优化 | ⭐⭐⭐ |
 
 ---
 
@@ -242,8 +242,8 @@ Service Mesh (4 hours)
 - [可用性最佳实践](../best-practices/availability/index.md)
 
 ### Cookbook
-- [Service LoadBalancer Cookbook](../cookbook-patterns.html?category=networking)
-- [Ingress HTTPS Cookbook](../cookbook-patterns.html?category=networking)
+- [Service LoadBalancer Cookbook](/cookbook-patterns.html?category=networking)
+- [Ingress HTTPS Cookbook](/cookbook-patterns.html?category=networking)
 
 ---
 
@@ -279,7 +279,7 @@ Service (绿色版本 10%)
 ## 🤖 Agent Prompt 模板
 
 ### 创建 LoadBalancer Service
-```prompt
+```text
 请帮我在 TKE 集群中创建一个 LoadBalancer 类型的 Service，要求：
 - Service 名称: my-app-lb
 - 选择器: app=my-app
@@ -289,7 +289,7 @@ Service (绿色版本 10%)
 ```
 
 ### 配置 Ingress 规则
-```prompt
+```text
 请配置 Ingress 路由规则，要求：
 - 域名: api.example.com
 - 路径 /v1 → service-v1
@@ -298,7 +298,7 @@ Service (绿色版本 10%)
 ```
 
 ### 排查网络问题
-```prompt
+```text
 我的 Pod 无法访问 Service，请帮我排查：
 1. 检查 Service Endpoint 是否正常
 2. 检查 DNS 解析是否正确
@@ -363,9 +363,9 @@ Service (绿色版本 10%)
 
 完成本模块后，建议继续学习：
 
-1. [可观测性模块](../observability/index.md) - 监控网络流量和性能
+1. 可观测性模块 - 监控网络流量和性能
 2. [安全模块](../best-practices/security/network-security.md) - 加固网络安全
-3. [Service Mesh](../advanced/service-mesh/index.md) - 微服务流量管理
+3. Service Mesh - 微服务流量管理
 
 ---
 

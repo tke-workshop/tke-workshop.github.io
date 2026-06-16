@@ -58,7 +58,7 @@
 
 **Filters 结构**:
 
-```json
+```text
 [
   {
     "Name": "NodePoolId",       // 按节点池 ID 过滤
@@ -579,7 +579,7 @@ export_nodes_to_csv(client, "cls-xxxxxxxx")
 
 ### 基础查询 Prompt
 
-```prompt
+```text
 请帮我查询 TKE 集群的节点列表：
 - 集群 ID：{{cluster_id}}
 - 地域：{{region}}
@@ -588,7 +588,7 @@ export_nodes_to_csv(client, "cls-xxxxxxxx")
 
 ### 条件筛选 Prompt
 
-```prompt
+```text
 请帮我查询符合以下条件的 TKE 节点：
 - 集群 ID：cls-xxxxxxxx
 - 节点池 ID：np-xxxxxxxx
@@ -598,7 +598,7 @@ export_nodes_to_csv(client, "cls-xxxxxxxx")
 
 ### 资源统计 Prompt
 
-```prompt
+```text
 请帮我统计 TKE 集群的节点资源：
 - 集群 ID：cls-xxxxxxxx
 - 统计信息：
@@ -610,7 +610,7 @@ export_nodes_to_csv(client, "cls-xxxxxxxx")
 
 ### 异常检测 Prompt
 
-```prompt
+```text
 请帮我检查 TKE 集群中的异常节点：
 - 集群 ID：cls-xxxxxxxx
 - 检查内容：
@@ -636,7 +636,7 @@ export_nodes_to_csv(client, "cls-xxxxxxxx")
 
 - [添加节点到集群](./01-add-node.md)
 - [删除节点](./02-delete-node.md)
-- [驱逐节点 Pod](./03-drain-node.md)
+- 驱逐节点 Pod
 - [创建节点池](../nodepool/01-create-nodepool.md)
 - [查询集群列表](../cluster/04-describe-clusters.md)
 
@@ -652,7 +652,7 @@ export_nodes_to_csv(client, "cls-xxxxxxxx")
 
 ## Cookbook 示例
 
-完整可执行代码示例: [TKE 节点查询 Cookbook](../../cookbook/describe-nodes-example.py)
+完整可执行代码示例: TKE 节点查询 Cookbook
 
 ---
 

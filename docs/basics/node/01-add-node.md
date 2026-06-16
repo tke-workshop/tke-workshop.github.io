@@ -42,7 +42,7 @@
 
 **RunInstancesForNode 结构**:
 
-```json
+```text
 {
   "InstanceType": "SA2.MEDIUM4",           // 实例机型 (2核4G)
   "SystemDisk": {
@@ -69,7 +69,7 @@
 
 **InstanceAdvancedSettings 结构**:
 
-```json
+```text
 {
   "Labels": [
     {
@@ -432,7 +432,7 @@ systemctl status containerd
 
 ### 创建节点 Prompt
 
-```prompt
+```text
 请向集群添加 3 个新节点:
 - 集群ID: {{cluster_id}}
 - 节点机型: SA2.MEDIUM4 (2核4G)
@@ -444,7 +444,7 @@ systemctl status containerd
 
 ### 添加已有节点 Prompt
 
-```prompt
+```text
 请将以下已有 CVM 实例加入集群:
 - 集群ID: cls-xxxxxxxx
 - 实例ID列表: ins-aaa, ins-bbb, ins-ccc
@@ -479,8 +479,8 @@ systemctl status containerd
 ## 相关文档
 
 - [删除节点](./02-delete-node.md)
-- [查询节点列表](./03-describe-nodes.md)
-- [设置节点不可调度](./04-cordon-node.md)
+- 查询节点列表
+- 设置节点不可调度
 - [创建节点池](../nodepool/01-create-nodepool.md)
 
 ---
@@ -495,7 +495,7 @@ systemctl status containerd
 
 ## Cookbook 示例
 
-完整可执行代码示例: [TKE 节点添加 Cookbook](../../cookbook/add-node-example.py)
+完整可执行代码示例: TKE 节点添加 Cookbook
 
 ---
 

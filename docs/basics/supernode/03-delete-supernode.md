@@ -382,7 +382,7 @@ delete_virtual_node_safely("cls-xxxxxxxx", "eklet-subnet-xxxxxxxx-0")
 
 ### 安全删除虚拟节点 Prompt
 
-```prompt
+```text
 请安全删除虚拟节点:
 - 集群ID: {{cluster_id}}
 - 节点名称: {{node_name}}
@@ -391,7 +391,7 @@ delete_virtual_node_safely("cls-xxxxxxxx", "eklet-subnet-xxxxxxxx-0")
 
 ### 强制删除虚拟节点 Prompt
 
-```prompt
+```text
 请强制删除虚拟节点（紧急情况）:
 - 集群ID: cls-xxxxxxxx
 - 节点名称: eklet-subnet-xxxxxxxx-0
@@ -401,7 +401,7 @@ delete_virtual_node_safely("cls-xxxxxxxx", "eklet-subnet-xxxxxxxx-0")
 
 ### 批量删除虚拟节点 Prompt
 
-```prompt
+```text
 请批量删除以下虚拟节点:
 - 集群ID: cls-xxxxxxxx
 - 节点列表: eklet-subnet-xxx1-0, eklet-subnet-xxx2-0, eklet-subnet-xxx3-0
@@ -443,7 +443,7 @@ delete_virtual_node_safely("cls-xxxxxxxx", "eklet-subnet-xxxxxxxx-0")
 
 - [创建超级节点池](./01-create-supernode-pool.md)
 - [创建按量超级节点](./02-create-supernode.md)
-- [查询超级节点池](./04-describe-supernode-pools.md)
+- 查询超级节点池
 - [普通节点删除](../node/02-delete-node.md)
 
 ---
@@ -457,7 +457,7 @@ delete_virtual_node_safely("cls-xxxxxxxx", "eklet-subnet-xxxxxxxx-0")
 
 ## Cookbook 示例
 
-完整可执行代码示例: [TKE 超级节点删除 Cookbook](../../cookbook/delete-supernode-example.py)
+完整可执行代码示例: TKE 超级节点删除 Cookbook
 
 ---
 

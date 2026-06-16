@@ -80,7 +80,7 @@ kubectl get pods -n monitoring
 
 ### 集群健康指标
 
-```promql
+```text
 # 节点就绪率
 sum(kube_node_status_condition{condition="Ready",status="true"}) / count(kube_node_info) * 100
 
@@ -93,7 +93,7 @@ histogram_quantile(0.99, rate(apiserver_request_duration_seconds_bucket[5m]))
 
 ### 工作负载指标
 
-```promql
+```text
 # Deployment 期望副本数 vs 实际副本数
 kube_deployment_spec_replicas - kube_deployment_status_replicas_available
 
@@ -108,7 +108,7 @@ container_memory_working_set_bytes{container!=""}
 
 ### 节点资源指标
 
-```promql
+```text
 # 节点 CPU 使用率
 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
 

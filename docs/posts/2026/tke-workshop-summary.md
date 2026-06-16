@@ -51,7 +51,7 @@ TKE Workshop 项目开发总结与反思
 [提供 Agent 可直接使用的 Prompt 模板]
 
 ## Cookbook 示例
-See: [cookbook/path/to/script.py](../../cookbook/path/to/script.py)
+See: cookbook/path/to/script.py
 
 ## 📝 关于这篇文章
 

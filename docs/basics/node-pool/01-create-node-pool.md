@@ -529,7 +529,7 @@ tccli vpc DescribeSecurityGroups --SecurityGroupIds '["sg-xxxxxxxx"]'
 
 ### 3. 节点池配额设置
 
-```json
+```text
 {
   "AutoScalingGroupPara": {
     "DesiredCapacity": 5,   // 期望节点数
@@ -541,7 +541,7 @@ tccli vpc DescribeSecurityGroups --SecurityGroupIds '["sg-xxxxxxxx"]'
 
 ### 4. 磁盘配置
 
-```json
+```text
 {
   "SystemDisk": {
     "DiskType": "CLOUD_PREMIUM",  // 高性能云硬盘
@@ -570,7 +570,7 @@ tccli vpc DescribeSecurityGroups --SecurityGroupIds '["sg-xxxxxxxx"]'
 
 ### Prompt 1: 基础节点池
 
-```prompt
+```text
 请在 TKE 集群中创建一个节点池：
 - 集群 ID: {{cluster_id}}
 - 节点池名称: {{pool_name}}
@@ -585,7 +585,7 @@ tccli vpc DescribeSecurityGroups --SecurityGroupIds '["sg-xxxxxxxx"]'
 
 ### Prompt 2: GPU 节点池
 
-```prompt
+```text
 请在 TKE 集群中创建一个 GPU 节点池：
 - 集群 ID: {{cluster_id}}
 - 节点池名称: gpu-pool
@@ -598,7 +598,7 @@ tccli vpc DescribeSecurityGroups --SecurityGroupIds '["sg-xxxxxxxx"]'
 
 ### Prompt 3: 生产环境节点池
 
-```prompt
+```text
 请在 TKE 集群中创建一个生产环境节点池：
 - 集群 ID: {{cluster_id}}
 - 节点池名称: production-web-pool
@@ -629,7 +629,7 @@ tccli vpc DescribeSecurityGroups --SecurityGroupIds '["sg-xxxxxxxx"]'
 
 ## Cookbook 示例
 
-完整可执行示例：[create-node-pool-example.py](../../cookbook/create-node-pool-example.py)
+完整可执行示例：create-node-pool-example.py
 
 ---
 

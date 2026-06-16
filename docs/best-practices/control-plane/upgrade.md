@@ -413,7 +413,7 @@ pluto detect-files -d ./manifests/
 
 ### 基础升级 Prompt
 
-```prompt
+```text
 请帮我升级 TKE 集群：
 - 集群 ID: {{cluster_id}}
 - 地域: {{region}}
@@ -423,7 +423,7 @@ pluto detect-files -d ./manifests/
 
 ### 带详细配置的 Prompt
 
-```prompt
+```text
 请帮我升级 TKE 集群，配置如下：
 - 集群 ID: cls-xxxxxxxx
 - 地域: ap-guangzhou
@@ -520,8 +520,8 @@ kubectl get events --sort-by='.lastTimestamp' -A
 
 ## 相关文档
 
-- [创建 TKE 集群](../basics/cluster/01-create-cluster.md)
-- [管理节点池](../basics/nodepool/01-create-nodepool.md)
+- 创建 TKE 集群
+- 管理节点池
 - [集群版本说明](https://cloud.tencent.com/document/product/457/47791)
 
 ---

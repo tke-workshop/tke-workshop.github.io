@@ -53,7 +53,7 @@ title: "如何创建 TKE 集群"
 
 **ClusterCIDRSettings 结构**:
 
-```json
+```text
 {
   "ClusterCIDR": "172.16.0.0/16",        // 集群容器网络 CIDR
   "MaxNodePodNum": 64,                    // 每个节点最大 Pod 数
@@ -66,7 +66,7 @@ title: "如何创建 TKE 集群"
 
 **ClusterBasicSettings 结构**:
 
-```json
+```text
 {
   "ClusterName": "my-tke-cluster",        // 集群名称 (不超过50字符)
   "ClusterVersion": "1.28.3",             // Kubernetes 版本
@@ -389,7 +389,7 @@ tccli tke EnableClusterDeletionProtection \
 
 ### 基础创建 Prompt
 
-```prompt
+```text
 请帮我创建一个 TKE 集群:
 - 地域: {{region}}
 - 集群名称: {{cluster_name}}
@@ -403,7 +403,7 @@ tccli tke EnableClusterDeletionProtection \
 
 ### 带节点创建 Prompt
 
-```prompt
+```text
 请帮我创建一个带3个节点的 TKE 集群:
 - 地域: ap-guangzhou
 - 集群名称: production-cluster
@@ -435,9 +435,9 @@ tccli tke EnableClusterDeletionProtection \
 ## 相关文档
 
 - [删除集群](./02-delete-cluster.md)
-- [查询集群列表](./03-describe-clusters.md)
+- 查询集群列表
 - [添加节点到集群](../node/01-add-node.md)
-- [配置集群访问凭证](./04-configure-kubeconfig.md)
+- 配置集群访问凭证
 
 ---
 
@@ -451,7 +451,7 @@ tccli tke EnableClusterDeletionProtection \
 
 ## Cookbook 示例
 
-完整可执行代码示例: [TKE 集群创建 Cookbook](../../cookbook/create-cluster-example.py)
+完整可执行代码示例: TKE 集群创建 Cookbook
 
 ---
 

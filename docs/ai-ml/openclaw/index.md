@@ -144,9 +144,9 @@ graph TB
 
 ### TKE 相关
 
-- [TKE GPU 调度](../gpu-scheduling.md)
-- [TKE 超级节点](../04-gpu-pod-best-practices.md)
-- [TKE 模型推理](../model-inference.md)
+- TKE GPU 调度
+- TKE 超级节点
+- TKE 模型推理
 - [OPEA on TKE](../opea/index.md)
 
 ### 最佳实践

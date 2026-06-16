@@ -1161,8 +1161,7 @@ spec:
 # 示例：特权 Pod 创建告警
 告警规则:
   名称: 特权 Pod 创建告警
-  查询: * | SELECT * WHERE verb='create' AND objectRef.resource='pods' 
-        AND requestObject LIKE '%privileged%true%'
+  查询: "* | SELECT * WHERE verb='create' AND objectRef.resource='pods' AND requestObject LIKE '%privileged%true%'"
   触发条件: 查询结果数 > 0
   告警级别: 严重
   通知渠道:
@@ -1172,7 +1171,7 @@ spec:
 # 示例：敏感操作告警
 告警规则:
   名称: Secret 删除告警
-  查询: * | SELECT * WHERE verb='delete' AND objectRef.resource='secrets'
+  查询: "* | SELECT * WHERE verb='delete' AND objectRef.resource='secrets'"
   触发条件: 查询结果数 > 0
   告警级别: 严重
 ```

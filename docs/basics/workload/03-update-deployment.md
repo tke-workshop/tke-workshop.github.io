@@ -593,7 +593,7 @@ kubectl set image deployment/<deployment-name> \
 
 ### Prompt 1: 镜像升级
 
-```prompt
+```text
 请升级 TKE 集群中 Deployment 的镜像版本：
 - 集群 ID: {{cluster_id}}
 - 命名空间: {{namespace}}
@@ -606,7 +606,7 @@ kubectl set image deployment/<deployment-name> \
 
 ### Prompt 2: 扩缩容
 
-```prompt
+```text
 请调整 TKE 集群中 Deployment 的副本数：
 - 集群 ID: {{cluster_id}}
 - 命名空间: {{namespace}}
@@ -617,7 +617,7 @@ kubectl set image deployment/<deployment-name> \
 
 ### Prompt 3: 完整更新
 
-```prompt
+```text
 请更新 TKE 集群中的 Deployment：
 - 集群 ID: {{cluster_id}}
 - 命名空间: {{namespace}}
@@ -648,7 +648,7 @@ kubectl set image deployment/<deployment-name> \
 
 ## Cookbook 示例
 
-完整可执行示例：[update-deployment-example.py](../../cookbook/update-deployment-example.py)
+完整可执行示例：update-deployment-example.py
 
 ---
 

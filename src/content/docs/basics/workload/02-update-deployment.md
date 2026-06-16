@@ -576,7 +576,7 @@ kubectl scale deployment <deployment-name> --replicas=5
 
 ## 参考 Cookbook
 
-完整可执行示例：[Cookbook - 更新 Deployment](../../cookbook/update-deployment-example.py)
+完整可执行示例：Cookbook - 更新 Deployment
 
 ---
 

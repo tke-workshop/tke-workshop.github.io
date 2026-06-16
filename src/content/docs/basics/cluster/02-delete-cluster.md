@@ -359,7 +359,7 @@ kubectl exec -n <namespace> <pod-name> -- tar czf - /data | \
 
 ### 基础删除 Prompt
 
-```prompt
+```text
 请帮我删除 TKE 集群:
 - 地域: {{region}}
 - 集群ID: {{cluster_id}}
@@ -373,7 +373,7 @@ kubectl exec -n <namespace> <pod-name> -- tar czf - /data | \
 
 ### 保留资源删除 Prompt
 
-```prompt
+```text
 请帮我删除集群,但保留以下资源:
 - 集群ID: {{cluster_id}}
 - 保留节点: 是
@@ -383,7 +383,7 @@ kubectl exec -n <namespace> <pod-name> -- tar czf - /data | \
 
 ### 批量删除 Prompt
 
-```prompt
+```text
 请帮我批量删除以下测试集群:
 - cls-test01, cls-test02, cls-test03
 - 地域: ap-guangzhou
@@ -406,9 +406,9 @@ kubectl exec -n <namespace> <pod-name> -- tar czf - /data | \
 ## 相关文档
 
 - [创建集群](./01-create-cluster.md)
-- [查询集群列表](./03-describe-clusters.md)
-- [启用删除保护](./05-enable-deletion-protection.md)
-- [集群备份与恢复](./06-backup-and-restore.md)
+- 查询集群列表
+- 启用删除保护
+- 集群备份与恢复
 
 ---
 
@@ -422,7 +422,7 @@ kubectl exec -n <namespace> <pod-name> -- tar czf - /data | \
 
 ## Cookbook 示例
 
-完整可执行代码示例: [TKE 集群删除 Cookbook](../../cookbook/delete-cluster-example.py)
+完整可执行代码示例: TKE 集群删除 Cookbook
 
 ---
 

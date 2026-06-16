@@ -61,10 +61,10 @@ graph TB
 |------|------|------|------|
 | [快速开始](quickstart.md) | 5 分钟部署 ChatQnA | ⭐ | 10 分钟 |
 | [ChatQnA 部署](chatqna-deployment.md) | 完整的 ChatQnA 部署指南 | ⭐⭐ | 30 分钟 |
-| [架构详解](architecture.md) | OPEA 架构和组件说明 | ⭐⭐⭐ | 20 分钟 |
-| [自动化部署](automation.md) | 使用 Cookbook 脚本自动化部署 | ⭐⭐ | 20 分钟 |
-| [生产实践](production.md) | 生产环境部署最佳实践 | ⭐⭐⭐⭐ | 40 分钟 |
-| [故障排查](troubleshooting.md) | 常见问题和解决方法 | ⭐⭐⭐ | 15 分钟 |
+| 架构详解 | OPEA 架构和组件说明 | ⭐⭐⭐ | 20 分钟 |
+| 自动化部署 | 使用 Cookbook 脚本自动化部署 | ⭐⭐ | 20 分钟 |
+| 生产实践 | 生产环境部署最佳实践 | ⭐⭐⭐⭐ | 40 分钟 |
+| 故障排查 | 常见问题和解决方法 | ⭐⭐⭐ | 15 分钟 |
 
 ## 🚀 快速开始
 
@@ -167,7 +167,7 @@ curl -X POST http://${GATEWAY_IP}:8888/v1/chatqna \
 | **资源占用** | ~20 核 40GB | 全部组件 |
 
 !!! tip "性能优化"
-    使用 GPU 节点可以显著提升 LLM 推理性能（10x+）。详见[生产实践](production.md)章节。
+    使用 GPU 节点可以显著提升 LLM 推理性能（10x+）。详见生产实践章节。
 
 ## 🔗 相关资源
 
@@ -180,9 +180,9 @@ curl -X POST http://${GATEWAY_IP}:8888/v1/chatqna \
 
 ### TKE 相关
 
-- [TKE GPU 调度](../gpu-scheduling.md)
-- [TKE 超级节点](../04-gpu-pod-best-practices.md)
-- [TKE 模型推理](../model-inference.md)
+- TKE GPU 调度
+- TKE 超级节点
+- TKE 模型推理
 
 ### 社区
 
@@ -221,4 +221,4 @@ curl -X POST http://${GATEWAY_IP}:8888/v1/chatqna \
 
 或者深入了解架构：
 
-[:octicons-arrow-right-24: OPEA 架构详解](architecture.md)
+:octicons-arrow-right-24: OPEA 架构详解
