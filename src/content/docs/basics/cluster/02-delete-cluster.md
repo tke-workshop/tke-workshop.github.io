@@ -349,7 +349,9 @@ tccli cbs CreateSnapshot \
   --SnapshotName "backup-before-delete"
 
 # 方式2: 复制数据到对象存储
-kubectl exec -n <namespace> <pod-name> -- tar czf - /data | \
+NAMESPACE="<namespace>"
+POD_NAME="<pod-name>"
+kubectl exec -n "${NAMESPACE}" "${POD_NAME}" -- tar czf - /data | \
   coscli cp - cos://bucket/backup/data.tar.gz
 ```
 
@@ -406,7 +408,7 @@ kubectl exec -n <namespace> <pod-name> -- tar czf - /data | \
 ## 相关文档
 
 - [创建集群](./01-create-cluster.md)
-- 查询集群列表
+- [查询集群列表](./04-describe-clusters.md)
 - 启用删除保护
 - 集群备份与恢复
 
