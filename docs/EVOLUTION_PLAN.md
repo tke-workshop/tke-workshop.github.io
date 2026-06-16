@@ -97,7 +97,7 @@
 
 ### Agent 执行日志
 
-```
+```text
 [2026-04-03] content-gap-filler: 填充 data/storage.md（CBS/CFS StorageClass、PVC、StatefulSet、扩容、常见问题）
 [2026-04-03] content-gap-filler: 填充 best-practices/observability/monitoring.md（TMP接入、PromQL、告警规则、Grafana大盘）
 [2026-04-02] 进化计划文档初始化，3个自动化任务创建完成（content-gap-filler/link-checker/ai-copilot-enricher）

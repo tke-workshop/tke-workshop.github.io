@@ -120,7 +120,7 @@ kubectl apply -f deployment.yaml
 ```
 
 期望输出：
-```
+```text
 deployment.apps/nginx-deployment created
 ```
 
@@ -464,7 +464,7 @@ kubectl get deployment nginx-deployment
 ```
 
 期望输出：
-```
+```text
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   3/3     3            3           2m
 ```
@@ -482,7 +482,7 @@ kubectl get pods -l app=nginx
 ```
 
 期望输出：
-```
+```text
 NAME                                READY   STATUS    RESTARTS   AGE
 nginx-deployment-5d59d67564-7xqmc   1/1     Running   0          2m
 nginx-deployment-5d59d67564-k8zqw   1/1     Running   0          2m

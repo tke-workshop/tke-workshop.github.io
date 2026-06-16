@@ -90,7 +90,7 @@ kubectl-check-ownerreferences
 
 如果检查结果如下，则表明集群内没有异常 ownerReference 引用：
 
-```
+```text
 No invalid ownerReferences found
 ```
 
@@ -162,7 +162,7 @@ TKE 目前在集群升级时，组件版本要求如下：
 
 例如：搜索 1.25 要被废弃的 v1beta1 的 poddisruptionbudgets 示例：
 
-```
+```text
 requestURI:policy/v1beta1/poddisruptionbudgets
 ```
 
@@ -192,7 +192,7 @@ kubent -k /root/.kube/config
 
 ##### 3.4.2.3 预期结果
 
-```
+```text
 _____________________________________________________________________________
 >>> Deprecated APIs removed in 1.25 <<<
 ------------------------------------------------------------------------------------------

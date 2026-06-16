@@ -299,7 +299,7 @@ kubectl get nodes
 
 **期望结果**:
 
-```
+```text
 Kubernetes control plane is running at https://cls-xxxxxxxx.ccs.tencent-cloud.com
 CoreDNS is running at https://cls-xxxxxxxx.ccs.tencent-cloud.com/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 ```

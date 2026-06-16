@@ -13,7 +13,7 @@ description: 记录使用 TKE Skill 和 kubernetes-mcp-server 部署项目到 TK
 
 理想场景是这样的：
 
-```
+```text
 用户: 把当前项目部署到 TKE 集群 cls-xxx
 AI: 好的，已完成部署！访问地址是 http://x.x.x.x
 ```
@@ -78,13 +78,13 @@ export TENCENTCLOUD_SECRET_KEY="xxx"
 
 我信心满满地说：
 
-```
+```text
 把 TKE Workshop 项目部署到集群 cls-1l0io2fu
 ```
 
 然后... AI 开始了它的"自主发挥"：
 
-```
+```text
 AI 执行流程:
   1. [TKE Skill] 获取 kubeconfig ✅
   2. [保存文件] 把 kubeconfig 写到本地 ✅
@@ -112,7 +112,7 @@ AI 执行流程:
 
 举个例子：
 
-```
+```text
 TKE Skill 获取的 kubeconfig:
   → AI 需要自己决定保存到哪个路径
   → kubernetes-mcp 需要读取这个路径
@@ -141,7 +141,7 @@ TKE Skill 获取的 kubeconfig:
 
 ### 问题 2：kubeconfig 流转不顺畅
 
-```
+```text
 TKE Skill: 这是 kubeconfig 内容
 AI: 我保存到 ~/.kube/config...（自己决定的）
 kubernetes-mcp: 我默认读 ~/.kube/config...（可能不一致）
@@ -151,7 +151,7 @@ kubernetes-mcp: 我默认读 ~/.kube/config...（可能不一致）
 
 ### 问题 3：镜像构建/推送是断点
 
-```
+```text
 项目代码 → [构建镜像] → [推送镜像] → [部署到 K8s]
                ❌ 没有自动化     ❌ 没有自动化
 ```
@@ -263,7 +263,7 @@ tke tcr-push --image xxx --namespace xxx
 
 **用户装好 TKE Skill 后，应该能直接说：**
 
-```
+```text
 把当前项目部署到 TKE 集群 cls-xxx
 ```
 

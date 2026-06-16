@@ -15,7 +15,7 @@
 
 推荐的 ML 项目目录结构，确保 Kitfile 能够正确打包所有组件：
 
-```
+```text
 my-ml-project/
 ├── Kitfile                      # ModelKit 配置文件（必需）
 ├── VERSION                      # 版本号文件
@@ -119,7 +119,7 @@ docs:
 
 遵循 [Semantic Versioning 2.0.0](https://semver.org/)：
 
-```
+```text
 MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD]
 
 示例：
@@ -183,6 +183,7 @@ model:
   parameters:
     api_key: "sk-xxxx..."  # 不要这样做！
 
+---
 # ✅ 正确做法 - 使用环境变量占位
 model:
   parameters:
@@ -251,6 +252,7 @@ model:
   path: ./llama2-7b-hf
   framework: Hugging Face
 
+---
 # fine-tuned/Kitfile - 微调权重（约 200MB）
 manifestVersion: v1.0.0
 package:
@@ -362,12 +364,14 @@ model:
   timeout: 60
   replicas: 1
 
+---
 # config/staging.yaml
 model:
   batch_size: 16
   timeout: 30
   replicas: 2
 
+---
 # config/prod.yaml
 model:
   batch_size: 32

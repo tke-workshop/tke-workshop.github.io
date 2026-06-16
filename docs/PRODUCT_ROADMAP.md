@@ -90,7 +90,7 @@
 #### 1.1 补全核心模块文档 (优先级: P0)
 
 **网络模块 (Networking)**:
-```
+```text
 networking/
 ├── index.md                          # 网络概述
 ├── service/
@@ -118,7 +118,7 @@ networking/
 ```
 
 **可观测性模块 (Observability)**:
-```
+```text
 observability/
 ├── index.md                          # 可观测性概述
 ├── monitoring/
@@ -142,7 +142,7 @@ observability/
 ```
 
 **控制平面模块 (Control Plane)**:
-```
+```text
 control-plane/
 ├── index.md                          # 控制平面概述
 ├── architecture/
@@ -166,7 +166,7 @@ control-plane/
 
 **目标**: 从 40% → 100%
 
-```
+```text
 ai-ml/
 ├── index.md                          # ✅ 已完成
 ├── gpu-basics/
@@ -196,7 +196,7 @@ ai-ml/
 
 **目标**: 从 20% → 100%
 
-```
+```text
 data/
 ├── index.md                          # ✅ 已完成
 ├── storage/
@@ -273,7 +273,7 @@ data/
 
 **功能设计**:
 
-```
+```text
 features/interactive-labs/
 ├── browser-terminal/              # 浏览器内终端
 │   ├── xterm.js 集成
@@ -290,7 +290,7 @@ features/interactive-labs/
 ```
 
 **用户体验**:
-```
+```text
 ┌─────────────────────────────────────────────────┐
 │ 📘 创建 TKE 集群                                  │
 ├─────────────────────────────────────────────────┤
@@ -385,7 +385,7 @@ features/interactive-labs/
 3. **TKE 架构师 (Architect)** - 全部模块 + 最佳实践
 
 **认证流程**:
-```
+```text
 1. 完成所有模块学习
    ↓
 2. 通过在线考试 (多选题 + 实操题)
@@ -406,7 +406,7 @@ features/interactive-labs/
 **技术选型**: GitHub Discussions
 
 **论坛分区**:
-```
+```bash
 tke-workshop/discussions/
 ├── 💬 General                      # 通用讨论
 ├── 🙋 Q&A                          # 问答
@@ -446,7 +446,7 @@ tke-workshop/discussions/
 
 **内容规划**:
 
-```
+```text
 case-studies/
 ├── e-commerce/
 │   ├── architecture.md             # 电商平台架构
@@ -564,7 +564,7 @@ plugins:
 
 **优化方案**:
 
-```
+```text
 ┌────────────────────────────────────────────────┐
 │ 🎯 TKE Workshop                                │
 │ AI-First 云原生学习平台                         │

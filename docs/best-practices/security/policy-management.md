@@ -509,7 +509,7 @@ kubectl apply -f test-privileged-pod.yaml
 
 **期望结果**（策略为 deny 模式时）：
 
-```
+```text
 Error from server (Forbidden): error when creating "test-privileged-pod.yaml": 
 admission webhook "validation.gatekeeper.sh" denied the request: 
 [psp-privileged-container] Privileged container is not allowed: privileged-container
@@ -549,7 +549,7 @@ kubectl get pods -n gatekeeper-system
 
 **期望结果**：
 
-```
+```text
 NAME                                            READY   STATUS    RESTARTS   AGE
 gatekeeper-audit-xxxxxxxxxx-xxxxx               1/1     Running   0          1d
 gatekeeper-controller-manager-xxxxxxxxxx-xxxxx  1/1     Running   0          1d

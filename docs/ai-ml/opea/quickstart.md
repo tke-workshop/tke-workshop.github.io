@@ -51,7 +51,7 @@ kubectl wait --for=condition=ready pod \
 
 预期输出：
 
-```
+```text
 NAME                                READY   STATUS    RESTARTS   AGE
 chatqna-redis-xxx                   1/1     Running   0          2m
 chatqna-embedding-xxx               2/2     Running   0          2m

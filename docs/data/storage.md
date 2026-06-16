@@ -32,7 +32,7 @@ kubectl get storageclass
 ```
 
 预期输出：
-```
+```text
 NAME                 PROVISIONER                    AGE
 cbs                  com.tencent.cloud.csi.cbs      xxx
 cbs-encrypted        com.tencent.cloud.csi.cbs      xxx
@@ -111,7 +111,7 @@ kubectl get pvc mysql-data
 ```
 
 预期输出（等待几秒变为 Bound）：
-```
+```text
 NAME         STATUS   VOLUME         CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 mysql-data   Bound    pvc-xxx-xxx    50Gi       RWO            cbs-ssd        30s
 ```
@@ -192,7 +192,7 @@ spec:
 ```
 
 创建后每个 Pod 对应一个 PVC：
-```
+```text
 data-redis-cluster-0   Bound   pvc-aaa   20Gi   RWO   cbs-ssd
 data-redis-cluster-1   Bound   pvc-bbb   20Gi   RWO   cbs-ssd
 data-redis-cluster-2   Bound   pvc-ccc   20Gi   RWO   cbs-ssd

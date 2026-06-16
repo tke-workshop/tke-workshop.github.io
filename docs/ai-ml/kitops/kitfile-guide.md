@@ -427,10 +427,12 @@ docs:
 model:
   path: ./models/model.pt
 
+---
 # ✅ 正确
 model:
   path: models/model.pt
 
+---
 # ❌ 错误 - 绝对路径
 model:
   path: /home/user/models/model.pt

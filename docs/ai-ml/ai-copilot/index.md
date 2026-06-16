@@ -33,14 +33,14 @@ TKE Skill 通过两个 CLI 工具提供完整的云原生运维能力：
 
 ### 📋 TKE 集群管理
 
-```
+```text
 帮我查一下广州地域的 TKE 集群
 获取集群 cls-xxx 的 kubeconfig
 ```
 
 ### ☸️ K8s 资源操作
 
-```
+```text
 帮我查看 default 命名空间的 Pod 状态
 查看 my-app Pod 的日志
 执行进入 my-app Pod 的 shell
@@ -48,7 +48,7 @@ TKE Skill 通过两个 CLI 工具提供完整的云原生运维能力：
 
 ### 🚀 一句话部署应用
 
-```
+```text
 帮我部署一个"你好，猴哥"静态页面到 TKE 集群
 帮我把本地项目打包成镜像并部署到 TKE
 ```
@@ -60,7 +60,7 @@ AI 将自动完成：
 
 ### 🔧 智能运维排障
 
-```
+```text
 帮我检查 my-app 为什么部署失败
 分析 Pod 状态、查看日志、排查问题原因
 ```
@@ -72,14 +72,14 @@ AI 将自动完成：
 
 ### ⛵ Helm 包管理
 
-```
+```text
 帮我用 Helm 安装 nginx，3 副本，开启等待
 帮我列出所有已安装的 Helm Release
 ```
 
 ### 🐳 TCR 镜像仓库
 
-```
+```text
 帮我查看广州地域的 TCR 实例
 创建一个镜像仓库 my-app
 ```
@@ -88,7 +88,7 @@ AI 将自动完成：
 
 一句话为团队成员创建权限：
 
-```
+```text
 帮我创建一个账号 team-frontend，权限级别 developer，可以访问 frontend 命名空间
 帮我生成 team-frontend 的安装 Prompt
 ```

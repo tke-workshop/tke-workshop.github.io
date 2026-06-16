@@ -201,7 +201,7 @@ kubectl get pods -n kube-system | grep virtual-kubelet
 
 **期望结果**:
 
-```
+```text
 NAME                                READY   STATUS    RESTARTS   AGE
 virtual-kubelet-np-xxxxxxxx-xxxxx   1/1     Running   0          2m
 ```

@@ -505,7 +505,7 @@ tccli vpc DescribeSecurityGroups --SecurityGroupIds '["sg-xxxxxxxx"]'
 
 ### 1. 节点池命名规范
 
-```
+```text
 <环境>-<用途>-pool
 例如：
 - production-web-pool

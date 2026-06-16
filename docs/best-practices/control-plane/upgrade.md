@@ -305,7 +305,7 @@ kubectl version --short
 
 **期望结果**：
 
-```
+```text
 Server Version: v1.28.3
 ```
 
@@ -317,7 +317,7 @@ kubectl get nodes -o wide
 
 **期望结果**：
 
-```
+```text
 NAME           STATUS   ROLES    AGE   VERSION   INTERNAL-IP    OS-IMAGE
 node-01        Ready    <none>   30d   v1.28.3   10.0.0.1       Tencent tlinux
 node-02        Ready    <none>   30d   v1.28.3   10.0.0.2       Tencent tlinux
