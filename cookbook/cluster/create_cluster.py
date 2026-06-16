@@ -8,6 +8,7 @@
 """
 
 import argparse
+import json
 import sys
 import time
 from pathlib import Path
@@ -21,6 +22,53 @@ from tencentcloud.tke.v20180525 import models
 from tencentcloud.common.exception.tencent_cloud_sdk_exception import TencentCloudSDKException
 
 logger = setup_logger(__name__)
+
+
+def build_create_cluster_request(
+    cluster_name: str,
+    k8s_version: str,
+    vpc_id: str,
+    cluster_cidr: str,
+    service_cidr: str,
+    cluster_level: str
+):
+    """
+    构造 CreateCluster 请求。
+    """
+    req = models.CreateClusterRequest()
+    req.ClusterType = "MANAGED_CLUSTER"
+
+    # 集群基础配置
+    req.ClusterBasicSettings = models.ClusterBasicSettings()
+    req.ClusterBasicSettings.ClusterName = cluster_name
+    req.ClusterBasicSettings.ClusterVersion = k8s_version
+    req.ClusterBasicSettings.VpcId = vpc_id
+    req.ClusterBasicSettings.ClusterLevel = cluster_level
+    req.ClusterBasicSettings.AutoUpgradeClusterLevel = models.AutoUpgradeClusterLevel()
+    req.ClusterBasicSettings.AutoUpgradeClusterLevel.IsAutoUpgrade = True
+
+    # 网络配置
+    req.ClusterCIDRSettings = models.ClusterCIDRSettings()
+    req.ClusterCIDRSettings.ClusterCIDR = cluster_cidr
+    req.ClusterCIDRSettings.MaxNodePodNum = 64
+    req.ClusterCIDRSettings.ServiceCIDR = service_cidr
+
+    return req
+
+
+def resolve_vpc_id(vpc_id: str = None) -> str:
+    """
+    解析 VPC ID。
+    """
+    if vpc_id:
+        return vpc_id
+
+    config = load_config()
+    vpc_id = config.get('cluster', {}).get('vpc_id')
+    if not vpc_id or vpc_id == 'vpc-xxxxxxxx':
+        raise ValueError("请在 config.yaml 中配置 vpc_id 或通过 --vpc-id 参数指定")
+
+    return vpc_id
 
 
 def create_cluster(
@@ -48,35 +96,19 @@ def create_cluster(
         集群 ID
     """
     with LogContext(logger, f"创建集群: {cluster_name}"):
-        # 加载配置
-        config = load_config()
-        if not vpc_id:
-            vpc_id = config.get('cluster', {}).get('vpc_id')
-            if not vpc_id or vpc_id == 'vpc-xxxxxxxx':
-                raise ValueError("请在 config.yaml 中配置 vpc_id 或通过 --vpc-id 参数指定")
-        
+        vpc_id = resolve_vpc_id(vpc_id)
+
         # 创建客户端
         client = get_tke_client(region)
-        
-        # 构造请求
-        req = models.CreateClusterRequest()
-        req.ClusterType = "MANAGED_CLUSTER"
-        
-        # 集群基础配置
-        req.ClusterBasicSettings = models.ClusterBasicSettings()
-        req.ClusterBasicSettings.ClusterName = cluster_name
-        req.ClusterBasicSettings.ClusterVersion = k8s_version
-        req.ClusterBasicSettings.VpcId = vpc_id
-        req.ClusterBasicSettings.ClusterLevel = cluster_level
-        req.ClusterBasicSettings.AutoUpgradeClusterLevel = True
-        
-        # 网络配置
-        req.ClusterCIDRSettings = models.ClusterCIDRSettings()
-        req.ClusterCIDRSettings.ClusterCIDR = cluster_cidr
-        req.ClusterCIDRSettings.MaxNodePodNum = 64
-        req.ClusterCIDRSettings.ServiceCIDR = service_cidr
-        req.ClusterCIDRSettings.VpcId = vpc_id
-        req.ClusterCIDRSettings.CniType = "vpc-cni"
+
+        req = build_create_cluster_request(
+            cluster_name=cluster_name,
+            k8s_version=k8s_version,
+            vpc_id=vpc_id,
+            cluster_cidr=cluster_cidr,
+            service_cidr=service_cidr,
+            cluster_level=cluster_level
+        )
         
         try:
             # 发起请求
@@ -174,12 +206,27 @@ def main():
     parser.add_argument('--cluster-level', default='L5', 
                        choices=['L5', 'L20', 'L50', 'L100', 'L200'],
                        help='集群规模')
+    parser.add_argument('--dry-run', action='store_true',
+                        help='只构造并序列化 CreateCluster 请求,不调用腾讯云 API')
     parser.add_argument('--wait', action='store_true', help='等待集群就绪')
     parser.add_argument('--timeout', type=int, default=1800, help='等待超时时间(秒)')
     
     args = parser.parse_args()
     
     try:
+        if args.dry_run:
+            vpc_id = resolve_vpc_id(args.vpc_id)
+            req = build_create_cluster_request(
+                cluster_name=args.cluster_name,
+                k8s_version=args.k8s_version,
+                vpc_id=vpc_id,
+                cluster_cidr=args.cluster_cidr,
+                service_cidr=args.service_cidr,
+                cluster_level=args.cluster_level
+            )
+            print(json.dumps(req._serialize(), ensure_ascii=False, indent=2))
+            sys.exit(0)
+
         # 创建集群
         cluster_id = create_cluster(
             cluster_name=args.cluster_name,
