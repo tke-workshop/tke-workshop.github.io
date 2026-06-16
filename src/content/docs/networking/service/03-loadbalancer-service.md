@@ -608,7 +608,7 @@ kubectl apply -f nginx-service-lb.yaml
 
 完整可执行的 Cookbook 脚本:
 
-👉 [LoadBalancer Service Cookbook](/cookbook-patterns.html?id=deploy-nginx)
+👉 [LoadBalancer Service Cookbook](/cookbooks/deploy-nginx/)
 
 包含:
 - ✅ 自动创建 Deployment

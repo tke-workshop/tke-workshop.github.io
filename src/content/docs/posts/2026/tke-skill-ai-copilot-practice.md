@@ -88,7 +88,7 @@ export TENCENTCLOUD_SECRET_KEY="xxx"
 AI 执行流程:
   1. [TKE Skill] 获取 kubeconfig ✅
   2. [保存文件] 把 kubeconfig 写到本地 ✅
-  3. [分析项目] 这是个 MkDocs 项目，需要 Dockerfile ✅
+  3. [分析项目] 这是个文档站点项目，需要 Dockerfile ✅
   4. [生成文件] 创建 Dockerfile ✅
   5. [终端] docker build... ❌ 报错
   6. [修复] 换个基础镜像... ✅

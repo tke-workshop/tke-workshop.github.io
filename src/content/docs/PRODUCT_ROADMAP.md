@@ -29,7 +29,7 @@ title: "TKE Workshop 产品路线图 (Product Roadmap)"
 ### ✅ 已完成功能 (Completed)
 
 #### 1. 文档基础设施
-- ✅ MkDocs Material 主题配置
+- ✅ Astro + Starlight 站点配置
 - ✅ 明暗主题切换
 - ✅ 响应式布局
 - ✅ 搜索功能
@@ -482,22 +482,15 @@ case-studies/
 - 🇯🇵 日本語 (可选)
 
 **实现方案**:
-```yaml
-# mkdocs.yml
-plugins:
-  - i18n:
-      default_language: zh
-      languages:
-        zh:
-          name: 简体中文
-          build: true
-        en:
-          name: English
-          build: true
-      nav_translations:
-        en:
-          基础操作: Basics
-          最佳实践: Best Practices
+```js
+// astro.config.mjs
+starlight({
+  defaultLocale: 'root',
+  locales: {
+    root: { label: '简体中文', lang: 'zh-CN' },
+    en: { label: 'English', lang: 'en' },
+  },
+});
           AI on TKE: AI on TKE
 ```
 

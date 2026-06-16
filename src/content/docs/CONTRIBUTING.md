@@ -21,26 +21,22 @@ title: "贡献指南"
 git clone git@github.com:YOUR_USERNAME/tke-workshop.git
 cd tke-workshop
 
-# 2. 创建虚拟环境
-python3 -m venv venv
-source venv/bin/activate
+# 2. 安装依赖
+npm install
 
-# 3. 安装依赖
-pip install -r requirements.txt
+# 3. 本地预览
+npm run dev
+# 浏览器打开 http://127.0.0.1:4321
 
-# 4. 本地预览
-mkdocs serve
-# 浏览器打开 http://127.0.0.1:8000
-
-# 5. 创建分支并编辑
+# 4. 创建分支并编辑
 git checkout -b docs/your-feature
 
-# 6. 提交并推送
+# 5. 提交并推送
 git add .
 git commit -m "docs(模块): 简要描述"
 git push origin docs/your-feature
 
-# 7. 在 GitHub 创建 Pull Request
+# 6. 在 GitHub 创建 Pull Request
 ```
 
 ## 📝 提交规范
@@ -81,7 +77,8 @@ feat/新功能描述
 
 提交 PR 前，请确认：
 
-- [ ] 本地预览通过（`mkdocs serve`）
+- [ ] 本地预览通过（`npm run dev`）
+- [ ] 构建通过（`npm run build`）
 - [ ] 无拼写错误
 - [ ] 链接有效
 - [ ] 图片已压缩（建议 < 200KB）

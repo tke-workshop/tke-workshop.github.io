@@ -242,8 +242,8 @@ Service Mesh (4 hours)
 - [可用性最佳实践](../best-practices/availability/index.md)
 
 ### Cookbook
-- [Service LoadBalancer Cookbook](/cookbook-patterns.html?category=networking)
-- [Ingress HTTPS Cookbook](/cookbook-patterns.html?category=networking)
+- [Service LoadBalancer Cookbook](/cookbooks/deploy-nginx/)
+- [全部 Networking Cookbook](/cookbooks/)
 
 ---
 

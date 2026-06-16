@@ -5,14 +5,14 @@
 *                           @admin1 @admin2
 
 # 站点配置（仅管理员可修改）
-mkdocs.yml                  @admin1 @admin2
+astro.config.mjs            @admin1 @admin2
+package.json                @admin1 @admin2
 .github/                    @admin1 @admin2
 
 # 模块负责人
-/docs/basics/               @basics-owner
-/docs/networking/           @networking-owner
-/docs/observability/        @observability-owner
-/docs/security/             @security-owner
-/docs/ai-ml/                @ai-ml-owner
-/docs/data/                 @data-owner
-/docs/control-plane/        @control-plane-owner
+/src/content/docs/basics/               @basics-owner
+/src/content/docs/networking/           @networking-owner
+/src/content/docs/best-practices/       @security-owner
+/src/content/docs/ai-ml/                @ai-ml-owner
+/src/content/docs/data/                 @data-owner
+/src/data/cookbooks.js                  @basics-owner
