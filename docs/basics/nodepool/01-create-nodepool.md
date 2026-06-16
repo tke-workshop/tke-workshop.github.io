@@ -526,7 +526,7 @@ sudo journalctl -u kubelet -f
 
 ### 基础创建
 
-```
+```text
 请帮我在 TKE 集群中创建一个节点池：
 - 集群 ID: cls-abc123
 - 节点池名称: standard-nodepool
@@ -540,7 +540,7 @@ sudo journalctl -u kubelet -f
 
 ### 高级配置
 
-```
+```text
 请帮我创建一个支持自动伸缩的节点池：
 - 集群 ID: cls-abc123
 - 节点池名称: auto-scaling-pool
@@ -555,7 +555,7 @@ sudo journalctl -u kubelet -f
 
 ### 批量创建
 
-```
+```text
 请帮我创建 3 个不同类型的节点池：
 1. 计算密集型节点池（CPU 优化，C5.2XLARGE16）
 2. 内存密集型节点池（内存优化，M5.2XLARGE32）

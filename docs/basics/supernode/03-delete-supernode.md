@@ -177,7 +177,7 @@ kubectl get node eklet-subnet-xxxxxxxx-0
 
 **期望结果**:
 
-```
+```text
 Error from server (NotFound): nodes "eklet-subnet-xxxxxxxx-0" not found
 ```
 

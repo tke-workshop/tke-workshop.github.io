@@ -265,7 +265,7 @@ resource "tencentcloud_kubernetes_cluster" "cluster" {
 
 对于需要访问外网的场景，使用 NAT 网关：
 
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │                        VPC                          │
 │  ┌─────────────┐    ┌─────────────────────────────┐│
@@ -629,7 +629,7 @@ spec:
     image: untrusted-image:v1
 ```
 
-```
+```text
 普通容器:
 ┌─────────────────────────────────────┐
 │           应用进程                   │
@@ -684,7 +684,9 @@ TKE 提供了针对容器工作负载优化的节点镜像：
 # 推荐使用 TencentOS 或容器优化镜像
 nodePool:
   osName: "tlinux3.1x86_64"  # TencentOS Server 3.1
-  # 或
+
+---
+nodePool:
   osName: "cos-x86_64"       # Container-Optimized OS
 ```
 
@@ -1164,6 +1166,7 @@ spec:
     - 企业微信
     - 短信
 
+---
 # 示例：敏感操作告警
 告警规则:
   名称: Secret 删除告警

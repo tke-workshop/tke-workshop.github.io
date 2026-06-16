@@ -63,7 +63,7 @@ kubeconfig:
 
 ## 📂 目录结构
 
-```
+```text
 cookbook/
 ├── README.md                    # 本文件
 ├── requirements.txt             # Python 依赖

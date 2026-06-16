@@ -88,7 +88,7 @@ kubectl run test-pod --image=busybox:1.28 --rm -it --restart=Never -- \
 
 **期望输出**:
 
-```
+```text
 NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
 my-app-svc   ClusterIP   10.96.123.45    <none>        80/TCP    1m
 ```
@@ -295,7 +295,7 @@ curl http://$LB_DOMAIN
 
 **期望输出**:
 
-```
+```text
 NAME               TYPE           CLUSTER-IP     EXTERNAL-IP                        PORT(S)        AGE
 my-app-lb-public   LoadBalancer   10.96.45.67    xxx.clb.myqcloud.com              80:31234/TCP   2m
 ```

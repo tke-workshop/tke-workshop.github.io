@@ -524,7 +524,7 @@ kubectl scale deployment <deployment-name> --replicas=5
 
 ### 基础镜像更新
 
-```
+```text
 请帮我更新 Deployment 的镜像版本：
 - Deployment 名称: nginx-deployment
 - 命名空间: production
@@ -534,7 +534,7 @@ kubectl scale deployment <deployment-name> --replicas=5
 
 ### 扩缩容
 
-```
+```text
 请帮我扩容 Deployment：
 - Deployment 名称: web-app
 - 命名空间: production
@@ -545,7 +545,7 @@ kubectl scale deployment <deployment-name> --replicas=5
 
 ### 资源配置调整
 
-```
+```text
 请帮我调整 Deployment 的资源配置：
 - Deployment 名称: api-server
 - 命名空间: production
@@ -559,7 +559,7 @@ kubectl scale deployment <deployment-name> --replicas=5
 
 ### 金丝雀发布
 
-```
+```text
 请帮我进行金丝雀发布：
 - 应用: web-app
 - 当前版本: v1.0 (10 个副本)

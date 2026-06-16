@@ -400,7 +400,7 @@ python cookbook/cluster/delete_cluster.py \
 
 以下是供 AI Agent 使用的提示词模板：
 
-```
+```text
 请在 TKE 上部署 OPEA ChatQnA 应用。
 
 要求:

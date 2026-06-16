@@ -188,7 +188,7 @@ spec:
 ## 🎓 学习路径
 
 ### 初学者路径 (4-6 小时)
-```
+```text
 1. ClusterIP Service (30 min)
    ↓
 2. NodePort Service (30 min)
@@ -201,7 +201,7 @@ spec:
 ```
 
 ### 进阶路径 (8-10 小时)
-```
+```text
 初学者路径
    ↓
 HTTPS Ingress (1 hour)
@@ -214,7 +214,7 @@ VPC-CNI (2 hours)
 ```
 
 ### 专家路径 (15+ 小时)
-```
+```text
 进阶路径
    ↓
 Service Mesh (4 hours)
@@ -246,7 +246,7 @@ Service Mesh (4 hours)
 ## 🎯 实战场景
 
 ### 场景 1: 微服务架构
-```
+```text
 API Gateway (Ingress)
     ↓
 多个微服务 (ClusterIP Service)
@@ -255,7 +255,7 @@ API Gateway (Ingress)
 ```
 
 ### 场景 2: 蓝绿部署
-```
+```text
 Ingress (流量分配)
     ↓
 Service (蓝色版本 90%)
@@ -264,7 +264,7 @@ Service (绿色版本 10%)
 ```
 
 ### 场景 3: 多租户隔离
-```
+```text
 租户 A (Namespace A)
     ↓ Network Policy
 租户 B (Namespace B)

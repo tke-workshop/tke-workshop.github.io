@@ -68,7 +68,7 @@ kubectl delete deployment <deployment-name> -n <namespace>
 ```
 
 期望输出：
-```
+```text
 deployment.apps "nginx-deployment" deleted
 ```
 
@@ -83,7 +83,7 @@ kubectl get pods -l app=<app-label> -n <namespace>
 ```
 
 期望输出：
-```
+```text
 Error from server (NotFound): deployments.apps "nginx-deployment" not found
 No resources found in default namespace.
 ```
@@ -301,7 +301,7 @@ kubectl get deployment <deployment-name> -n <namespace>
 ```
 
 期望输出：
-```
+```text
 Error from server (NotFound): deployments.apps "nginx-deployment" not found
 ```
 
@@ -312,7 +312,7 @@ kubectl get pods -l app=<app-label> -n <namespace>
 ```
 
 期望输出：
-```
+```text
 No resources found in default namespace.
 ```
 
@@ -323,7 +323,7 @@ kubectl get replicaset -l app=<app-label> -n <namespace>
 ```
 
 期望输出：
-```
+```text
 No resources found in default namespace.
 ```
 

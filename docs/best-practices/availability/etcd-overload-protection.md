@@ -114,6 +114,7 @@ pods, err := clientset.CoreV1().Pods(namespace).List(context.TODO(), metav1.List
 name: TKE_READ_CACHE_RULE
 value: '{"rules":[{"resource":"configmaps","userAgents":["okhttp/3.14.9","kubectl"]}]}'
 
+---
 # SkipLimit 特性
 name: TKE_SKIP_LIMIT_RULE
 value: '{"rules":[{"resource":"configmaps","userAgents":["kubectl"]}]}'
@@ -226,7 +227,7 @@ kubectl get --raw /metrics | grep request_match_config_sync_counter
 
 业务集群因异常 list pod 出现 API Server CPU 高负载和 etcd 流量告警：
 
-```
+```text
 [ETCD告警][2025-04-01 06:06:39][ETCD出流量超过阀值，集群名:cls-xxxxxxxx, 当前流量大小:240.051MB
 ```
 
@@ -234,7 +235,7 @@ kubectl get --raw /metrics | grep request_match_config_sync_counter
 
 查看 API Server 慢查询日志，确定 userAgent：
 
-```
+```text
 I0401 06:47:07.032841       1 trace.go:219] Trace[1893148101]: "List" accept:application/json, */*,audit-id:223398123-0b6c-4743-9c62-124,client:172.10.24.12,protocol:HTTP/2.0,resource:pods,scope:namespace,url:/api/v1/namespaces/infer/pods,user-agent: okhttp/v3.12 (linux/amd64) kubernetes/$Format/admin,verb:LIST (01-Apr-2025 06:47:06.490) (total time: 1542ms):
 ```
 
