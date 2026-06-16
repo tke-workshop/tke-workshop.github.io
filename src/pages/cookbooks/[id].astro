@@ -1,6 +1,6 @@
 ---
 import MarketingLayout from '../../layouts/MarketingLayout.astro';
-import { cookbooks, getCookbook } from '../../data/cookbooks';
+import { cookbooks, getCookbook } from '../../data/cookbooks.js';
 
 export function getStaticPaths() {
   return cookbooks.map((cookbook) => ({
@@ -30,6 +30,7 @@ if (!cookbook) {
         <span class="pill">{cookbook.language}</span>
         <span class="pill">{cookbook.estimatedTime}</span>
         <span class="pill">{cookbook.verified ? 'Verified' : 'Draft'}</span>
+        <span class="pill pill--risk">风险：{cookbook.risk.level}</span>
         {cookbook.tags.map((tag) => <span class="pill">{tag}</span>)}
       </div>
     </div>
@@ -37,6 +38,21 @@ if (!cookbook) {
 
   <div class="recipe-layout">
     <article>
+      <section class="recipe-section recipe-section--risk">
+        <h2>风险与费用提示</h2>
+        <div class="recipe-risk-grid">
+          <div>
+            <span class="recipe-eyebrow">资源影响</span>
+            <strong>{cookbook.risk.resourceImpact}</strong>
+          </div>
+          <div>
+            <span class="recipe-eyebrow">费用影响</span>
+            <strong>{cookbook.risk.cost}</strong>
+          </div>
+        </div>
+        <p>{cookbook.risk.notice}</p>
+      </section>
+
       <section class="recipe-section">
         <h2>前置条件</h2>
         <ul>
@@ -45,34 +61,155 @@ if (!cookbook) {
       </section>
 
       <section class="recipe-section">
+        <h2>参数表</h2>
+        <div class="recipe-table-wrap">
+          <table class="recipe-table">
+            <thead>
+              <tr>
+                <th>参数</th>
+                <th>必填</th>
+                <th>示例</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                cookbook.parameters.map((parameter) => (
+                  <tr>
+                    <td><code>{parameter.name}</code></td>
+                    <td>{parameter.required ? '是' : '否'}</td>
+                    <td><code>{parameter.example}</code></td>
+                    <td>{parameter.description}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="recipe-section">
         <h2>执行命令</h2>
-        <pre class="command-block"><code>{cookbook.commands.join('\n')}</code></pre>
+        <div class="recipe-command-list">
+          {
+            cookbook.commands.map((command, index) => (
+              <div class="recipe-command">
+                <div class="recipe-command__head">
+                  <span>Step {index + 1}</span>
+                  <button class="copy-button" type="button" data-copy={command}>复制</button>
+                </div>
+                <pre class="command-block"><code>{command}</code></pre>
+              </div>
+            ))
+          }
+        </div>
       </section>
 
       <section class="recipe-section">
         <h2>验证步骤</h2>
-        <ul>
-          {cookbook.verification.map((item) => <li><code>{item}</code></li>)}
-        </ul>
+        <div class="recipe-command-list">
+          {
+            cookbook.verification.map((item, index) => (
+              <div class="recipe-command">
+                <div class="recipe-command__head">
+                  <span>Check {index + 1}</span>
+                  <button class="copy-button" type="button" data-copy={item}>复制</button>
+                </div>
+                <pre class="command-block"><code>{item}</code></pre>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="recipe-section">
+        <h2>清理步骤</h2>
+        <ol>
+          {cookbook.cleanup.map((item) => <li>{item}</li>)}
+        </ol>
       </section>
 
       <section class="recipe-section">
         <h2>Agent Prompt</h2>
-        <p>{cookbook.prompt}</p>
+        <div class="recipe-command">
+          <div class="recipe-command__head">
+            <span>Prompt</span>
+            <button class="copy-button" type="button" data-copy={cookbook.prompt}>复制 Prompt</button>
+          </div>
+          <p>{cookbook.prompt}</p>
+        </div>
       </section>
     </article>
 
-    <aside class="recipe-section">
-      <h2>相关文件</h2>
-      <ul>
-        {
-          cookbook.files.map((file) => (
-            <li>
-              <a href={`https://github.com/tke-workshop/tke-workshop.github.io/blob/main/${file}`}>{file}</a>
-            </li>
-          ))
-        }
-      </ul>
+    <aside class="recipe-aside">
+      <section class="recipe-section">
+        <h2>相关文档</h2>
+        <ul>
+          {
+            cookbook.relatedDocs.map((doc) => (
+              <li>
+                <a href={doc.href}>{doc.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section class="recipe-section">
+        <h2>相关文件</h2>
+        <ul>
+          {
+            cookbook.files.map((file) => (
+              <li>
+                <a href={`https://github.com/tke-workshop/tke-workshop.github.io/blob/main/${file}`}>{file}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
     </aside>
   </div>
+
+  <script>
+    async function copyText(text) {
+      if (navigator.clipboard?.writeText) {
+        try {
+          await navigator.clipboard.writeText(text);
+          return;
+        } catch {
+          // Fall back to a temporary textarea for browsers that block clipboard writes.
+        }
+      }
+
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.append(textarea);
+      textarea.select();
+      const copied = document.execCommand('copy');
+      textarea.remove();
+      if (!copied) throw new Error('Copy failed');
+    }
+
+    document.addEventListener('click', async (event) => {
+      const button = event.target instanceof HTMLElement && event.target.closest('.copy-button');
+      if (!(button instanceof HTMLButtonElement)) return;
+
+      const text = button.dataset.copy;
+      if (!text) return;
+
+      const originalText = button.textContent;
+      try {
+        await copyText(text);
+        button.textContent = '已复制';
+      } catch {
+        button.textContent = '请手动复制';
+      }
+      window.setTimeout(() => {
+        button.textContent = originalText;
+      }, 1600);
+    });
+  </script>
 </MarketingLayout>
