@@ -93,6 +93,8 @@ body {
 }
 
 .workshop-nav__links a,
+.workshop-nav__menu summary,
+.workshop-nav__menu-panel a,
 .workshop-button {
   border-radius: 999px;
   color: var(--tke-muted);
@@ -105,9 +107,55 @@ body {
   padding: 9px 13px;
 }
 
-.workshop-nav__links a:hover {
+.workshop-nav__links a:hover,
+.workshop-nav__links a[aria-current='page'],
+.workshop-nav__menu-panel a:hover,
+.workshop-nav__menu-panel a[aria-current='page'] {
   color: var(--tke-blue);
   background: color-mix(in srgb, var(--tke-blue), transparent 91%);
+}
+
+.workshop-nav__menu {
+  position: relative;
+  display: none;
+}
+
+.workshop-nav__menu summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--tke-line);
+  color: var(--tke-ink);
+  background: var(--tke-panel);
+  cursor: pointer;
+  list-style: none;
+}
+
+.workshop-nav__menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.workshop-nav__menu-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  display: grid;
+  width: min(250px, calc(100vw - 32px));
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid var(--tke-line);
+  border-radius: var(--tke-radius);
+  background: var(--tke-panel);
+  box-shadow: 0 18px 50px rgba(24, 32, 51, 0.14);
+}
+
+.workshop-nav__menu:not([open]) .workshop-nav__menu-panel {
+  display: none;
+}
+
+.workshop-nav__menu-panel a {
+  padding: 10px 12px;
 }
 
 .workshop-button {
@@ -383,6 +431,11 @@ body {
 
   .workshop-nav__links {
     display: none;
+  }
+
+  .workshop-nav__menu {
+    display: block;
+    margin-left: auto;
   }
 }
 

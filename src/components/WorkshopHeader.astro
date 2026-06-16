@@ -1,0 +1,146 @@
+---
+import config from 'virtual:starlight/user-config';
+
+import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
+import Search from 'virtual:starlight/components/Search';
+import SiteTitle from 'virtual:starlight/components/SiteTitle';
+import SocialIcons from 'virtual:starlight/components/SocialIcons';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+import { getActiveNavItem, workshopNavItems } from '../data/navigation.mjs';
+
+const shouldRenderSearch =
+  config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
+
+const pathname = Astro.url.pathname;
+const activeItem = getActiveNavItem(pathname);
+---
+
+<div class="workshop-doc-header">
+  <div class="workshop-doc-header__main">
+    <div class="title-wrapper sl-flex">
+      <SiteTitle />
+    </div>
+    <div class="sl-flex print:hidden workshop-doc-header__search">
+      {shouldRenderSearch && <Search />}
+    </div>
+    <div class="sl-hidden md:sl-flex print:hidden right-group">
+      <div class="sl-flex social-icons">
+        <SocialIcons />
+      </div>
+      <ThemeSelect />
+      <LanguageSelect />
+    </div>
+  </div>
+
+  <nav class="workshop-doc-tabs print:hidden" aria-label="一级导航">
+    {
+      workshopNavItems.map((item) => {
+        const isActive = activeItem?.label === item.label;
+        return (
+          <a href={item.href} aria-current={isActive ? 'page' : undefined}>
+            {item.label}
+          </a>
+        );
+      })
+    }
+  </nav>
+</div>
+
+<style>
+  @layer starlight.core {
+    :global(:root) {
+      --sl-nav-height: 7rem;
+    }
+
+    .workshop-doc-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      height: 100%;
+    }
+
+    .workshop-doc-header__main {
+      display: flex;
+      gap: var(--sl-nav-gap);
+      justify-content: space-between;
+      align-items: center;
+      min-height: 2.65rem;
+    }
+
+    .title-wrapper {
+      overflow: clip;
+      padding: 0.25rem;
+      margin: -0.25rem;
+      min-width: 0;
+    }
+
+    .workshop-doc-header__search {
+      flex: 1;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .right-group,
+    .social-icons {
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .social-icons::after {
+      content: '';
+      height: 2rem;
+      border-inline-end: 1px solid var(--sl-color-gray-5);
+    }
+
+    .workshop-doc-tabs {
+      display: flex;
+      gap: 0.35rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      white-space: nowrap;
+      padding-block: 0.1rem 0.25rem;
+    }
+
+    .workshop-doc-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .workshop-doc-tabs a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2rem;
+      padding: 0 0.72rem;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      color: var(--sl-color-gray-2);
+      font-size: var(--sl-text-sm);
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    .workshop-doc-tabs a:hover,
+    .workshop-doc-tabs a:focus {
+      color: var(--sl-color-white);
+      background: var(--sl-color-gray-6);
+    }
+
+    .workshop-doc-tabs a[aria-current='page'] {
+      color: var(--sl-color-text-invert);
+      background: var(--sl-color-text-accent);
+    }
+
+    @media (max-width: 49.99rem) {
+      :global(:root) {
+        --sl-nav-height: 6.7rem;
+      }
+
+      .workshop-doc-header {
+        gap: 0.35rem;
+      }
+
+      .workshop-doc-header__main {
+        padding-inline-end: calc(var(--sl-menu-button-size) + 0.75rem);
+      }
+    }
+  }
+</style>

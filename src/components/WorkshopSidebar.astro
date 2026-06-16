@@ -1,0 +1,54 @@
+---
+import MobileMenuFooter from 'virtual:starlight/components/MobileMenuFooter';
+import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro';
+import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro';
+import { getActiveNavItem } from '../data/navigation.mjs';
+
+const { sidebar } = Astro.locals.starlightRoute;
+const pathname = Astro.url.pathname;
+
+function hasCurrentEntry(entries: typeof sidebar): boolean {
+  return entries.some((entry) => {
+    if (entry.type === 'link') return entry.isCurrent;
+    return hasCurrentEntry(entry.entries);
+  });
+}
+
+const activeModule = getActiveNavItem(pathname);
+
+const activeGroup =
+  activeModule &&
+  sidebar.find(
+    (entry) => entry.type === 'group' && activeModule.sidebarLabels.includes(entry.label)
+  );
+
+const currentGroup =
+  activeGroup ||
+  sidebar.find((entry) => entry.type === 'group' && hasCurrentEntry(entry.entries));
+
+const scopedSidebar = currentGroup?.type === 'group' ? currentGroup.entries : sidebar;
+const scopedLabel = currentGroup?.type === 'group' ? currentGroup.label : '目录';
+---
+
+<div class="workshop-sidebar-label">{scopedLabel}</div>
+<SidebarPersister>
+  <SidebarSublist sublist={scopedSidebar} />
+</SidebarPersister>
+
+<div class="md:sl-hidden">
+  <MobileMenuFooter />
+</div>
+
+<style>
+  @layer starlight.core {
+    .workshop-sidebar-label {
+      margin: 0 0 0.55rem;
+      padding: 0 0.5rem 0.55rem;
+      border-bottom: 1px solid var(--sl-color-hairline-light);
+      color: var(--sl-color-white);
+      font-size: var(--sl-text-sm);
+      font-weight: 750;
+      letter-spacing: 0;
+    }
+  }
+</style>

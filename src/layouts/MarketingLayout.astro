@@ -1,15 +1,9 @@
 ---
 import '../styles/workshop.css';
-
-const navItems = [
-  { label: 'Start', href: '/start/' },
-  { label: 'Operate', href: '/operate/' },
-  { label: 'Practice', href: '/practice/' },
-  { label: 'AI on TKE', href: '/ai-on-tke/' },
-  { label: 'Cookbooks', href: '/cookbooks/' },
-];
+import { getActiveNavItem, workshopNavItems } from '../data/navigation.mjs';
 
 const { title = 'TKE Workshop', description = '面向 TKE 云原生实践的学习路径、操作指南和可执行 Cookbook。' } = Astro.props;
+const activeItem = getActiveNavItem(Astro.url.pathname);
 ---
 
 <!doctype html>
@@ -29,8 +23,26 @@ const { title = 'TKE Workshop', description = '面向 TKE 云原生实践的学�
             <span>TKE Workshop</span>
           </a>
           <nav class="workshop-nav__links" aria-label="主导航">
-            {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+            {
+              workshopNavItems.map((item) => (
+                <a href={item.href} aria-current={activeItem?.label === item.label ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              ))
+            }
           </nav>
+          <details class="workshop-nav__menu">
+            <summary>菜单</summary>
+            <div class="workshop-nav__menu-panel">
+              {
+                workshopNavItems.map((item) => (
+                  <a href={item.href} aria-current={activeItem?.label === item.label ? 'page' : undefined}>
+                    {item.label}
+                  </a>
+                ))
+              }
+            </div>
+          </details>
           <a class="workshop-button" href="https://github.com/tke-workshop/tke-workshop.github.io">GitHub</a>
         </div>
       </header>

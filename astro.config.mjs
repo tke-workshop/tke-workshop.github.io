@@ -24,10 +24,15 @@ export default defineConfig({
       editLink: {
         baseUrl: 'https://github.com/tke-workshop/tke-workshop.github.io/edit/main/',
       },
+      components: {
+        Header: './src/components/WorkshopHeader.astro',
+        Sidebar: './src/components/WorkshopSidebar.astro',
+      },
       customCss: ['./src/styles/workshop.css'],
       sidebar: [
         {
           label: 'Start',
+          collapsed: true,
           items: [
             { label: 'Workshop 概览', slug: 'start' },
             { label: '环境准备', slug: 'start/environment' },
@@ -35,22 +40,27 @@ export default defineConfig({
         },
         {
           label: '基础操作',
-          items: [{ autogenerate: { directory: 'basics' } }],
+          collapsed: true,
+          items: [{ autogenerate: { directory: 'basics', collapsed: true } }],
         },
         {
           label: '最佳实践',
-          items: [{ autogenerate: { directory: 'best-practices' } }],
+          collapsed: true,
+          items: [{ autogenerate: { directory: 'best-practices', collapsed: true } }],
         },
         {
           label: 'AI on TKE',
-          items: [{ autogenerate: { directory: 'ai-ml' } }],
+          collapsed: true,
+          items: [{ autogenerate: { directory: 'ai-ml', collapsed: true } }],
         },
         {
           label: 'Data on TKE',
-          items: [{ autogenerate: { directory: 'data' } }],
+          collapsed: true,
+          items: [{ autogenerate: { directory: 'data', collapsed: true } }],
         },
         {
           label: 'Workshop Paths',
+          collapsed: true,
           items: [
             { label: '基础操作路径', slug: 'operate' },
             { label: '生产实践路径', slug: 'practice' },
@@ -59,6 +69,7 @@ export default defineConfig({
         },
         {
           label: 'Contribute',
+          collapsed: true,
           items: [{ label: '贡献与 Agent-First 规范', slug: 'contribute' }],
         },
       ],
