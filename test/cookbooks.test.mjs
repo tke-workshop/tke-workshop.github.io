@@ -5,6 +5,8 @@ import { cookbooks } from '../src/data/cookbooks.js';
 
 const legacyCookbookIds = [
   'create-cluster',
+  'delete-cluster',
+  'describe-clusters',
   'deploy-nginx',
   'deploy-gpu-pod',
   'tke-ai-playbook',
@@ -27,6 +29,20 @@ test('migrates every legacy cookbook into the new cookbook collection', () => {
   assert.deepEqual(
     cookbooks.map((cookbook) => cookbook.id),
     legacyCookbookIds
+  );
+});
+
+test('cluster API docs link to local cookbook scripts', () => {
+  const clusterCookbooks = new Map(
+    cookbooks
+      .filter((cookbook) => ['create-cluster', 'delete-cluster', 'describe-clusters'].includes(cookbook.id))
+      .map((cookbook) => [cookbook.id, cookbook])
+  );
+
+  assert.equal(clusterCookbooks.get('delete-cluster')?.files?.includes('cookbook/cluster/delete_cluster.py'), true);
+  assert.equal(
+    clusterCookbooks.get('describe-clusters')?.files?.includes('cookbook/cluster/describe_clusters.py'),
+    true
   );
 });
 
