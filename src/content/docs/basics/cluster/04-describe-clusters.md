@@ -552,7 +552,7 @@ export_clusters_to_csv(resp.Clusters)
 
 ## Cookbook 示例
 
-完整可执行代码示例: TKE 集群查询 Cookbook
+完整可执行代码示例: [TKE 集群查询 Cookbook](/cookbooks/describe-clusters/)；源码见 [`cookbook/cluster/describe_clusters.py`](https://github.com/tke-workshop/tke-workshop.github.io/blob/main/cookbook/cluster/describe_clusters.py)。
 
 ---
 

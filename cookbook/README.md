@@ -70,7 +70,9 @@ cookbook/
 │   ├── auth.py                  # 认证工具
 │   └── logger.py                # 日志工具
 ├── cluster/                     # 集群管理
-│   └── create_cluster.py        # 创建集群
+│   ├── create_cluster.py        # 创建集群
+│   ├── delete_cluster.py        # 删除集群
+│   └── describe_clusters.py     # 查询集群
 ├── workload/                    # 工作负载
 │   ├── deploy_nginx.py          # 部署 Nginx
 │   └── deploy_nginx.yaml        # Nginx YAML 配置
@@ -126,6 +128,8 @@ python3 supernode/deploy_gpu_pod.py \
 | 脚本 | 语言 | 功能 | 文档链接 |
 |------|------|------|---------|
 | `create_cluster.py` | Python | 创建 TKE 集群 | [docs](../docs/basics/cluster/01-create-cluster.md) |
+| `delete_cluster.py` | Python | 删除 TKE 集群，默认 dry-run | [docs](../docs/basics/cluster/02-delete-cluster.md) |
+| `describe_clusters.py` | Python | 查询 TKE 集群列表和详情 | [docs](../docs/basics/cluster/04-describe-clusters.md) |
 
 ### 工作负载 (workload/)
 
