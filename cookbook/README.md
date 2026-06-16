@@ -18,7 +18,7 @@ Cookbook 提供完整的、可立即执行的 TKE 操作脚本和场景示例，
 
 ### 前置条件
 
-1. **Python 3.8+** 或 **Go 1.19+**
+1. **Python 3.8+**
 2. **腾讯云 API 密钥** (SecretId 和 SecretKey)
 3. **kubectl** (用于 Kubernetes 操作)
 
@@ -28,8 +28,6 @@ Cookbook 提供完整的、可立即执行的 TKE 操作脚本和场景示例，
 # Python 依赖
 pip install -r requirements.txt
 
-# Go 依赖
-go mod download
 ```
 
 ### 配置 API 密钥
@@ -67,51 +65,19 @@ kubeconfig:
 cookbook/
 ├── README.md                    # 本文件
 ├── requirements.txt             # Python 依赖
-├── go.mod                       # Go 依赖
 ├── config.example.yaml          # 配置模板
 ├── common/                      # 通用工具库
 │   ├── auth.py                  # 认证工具
-│   ├── logger.py                # 日志工具
-│   └── k8s_client.py            # Kubernetes 客户端
+│   └── logger.py                # 日志工具
 ├── cluster/                     # 集群管理
-│   ├── README.md
-│   ├── create_cluster.py        # 创建集群
-│   ├── delete_cluster.py        # 删除集群
-│   ├── create_cluster.go        # Go 版本
-│   └── create_cluster.sh        # Shell 版本
-├── node/                        # 节点管理
-│   ├── README.md
-│   ├── add_node.py              # 添加节点
-│   ├── delete_node.py           # 删除节点
-│   └── batch_add_nodes.py       # 批量添加节点
+│   └── create_cluster.py        # 创建集群
 ├── workload/                    # 工作负载
-│   ├── README.md
 │   ├── deploy_nginx.py          # 部署 Nginx
-│   ├── deploy_nginx.yaml        # Nginx YAML 配置
-│   ├── deploy_microservice.py  # 部署微服务
-│   └── update_deployment.py    # 更新 Deployment
-├── service/                     # 服务管理
-│   ├── README.md
-│   ├── create_clusterip.py     # 创建 ClusterIP Service
-│   ├── create_loadbalancer.py  # 创建 LoadBalancer Service
-│   └── expose_service.yaml     # Service YAML 配置
-└── scenarios/                   # 完整场景
-    ├── blue_green_deployment/   # 蓝绿部署
-    │   ├── README.md
-    │   ├── blue_green.py
-    │   └── manifests/
-    ├── canary_release/          # 金丝雀发布
-    │   ├── README.md
-    │   ├── canary.py
-    │   └── manifests/
-    ├── disaster_recovery/       # 灾难恢复
-    │   ├── README.md
-    │   ├── backup.py
-    │   └── restore.py
-    └── auto_scaling/            # 自动扩缩容
-        ├── README.md
-        ├── setup_hpa.py
-        └── load_test.sh
+│   └── deploy_nginx.yaml        # Nginx YAML 配置
+└── supernode/                   # 超级节点
+    ├── README.md
+    ├── deploy_gpu_pod.py        # 部署 GPU Pod
+    └── gpu_pod_examples.yaml    # GPU Pod 示例配置
 ```
 
 ---
@@ -127,14 +93,6 @@ python3 cluster/create_cluster.py \
   --region ap-guangzhou \
   --k8s-version 1.28.3
 
-# Go 版本
-go run cluster/create_cluster.go \
-  -name my-cluster \
-  -region ap-guangzhou \
-  -version 1.28.3
-
-# Shell 版本
-bash cluster/create_cluster.sh my-cluster ap-guangzhou
 ```
 
 ### 示例 2: 部署 Nginx 应用
@@ -142,29 +100,21 @@ bash cluster/create_cluster.sh my-cluster ap-guangzhou
 ```bash
 # 使用 Python SDK
 python3 workload/deploy_nginx.py \
-  --cluster-id cls-xxxxxxxx \
-  --replicas 3
+  --namespace default \
+  --replicas 3 \
+  --expose
 
 # 使用 YAML 配置
 kubectl apply -f workload/deploy_nginx.yaml
 ```
 
-### 示例 3: 蓝绿部署场景
+### 示例 3: 部署 GPU Pod
 
 ```bash
-cd scenarios/blue_green_deployment
-
-# 部署蓝色版本
-python3 blue_green.py deploy --version blue
-
-# 部署绿色版本
-python3 blue_green.py deploy --version green
-
-# 切换流量到绿色版本
-python3 blue_green.py switch --to green
-
-# 回滚到蓝色版本
-python3 blue_green.py rollback --to blue
+python3 supernode/deploy_gpu_pod.py \
+  --name gpu-demo \
+  --image nvidia/cuda:12.2.0-base-ubuntu22.04 \
+  --gpu-type T4
 ```
 
 ---
@@ -176,41 +126,18 @@ python3 blue_green.py rollback --to blue
 | 脚本 | 语言 | 功能 | 文档链接 |
 |------|------|------|---------|
 | `create_cluster.py` | Python | 创建 TKE 集群 | [docs](../docs/basics/cluster/01-create-cluster.md) |
-| `delete_cluster.py` | Python | 删除 TKE 集群 | [docs](../docs/basics/cluster/02-delete-cluster.md) |
-| `create_cluster.go` | Go | 创建集群 (Go 版本) | [docs](../docs/basics/cluster/01-create-cluster.md) |
-| `create_cluster.sh` | Shell | 创建集群 (Shell 版本) | [docs](../docs/basics/cluster/01-create-cluster.md) |
-
-### 节点管理 (node/)
-
-| 脚本 | 语言 | 功能 | 文档链接 |
-|------|------|------|---------|
-| `add_node.py` | Python | 添加节点到集群 | [docs](../docs/basics/node/01-add-node.md) |
-| `delete_node.py` | Python | 从集群删除节点 | [docs](../docs/basics/node/02-delete-node.md) |
-| `batch_add_nodes.py` | Python | 批量添加节点 | [docs](../docs/basics/node/01-add-node.md) |
 
 ### 工作负载 (workload/)
 
 | 脚本 | 语言 | 功能 | 文档链接 |
 |------|------|------|---------|
 | `deploy_nginx.py` | Python | 部署 Nginx 示例 | [docs](../docs/basics/workload/01-create-deployment.md) |
-| `deploy_microservice.py` | Python | 部署微服务应用 | [docs](../docs/basics/workload/01-create-deployment.md) |
-| `update_deployment.py` | Python | 滚动更新 Deployment | [docs](../docs/basics/workload/02-update-deployment.md) |
 
-### 服务管理 (service/)
+### 超级节点 (supernode/)
 
 | 脚本 | 语言 | 功能 | 文档链接 |
 |------|------|------|---------|
-| `create_clusterip.py` | Python | 创建 ClusterIP Service | [docs](../docs/basics/service/01-create-service.md) |
-| `create_loadbalancer.py` | Python | 创建 LoadBalancer Service | [docs](../docs/basics/service/01-create-service.md) |
-
-### 完整场景 (scenarios/)
-
-| 场景 | 语言 | 功能 | 难度 |
-|------|------|------|------|
-| `blue_green_deployment/` | Python | 蓝绿部署完整流程 | ⭐⭐⭐ |
-| `canary_release/` | Python | 金丝雀发布 | ⭐⭐⭐ |
-| `disaster_recovery/` | Python | 灾难恢复和备份 | ⭐⭐⭐⭐ |
-| `auto_scaling/` | Python | 自动扩缩容配置 | ⭐⭐ |
+| `deploy_gpu_pod.py` | Python | 在超级节点上部署 GPU Pod | [docs](../docs/basics/supernode/02-create-supernode.md) |
 
 ---
 
@@ -281,11 +208,8 @@ python3 blue_green.py rollback --to blue
 # Python 测试
 pytest tests/
 
-# Go 测试
-go test ./...
-
-# Shell 脚本检查
-shellcheck cluster/*.sh
+# Python 语法检查
+python3 -m py_compile cookbook/**/*.py
 ```
 
 ---
@@ -304,7 +228,7 @@ shellcheck cluster/*.sh
 
 ## 📄 许可证
 
-[Apache License 2.0](../LICENSE)
+Apache License 2.0
 
 ---
 
