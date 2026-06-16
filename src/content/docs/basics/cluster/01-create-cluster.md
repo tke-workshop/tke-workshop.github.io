@@ -303,7 +303,7 @@ kubectl get nodes
 
 **期望结果**:
 
-```
+```text
 Kubernetes control plane is running at https://cls-xxxxxxxx.ccs.tencent-cloud.com
 CoreDNS is running at https://cls-xxxxxxxx.ccs.tencent-cloud.com/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 ```
@@ -435,7 +435,7 @@ tccli tke EnableClusterDeletionProtection \
 ## 相关文档
 
 - [删除集群](./02-delete-cluster.md)
-- 查询集群列表
+- [查询集群列表](./04-describe-clusters.md)
 - [添加节点到集群](../node/01-add-node.md)
 - 配置集群访问凭证
 
@@ -451,7 +451,7 @@ tccli tke EnableClusterDeletionProtection \
 
 ## Cookbook 示例
 
-完整可执行代码示例: TKE 集群创建 Cookbook
+完整可执行代码示例: [TKE 集群创建 Cookbook](/cookbooks/create-cluster/)；源码见 [`cookbook/cluster/create_cluster.py`](https://github.com/tke-workshop/tke-workshop.github.io/blob/main/cookbook/cluster/create_cluster.py)。
 
 ---
 
