@@ -13,6 +13,16 @@ const cookbook = getCookbook(Astro.params.id ?? '');
 if (!cookbook) {
   throw new Error(`Cookbook not found: ${Astro.params.id}`);
 }
+
+function getFileHref(file) {
+  return typeof file === 'string'
+    ? `https://github.com/tke-workshop/tke-workshop.github.io/blob/main/${file}`
+    : file.href;
+}
+
+function getFileLabel(file) {
+  return typeof file === 'string' ? file : file.label;
+}
 ---
 
 <MarketingLayout title={`${cookbook.title} - TKE Cookbook`}>
@@ -21,7 +31,7 @@ if (!cookbook) {
     <div style="margin-top: 24px;">
       <span class="workshop-kicker">{cookbook.category} recipe</span>
       <h1 style="max-width: 820px; margin: 0; font-size: clamp(2.1rem, 5vw, 4rem); line-height: 1.05;">
-        {cookbook.title}
+        <span aria-hidden="true">{cookbook.icon}</span> {cookbook.title}
       </h1>
       <p style="max-width: 760px; color: var(--tke-muted); font-size: 1.1rem; line-height: 1.8;">
         {cookbook.description}
@@ -51,6 +61,25 @@ if (!cookbook) {
           </div>
         </div>
         <p>{cookbook.risk.notice}</p>
+      </section>
+
+      <section class="recipe-section">
+        <h2>执行拓扑</h2>
+        <div class="service-map" aria-label={`${cookbook.title} 执行拓扑`}>
+          {
+            cookbook.services.map((service, index) => (
+              <>
+                <div class="service-node">
+                  <span class="service-node__icon" aria-hidden="true">{service.icon}</span>
+                  <span>{service.label}</span>
+                </div>
+                {index < cookbook.services.length - 1 && (
+                  <span class="service-map__arrow" aria-hidden="true">→</span>
+                )}
+              </>
+            ))
+          }
+        </div>
       </section>
 
       <section class="recipe-section">
@@ -143,6 +172,17 @@ if (!cookbook) {
 
     <aside class="recipe-aside">
       <section class="recipe-section">
+        <h2>来源仓库</h2>
+        <ul>
+          <li>
+            <a href={cookbook.source.href}>{cookbook.source.repo}</a>
+          </li>
+          <li>Branch: <code>{cookbook.source.branch}</code></li>
+          <li>Path: <code>{cookbook.source.path || '/'}</code></li>
+        </ul>
+      </section>
+
+      <section class="recipe-section">
         <h2>相关文档</h2>
         <ul>
           {
@@ -161,7 +201,7 @@ if (!cookbook) {
           {
             cookbook.files.map((file) => (
               <li>
-                <a href={`https://github.com/tke-workshop/tke-workshop.github.io/blob/main/${file}`}>{file}</a>
+                <a href={getFileHref(file)}>{getFileLabel(file)}</a>
               </li>
             ))
           }

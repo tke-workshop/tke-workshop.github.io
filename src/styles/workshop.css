@@ -361,6 +361,46 @@ body {
   padding-top: 16px;
 }
 
+.recipe-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.service-map {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.service-node {
+  min-width: 140px;
+  flex: 1 0 140px;
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  align-content: center;
+  border: 1px solid var(--tke-line);
+  border-radius: var(--tke-radius);
+  padding: 16px 14px;
+  text-align: center;
+  background: color-mix(in srgb, var(--tke-panel), var(--tke-bg) 20%);
+}
+
+.service-node__icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.service-map__arrow {
+  flex: 0 0 auto;
+  align-self: center;
+  color: var(--tke-muted);
+  font-size: 1.2rem;
+}
+
 .pill {
   display: inline-flex;
   align-items: center;

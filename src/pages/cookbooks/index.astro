@@ -2,11 +2,21 @@
 import MarketingLayout from '../../layouts/MarketingLayout.astro';
 import { cookbooks } from '../../data/cookbooks.js';
 
-const categories = [
-  { id: 'cluster', label: 'Cluster' },
-  { id: 'workload', label: 'Workload' },
-  { id: 'gpu', label: 'GPU' },
-];
+const categoryLabels = {
+  agent: 'Agent',
+  cluster: 'Cluster',
+  gpu: 'GPU',
+  networking: 'Networking',
+  testing: 'Testing',
+  workload: 'Workload',
+};
+
+const categories = Array.from(new Set(cookbooks.map((cookbook) => cookbook.category))).map(
+  (category) => ({
+    id: category,
+    label: categoryLabels[category] ?? category,
+  })
+);
 ---
 
 <MarketingLayout title="TKE Cookbooks - 可执行实践集合">
@@ -16,8 +26,8 @@ const categories = [
       <div>
         <h2>Cookbooks</h2>
         <p>
-          Cookbook 是 Workshop 的执行层。每个 Recipe 都连接真实脚本、输入条件、执行命令、
-          验证步骤和可交给 Agent 的 Prompt。
+          Cookbook 是 Workshop 的执行层。新版已迁移旧版 Collection 中的 {cookbooks.length} 个 Recipe，
+          每个条目都连接来源仓库、输入条件、执行命令、验证步骤和可交给 Agent 的 Prompt。
         </p>
       </div>
       <div class="workshop-actions" style="margin: 0;">
@@ -34,13 +44,17 @@ const categories = [
       {
         cookbooks.map((cookbook) => (
           <a class="recipe-card" href={`/cookbooks/${cookbook.id}/`}>
-            <span class="pill">{cookbook.verified ? 'Verified' : 'Draft'}</span>
-            <h2>{cookbook.title}</h2>
+            <div class="recipe-card__badges">
+              <span class="pill">{cookbook.verified ? 'Verified' : 'Draft'}</span>
+              {cookbook.badge && <span class="pill pill--risk">{cookbook.badge}</span>}
+            </div>
+            <h2><span aria-hidden="true">{cookbook.icon}</span> {cookbook.title}</h2>
             <p>{cookbook.description}</p>
             <div class="recipe-card__meta">
               <span class="pill">{cookbook.category}</span>
               <span class="pill">{cookbook.language}</span>
               <span class="pill">{cookbook.estimatedTime}</span>
+              <span class="pill">风险：{cookbook.risk.level}</span>
             </div>
           </a>
         ))
