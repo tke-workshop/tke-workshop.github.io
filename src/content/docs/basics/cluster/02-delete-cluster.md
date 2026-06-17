@@ -39,7 +39,7 @@ title: "如何删除 TKE 集群"
 - [ ] **数据备份**: 已备份集群中的重要数据、ConfigMap、Secret
 - [ ] **应用迁移**: 已迁移或下线集群中的应用
 - [ ] **删除保护**: 检查是否启用了删除保护
-- [ ] **关联资源**: 确认要保留还是删除关联的 CLB、CBS 等资源
+- [ ] **关联资源**: 确认要保留还是删除关联的 CBS，并记录需要删除后核查的 CLB 等资源
 - [ ] **费用结算**: 确认是否有未结算的费用
 
 ---
@@ -91,10 +91,6 @@ curl -X POST "https://tke.tencentcloudapi.com/" \
       {
         "ResourceType": "CBS",
         "DeleteMode": "terminate"
-      },
-      {
-        "ResourceType": "CLB",
-        "DeleteMode": "terminate"
       }
     ]
   }'
@@ -121,10 +117,6 @@ tccli tke DeleteCluster \
     {
       "ResourceType": "CBS",
       "DeleteMode": "terminate"
-    },
-    {
-      "ResourceType": "CLB",
-      "DeleteMode": "terminate"
     }
   ]'
 ```
@@ -135,7 +127,7 @@ tccli tke DeleteCluster \
 |--------|------|------|------|--------|
 | ClusterId | 是 | String | 集群 ID | - |
 | InstanceDeleteMode | 是 | String | 节点删除策略 | terminate(销毁) / retain(保留) |
-| ResourceDeleteOptions | 否 | Array | 资源删除策略 | 见下表 |
+| ResourceDeleteOptions | 否 | Array | 资源删除策略；DeleteCluster 当前仅支持 CBS，默认保留 CBS | 见下表 |
 
 **ResourceDeleteOptions 说明**:
 
@@ -143,8 +135,8 @@ tccli tke DeleteCluster \
 |--------------|------------|------|
 | CBS | terminate | 销毁云硬盘 |
 | CBS | retain | 保留云硬盘 |
-| CLB | terminate | 销毁负载均衡器 |
-| CLB | retain | 保留负载均衡器 |
+
+> 注意: DeleteCluster API 的 `ResourceDeleteOptions` 当前仅支持 CBS。CLB 不应作为 `ResourceDeleteOptions` 入参传递；请在集群删除完成后按验证步骤检查是否仍有遗留 CLB。
 
 **使用 Python SDK**:
 
@@ -164,11 +156,7 @@ option1 = models.ResourceDeleteOption()
 option1.ResourceType = "CBS"
 option1.DeleteMode = "terminate"
 
-option2 = models.ResourceDeleteOption()
-option2.ResourceType = "CLB"
-option2.DeleteMode = "terminate"
-
-req.ResourceDeleteOptions = [option1, option2]
+req.ResourceDeleteOptions = [option1]
 
 resp = client.DeleteCluster(req)
 print(f"RequestId: {resp.RequestId}")
@@ -196,10 +184,6 @@ func main() {
 	request.ResourceDeleteOptions = []*tke.ResourceDeleteOption{
 		{
 			ResourceType: common.StringPtr("CBS"),
-			DeleteMode:   common.StringPtr("terminate"),
-		},
-		{
-			ResourceType: common.StringPtr("CLB"),
 			DeleteMode:   common.StringPtr("terminate"),
 		},
 	}
@@ -308,15 +292,16 @@ tccli clb DescribeLoadBalancers \
 
 ### 资源删除策略
 
+DeleteCluster API 的 `ResourceDeleteOptions` 当前仅支持 CBS；未显式传入时默认保留 CBS。CLB 等关联资源不能通过 `ResourceDeleteOptions` 设置 `retain` 或 `terminate`，请在删除后通过验证步骤检查是否仍有遗留资源。
+
 | 资源类型 | terminate 策略 | retain 策略 |
 |---------|---------------|------------|
 | CBS(云硬盘) | 销毁数据盘和系统盘 | 保留数据盘,销毁系统盘 |
-| CLB(负载均衡) | 销毁所有 Service 创建的 CLB | 保留 CLB,解除与集群关联 |
 
 **最佳实践**:
 - 测试环境: 使用 `terminate` 彻底清理资源
 - 生产环境: 先手动备份数据,再使用 `terminate`
-- 特殊需求: 使用 `retain` 保留特定资源
+- 特殊需求: 使用 `retain` 保留 CBS，并记录删除后需要人工核查的关联资源
 
 ---
 
@@ -380,7 +365,7 @@ kubectl exec -n "${NAMESPACE}" "${POD_NAME}" -- tar czf - /data | \
 - 集群ID: {{cluster_id}}
 - 保留节点: 是
 - 保留云硬盘: 是
-- 保留负载均衡器: 是
+- 删除后核查负载均衡器是否遗留: 是
 ```
 
 ### 批量删除 Prompt
