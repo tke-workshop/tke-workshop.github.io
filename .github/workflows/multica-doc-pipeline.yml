@@ -64,3 +64,23 @@ jobs:
           curl -fsS -X POST "$MULTICA_WEBHOOK_URL" \
             -H "Content-Type: application/json" \
             -d "$PAYLOAD"
+
+  live-verify:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event_name == 'workflow_run' &&
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'main'
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Multica Live Verify Router
+        env:
+          MULTICA_WEBHOOK_URL: ${{ secrets.MULTICA_LIVE_VERIFY_WEBHOOK_URL }}
+          PAYLOAD: ${{ toJson(github.event) }}
+        run: |
+          curl -fsS -X POST "$MULTICA_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD"
