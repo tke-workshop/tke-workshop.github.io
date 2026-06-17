@@ -180,7 +180,7 @@ kubectl get nodes -o wide
 
 **期望结果**:
 
-```
+```text
 NAME                         STATUS   ROLES    AGE   VERSION
 eklet-subnet-xxxxxxxx-0      Ready    agent    1m    v1.28.3-tke.1
 ```
