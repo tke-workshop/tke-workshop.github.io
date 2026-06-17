@@ -109,7 +109,7 @@ kubectl delete deployment <deployment-name> -n <namespace>
 ```
 
 **输出示例**：
-```
+```text
 deployment.apps "nginx-deployment" deleted
 ```
 
@@ -487,7 +487,7 @@ kubectl delete namespace <namespace>
 
 ### 基础删除
 
-```
+```text
 请帮我删除 Deployment：
 - Deployment 名称: nginx-deployment
 - 命名空间: default
@@ -496,7 +496,7 @@ kubectl delete namespace <namespace>
 
 ### 删除并清理关联资源
 
-```
+```text
 请帮我删除应用及其所有关联资源：
 - Deployment 名称: web-app
 - 命名空间: production
@@ -506,7 +506,7 @@ kubectl delete namespace <namespace>
 
 ### 批量删除
 
-```
+```text
 请帮我清理测试环境：
 - 命名空间: test
 - 删除所有 Deployment
@@ -515,7 +515,7 @@ kubectl delete namespace <namespace>
 
 ### 强制删除
 
-```
+```text
 请帮我强制删除无法正常删除的 Deployment：
 - Deployment 名称: stuck-deployment
 - 命名空间: default
