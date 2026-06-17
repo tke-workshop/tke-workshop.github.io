@@ -2,7 +2,7 @@
 """
 删除 TKE 集群示例脚本
 
-功能: 删除指定 TKE 集群，并显式选择节点与关联资源删除策略
+功能: 删除指定 TKE 集群，并显式选择节点与 CBS 删除策略
 使用方法: python3 delete_cluster.py --cluster-id cls-xxxxxxxx --region ap-guangzhou --confirm-delete
 文档链接: https://tke-workshop.github.io/basics/cluster/02-delete-cluster/
 """
@@ -22,14 +22,11 @@ from tencentcloud.common.exception.tencent_cloud_sdk_exception import TencentClo
 logger = setup_logger(__name__)
 
 
-def build_resource_delete_options(cbs_mode: str, clb_mode: str) -> list[models.ResourceDeleteOption]:
-    options = []
-    for resource_type, delete_mode in (("CBS", cbs_mode), ("CLB", clb_mode)):
-        option = models.ResourceDeleteOption()
-        option.ResourceType = resource_type
-        option.DeleteMode = delete_mode
-        options.append(option)
-    return options
+def build_resource_delete_options(cbs_mode: str) -> list[models.ResourceDeleteOption]:
+    option = models.ResourceDeleteOption()
+    option.ResourceType = "CBS"
+    option.DeleteMode = cbs_mode
+    return [option]
 
 
 def describe_cluster(client, cluster_id: str):
@@ -46,7 +43,6 @@ def delete_cluster(
     region: str,
     instance_delete_mode: str = "terminate",
     cbs_delete_mode: str = "terminate",
-    clb_delete_mode: str = "terminate",
     disable_deletion_protection: bool = False,
     confirm_delete: bool = False,
 ):
@@ -64,7 +60,7 @@ def delete_cluster(
         logger.info(f"集群状态: {cluster.ClusterStatus}")
         logger.info(f"节点删除策略: {instance_delete_mode}")
         logger.info(f"CBS 删除策略: {cbs_delete_mode}")
-        logger.info(f"CLB 删除策略: {clb_delete_mode}")
+        logger.info("CLB 不作为 ResourceDeleteOptions 入参配置；删除后请按文档验证是否有遗留 CLB。")
 
         deletion_protection = getattr(cluster, "DeletionProtection", None)
         if deletion_protection:
@@ -87,7 +83,7 @@ def delete_cluster(
         req = models.DeleteClusterRequest()
         req.ClusterId = cluster_id
         req.InstanceDeleteMode = instance_delete_mode
-        req.ResourceDeleteOptions = build_resource_delete_options(cbs_delete_mode, clb_delete_mode)
+        req.ResourceDeleteOptions = build_resource_delete_options(cbs_delete_mode)
 
         try:
             resp = client.DeleteCluster(req)
@@ -135,19 +131,18 @@ def main():
   # 预检查删除计划，不提交删除
   python3 delete_cluster.py --cluster-id cls-xxxxxxxx --region ap-guangzhou
 
-  # 删除测试集群并销毁节点、CBS、CLB
+  # 删除测试集群并销毁节点和 CBS；删除后检查是否有遗留 CLB
   python3 delete_cluster.py \\
     --cluster-id cls-xxxxxxxx \\
     --region ap-guangzhou \\
     --confirm-delete \\
     --wait
 
-  # 删除集群但保留节点、CBS、CLB
+  # 删除集群但保留节点和 CBS；删除后检查是否有遗留 CLB
   python3 delete_cluster.py \\
     --cluster-id cls-xxxxxxxx \\
     --instance-delete-mode retain \\
     --cbs-delete-mode retain \\
-    --clb-delete-mode retain \\
     --confirm-delete
         """,
     )
@@ -165,12 +160,6 @@ def main():
         default="terminate",
         choices=["terminate", "retain"],
         help="CBS 删除策略",
-    )
-    parser.add_argument(
-        "--clb-delete-mode",
-        default="terminate",
-        choices=["terminate", "retain"],
-        help="CLB 删除策略",
     )
     parser.add_argument(
         "--disable-deletion-protection",
@@ -193,7 +182,6 @@ def main():
             region=args.region,
             instance_delete_mode=args.instance_delete_mode,
             cbs_delete_mode=args.cbs_delete_mode,
-            clb_delete_mode=args.clb_delete_mode,
             disable_deletion_protection=args.disable_deletion_protection,
             confirm_delete=args.confirm_delete,
         )

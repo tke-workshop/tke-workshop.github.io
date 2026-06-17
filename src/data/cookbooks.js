@@ -190,7 +190,7 @@ export const cookbooks = [
     }),
     risk: {
       level: '高',
-      cost: '会删除真实 TKE 集群，并可能销毁 CVM 节点、云硬盘和负载均衡器。',
+      cost: '会删除真实 TKE 集群，并可能销毁 CVM 节点和云硬盘；删除后需检查是否有遗留负载均衡器。',
       resourceImpact: '删除云资源',
       notice: '脚本默认 dry-run；执行 --confirm-delete 前必须完成数据备份、删除保护检查和资源保留策略确认。',
     },
@@ -226,12 +226,6 @@ export const cookbooks = [
         description: 'CBS 删除策略，可选 terminate 或 retain。',
       },
       {
-        name: '--clb-delete-mode',
-        required: false,
-        example: 'retain',
-        description: 'CLB 删除策略，可选 terminate 或 retain。',
-      },
-      {
         name: '--wait',
         required: false,
         example: '--wait',
@@ -251,7 +245,7 @@ export const cookbooks = [
     prerequisites: [
       '已准备腾讯云 SecretId 和 SecretKey。',
       '已复制 cookbook/config.example.yaml 为 cookbook/config.yaml。',
-      '已确认目标 ClusterId、地域、备份状态、删除保护状态和资源保留策略。',
+      '已确认目标 ClusterId、地域、备份状态、删除保护状态、CBS 删除策略和删除后需要核查的关联资源。',
     ],
     commands: [
       'cd cookbook',
@@ -264,12 +258,12 @@ export const cookbooks = [
       '确认返回 ResourceNotFound.ClusterNotFound，或查询结果中不再包含该集群。',
     ],
     cleanup: [
-      '检查 CVM、CBS、CLB、公网 IP 等关联计费资源是否按策略删除或保留。',
+      '检查 CVM、CBS、CLB、公网 IP 等关联计费资源是否已删除或按预期保留。',
       '如选择 retain，记录保留资源清单和后续负责人。',
       '确认本次操作产生的日志和备份文件已按团队要求归档。',
     ],
     prompt:
-      '请根据 TKE Workshop 的 delete-cluster Cookbook，先对 cls-xxxxxxxx 输出 dry-run 删除计划，确认备份、删除保护和资源保留策略后，再提交删除并等待完成。',
+      '请根据 TKE Workshop 的 delete-cluster Cookbook，先对 cls-xxxxxxxx 输出 dry-run 删除计划，确认备份、删除保护和 CBS 删除策略后，再提交删除、等待完成并检查关联资源。',
   },
   {
     id: 'describe-clusters',
