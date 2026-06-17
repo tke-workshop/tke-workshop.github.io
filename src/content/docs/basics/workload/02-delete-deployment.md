@@ -8,9 +8,9 @@ title: "删除 Deployment (DeleteDeployment)"
 
 删除 TKE 集群中的 Deployment 工作负载。删除 Deployment 会级联删除其管理的所有 Pod（除非配置为孤儿删除）。
 
-**API 名称**: 无（使用 kubectl 或 Kubernetes API）  
-**功能优先级**: P0（核心功能）  
-**适用场景**: 应用下线、版本回退、资源清理
+- **API 名称**: 无（使用 kubectl 或 Kubernetes API）
+- **功能优先级**: P0（核心功能）
+- **适用场景**: 应用下线、版本回退、资源清理
 
 ---
 
@@ -43,7 +43,7 @@ title: "删除 Deployment (DeleteDeployment)"
    ```bash
    # 查看关联的 Service
    kubectl get svc -n <namespace> -l app=<app-label>
-   
+
    # 查看关联的 Ingress
    kubectl get ingress -n <namespace>
    ```
@@ -72,7 +72,7 @@ kubectl delete deployment <deployment-name> -n <namespace>
 ```
 
 期望输出：
-```
+```text
 deployment.apps "nginx-deployment" deleted
 ```
 
@@ -87,7 +87,7 @@ kubectl get pods -l app=<app-label> -n <namespace>
 ```
 
 期望输出：
-```
+```text
 Error from server (NotFound): deployments.apps "nginx-deployment" not found
 No resources found in default namespace.
 ```
@@ -137,10 +137,10 @@ def delete_deployment(name, namespace="default"):
             namespace=namespace,
             propagation_policy='Foreground'  # 前台级联删除
         )
-        
+
         print(f"✅ Deployment '{name}' deleted successfully")
         print(f"   Namespace: {namespace}")
-        
+
         # 等待 Pod 清理完成
         print(f"⏳ Waiting for Pods to be deleted...")
         core_v1 = client.CoreV1Api()
@@ -155,9 +155,9 @@ def delete_deployment(name, namespace="default"):
             print(f"   Remaining Pods: {len(pods.items)}")
             import time
             time.sleep(2)
-        
+
         return True
-        
+
     except ApiException as e:
         if e.status == 404:
             print(f"❌ Error: Deployment '{name}' not found")
@@ -180,7 +180,7 @@ import (
     "context"
     "fmt"
     "time"
-    
+
     metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
     "k8s.io/client-go/kubernetes"
     "k8s.io/client-go/tools/clientcmd"
@@ -192,22 +192,22 @@ func main() {
     if err != nil {
         panic(err)
     }
-    
+
     // 创建客户端
     clientset, err := kubernetes.NewForConfig(config)
     if err != nil {
         panic(err)
     }
-    
+
     // 删除 Deployment
     deploymentName := "nginx-deployment"
     namespace := "default"
-    
+
     deletePolicy := metav1.DeletePropagationForeground
     deleteOptions := metav1.DeleteOptions{
         PropagationPolicy: &deletePolicy,
     }
-    
+
     err = clientset.AppsV1().Deployments(namespace).Delete(
         context.TODO(),
         deploymentName,
@@ -216,9 +216,9 @@ func main() {
     if err != nil {
         panic(err)
     }
-    
+
     fmt.Printf("✅ Deployment '%s' deleted successfully\n", deploymentName)
-    
+
     // 等待 Pod 清理完成
     fmt.Println("⏳ Waiting for Pods to be deleted...")
     for {
@@ -231,12 +231,12 @@ func main() {
         if err != nil {
             panic(err)
         }
-        
+
         if len(pods.Items) == 0 {
             fmt.Println("✅ All Pods deleted")
             break
         }
-        
+
         fmt.Printf("   Remaining Pods: %d\n", len(pods.Items))
         time.Sleep(2 * time.Second)
     }
@@ -305,7 +305,7 @@ kubectl get deployment <deployment-name> -n <namespace>
 ```
 
 期望输出：
-```
+```text
 Error from server (NotFound): deployments.apps "nginx-deployment" not found
 ```
 
@@ -316,7 +316,7 @@ kubectl get pods -l app=<app-label> -n <namespace>
 ```
 
 期望输出：
-```
+```text
 No resources found in default namespace.
 ```
 
@@ -327,7 +327,7 @@ kubectl get replicaset -l app=<app-label> -n <namespace>
 ```
 
 期望输出：
-```
+```text
 No resources found in default namespace.
 ```
 
@@ -505,6 +505,6 @@ kubectl delete deployment -l app=myapp,env=dev -n <namespace>
 
 ---
 
-**文档版本**: v1.0  
-**最后更新**: 2025-12-25  
-**适用 TKE 版本**: ≥ 1.20
+- **文档版本**: v1.0
+- **最后更新**: 2025-12-25
+- **适用 TKE 版本**: ≥ 1.20
