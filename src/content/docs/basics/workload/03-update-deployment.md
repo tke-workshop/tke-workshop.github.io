@@ -80,7 +80,7 @@ kubectl set image deployment/nginx-deployment \
 ```
 
 期望输出：
-```
+```text
 deployment.apps/nginx-deployment image updated
 ```
 
@@ -150,7 +150,7 @@ kubectl apply -f deployment.yaml
 ```
 
 期望输出：
-```
+```text
 deployment.apps/nginx-deployment configured
 ```
 
@@ -349,7 +349,7 @@ kubectl rollout status deployment/<deployment-name> -n <namespace>
 ```
 
 期望输出：
-```
+```text
 Waiting for deployment "nginx-deployment" rollout to finish: 1 out of 5 new replicas have been updated...
 Waiting for deployment "nginx-deployment" rollout to finish: 2 out of 5 new replicas have been updated...
 ...
@@ -363,7 +363,7 @@ kubectl rollout history deployment/<deployment-name> -n <namespace>
 ```
 
 期望输出：
-```
+```text
 REVISION  CHANGE-CAUSE
 1         <none>
 2         kubectl set image deployment/nginx-deployment nginx=nginx:1.22
@@ -376,7 +376,7 @@ kubectl get deployment <deployment-name> -n <namespace>
 ```
 
 期望输出：
-```
+```text
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   5/5     5            5           10m
 ```
