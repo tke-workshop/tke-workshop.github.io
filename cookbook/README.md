@@ -135,7 +135,7 @@ python3 supernode/deploy_gpu_pod.py \
 
 | 脚本 | 语言 | 功能 | 文档链接 |
 |------|------|------|---------|
-| `deploy_nginx.py` | Python | 部署 Nginx 示例 | [docs](../docs/basics/workload/01-create-deployment.md) |
+| `deploy_nginx.py` | Python | 部署 Nginx 示例 | [docs](../src/content/docs/basics/kubernetes/02-kubectl-common-operations.md) |
 
 ### 超级节点 (supernode/)
 

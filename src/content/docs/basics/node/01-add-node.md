@@ -41,10 +41,10 @@ title: "如何添加节点到 TKE 集群"
 | 参数名 | 必填 | 类型 | 说明 | 示例值 |
 |--------|------|------|------|--------|
 | ClusterId | 是 | String | 集群 ID | cls-xxxxxxxx |
-| RunInstancesForNode | 是 | Array | 节点创建参数 | 见下方 |
+| RunInstancePara | 是 | String | CVM 创建实例参数 JSON 字符串 | 见下方 |
 | InstanceAdvancedSettings | 否 | Object | 节点高级配置 | 见下方 |
 
-**RunInstancesForNode 结构**:
+**RunInstancePara 结构**:
 
 ```text
 {
@@ -112,27 +112,7 @@ curl -X POST "https://tke.tencentcloudapi.com/" \
   -H "Authorization: TC3-HMAC-SHA256 Credential=<SecretId>/..." \
   -d '{
     "ClusterId": "cls-xxxxxxxx",
-    "RunInstancesForNode": [
-      {
-        "InstanceType": "SA2.MEDIUM4",
-        "SystemDisk": {
-          "DiskType": "CLOUD_PREMIUM",
-          "DiskSize": 50
-        },
-        "DataDisks": [
-          {
-            "DiskType": "CLOUD_PREMIUM",
-            "DiskSize": 100
-          }
-        ],
-        "InternetAccessible": {
-          "InternetMaxBandwidthOut": 5
-        },
-        "InstanceCount": 3,
-        "Zone": "ap-guangzhou-3",
-        "SecurityGroupIds": ["sg-xxxxxxxx"]
-      }
-    ],
+    "RunInstancePara": "{\"InstanceType\":\"SA2.MEDIUM4\",\"SystemDisk\":{\"DiskType\":\"CLOUD_PREMIUM\",\"DiskSize\":50},\"DataDisks\":[{\"DiskType\":\"CLOUD_PREMIUM\",\"DiskSize\":100}],\"InternetAccessible\":{\"InternetMaxBandwidthOut\":5},\"InstanceCount\":3,\"Placement\":{\"Zone\":\"ap-guangzhou-3\"},\"SecurityGroupIds\":[\"sg-xxxxxxxx\"]}",
     "InstanceAdvancedSettings": {
       "Labels": [
         {
@@ -165,27 +145,27 @@ curl -X POST "https://tke.tencentcloudapi.com/" \
 tccli tke CreateClusterInstances \
   --Region ap-guangzhou \
   --ClusterId cls-xxxxxxxx \
-  --RunInstancesForNode '[
-    {
-      "InstanceType": "SA2.MEDIUM4",
-      "SystemDisk": {
+  --RunInstancePara '{
+    "InstanceType": "SA2.MEDIUM4",
+    "SystemDisk": {
+      "DiskType": "CLOUD_PREMIUM",
+      "DiskSize": 50
+    },
+    "DataDisks": [
+      {
         "DiskType": "CLOUD_PREMIUM",
-        "DiskSize": 50
-      },
-      "DataDisks": [
-        {
-          "DiskType": "CLOUD_PREMIUM",
-          "DiskSize": 100
-        }
-      ],
-      "InternetAccessible": {
-        "InternetMaxBandwidthOut": 5
-      },
-      "InstanceCount": 3,
-      "Zone": "ap-guangzhou-3",
-      "SecurityGroupIds": ["sg-xxxxxxxx"]
-    }
-  ]' \
+        "DiskSize": 100
+      }
+    ],
+    "InternetAccessible": {
+      "InternetMaxBandwidthOut": 5
+    },
+    "InstanceCount": 3,
+    "Placement": {
+      "Zone": "ap-guangzhou-3"
+    },
+    "SecurityGroupIds": ["sg-xxxxxxxx"]
+  }' \
   --InstanceAdvancedSettings '{
     "Labels": [
       {
@@ -199,6 +179,8 @@ tccli tke CreateClusterInstances \
 **使用 Python SDK**:
 
 ```python
+import json
+
 from tencentcloud.common import credential
 from tencentcloud.tke.v20180525 import tke_client, models
 
@@ -208,16 +190,19 @@ client = tke_client.TkeClient(cred, "ap-guangzhou")
 req = models.CreateClusterInstancesRequest()
 req.ClusterId = "cls-xxxxxxxx"
 
-# 节点创建参数
-run_param = models.RunInstancesForNode()
-run_param.InstanceType = "SA2.MEDIUM4"
-run_param.SystemDisk = models.SystemDisk()
-run_param.SystemDisk.DiskType = "CLOUD_PREMIUM"
-run_param.SystemDisk.DiskSize = 50
-run_param.InstanceCount = 3
-run_param.Zone = "ap-guangzhou-3"
-
-req.RunInstancesForNode = [run_param]
+# CVM 创建参数,通过 RunInstancePara 透传
+req.RunInstancePara = json.dumps({
+    "InstanceType": "SA2.MEDIUM4",
+    "SystemDisk": {
+        "DiskType": "CLOUD_PREMIUM",
+        "DiskSize": 50,
+    },
+    "InstanceCount": 3,
+    "Placement": {
+        "Zone": "ap-guangzhou-3",
+    },
+    "SecurityGroupIds": ["sg-xxxxxxxx"],
+})
 
 # 高级配置
 advanced = models.InstanceAdvancedSettings()
@@ -485,7 +470,7 @@ systemctl status containerd
 - [删除节点](./02-delete-node.md)
 - 查询节点列表
 - 设置节点不可调度
-- [创建节点池](../nodepool/01-create-nodepool.md)
+- [创建节点池](../node-pool/01-create-node-pool.md)
 
 ---
 
