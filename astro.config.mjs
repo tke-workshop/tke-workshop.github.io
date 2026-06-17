@@ -44,6 +44,16 @@ export default defineConfig({
           items: [{ autogenerate: { directory: 'basics', collapsed: true } }],
         },
         {
+          label: '网络',
+          collapsed: true,
+          items: [{ autogenerate: { directory: 'networking', collapsed: true } }],
+        },
+        {
+          label: '存储',
+          collapsed: true,
+          items: [{ autogenerate: { directory: 'storage', collapsed: true } }],
+        },
+        {
           label: '最佳实践',
           collapsed: true,
           items: [{ autogenerate: { directory: 'best-practices', collapsed: true } }],
