@@ -328,7 +328,7 @@ kubectl get nodes -o wide
 
 **期望结果**:
 
-```
+```text
 NAME            STATUS   ROLES    AGE   VERSION
 tke-node-xxx1   Ready    <none>   2m    v1.28.3
 tke-node-xxx2   Ready    <none>   2m    v1.28.3
