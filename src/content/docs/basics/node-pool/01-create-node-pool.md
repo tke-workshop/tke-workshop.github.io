@@ -136,6 +136,8 @@ tccli tke CreateClusterNodePool --cli-input-json file://node-pool-config.json
 ### 方式 2: 使用 Python SDK
 
 ```python
+import json
+
 from tencentcloud.common import credential
 from tencentcloud.common.profile.client_profile import ClientProfile
 from tencentcloud.common.profile.http_profile import HttpProfile
@@ -483,7 +485,8 @@ tccli tke DescribeClusterNodePoolDetail \
 #### 2. 查看节点状态
 
 ```bash
-kubectl describe node <node-name>
+NODE_NAME="node-name"
+kubectl describe node "${NODE_NAME}"
 ```
 
 查看节点事件和状态。
@@ -633,7 +636,7 @@ tccli vpc DescribeSecurityGroups --SecurityGroupIds '["sg-xxxxxxxx"]'
 
 ## Cookbook 示例
 
-完整可执行示例：create-node-pool-example.py
+本页提供 tccli、Python SDK 和 Go SDK 的节点池创建示例。若需要可直接运行的 Cookbook 脚本，请先基于本文示例补齐真实集群、VPC、子网、安全组和实例规格参数，并在测试环境验证清理流程。
 
 ---
 
