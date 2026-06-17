@@ -8,8 +8,8 @@ title: "扩容节点池 (ModifyClusterNodePool)"
 
 修改 TKE 节点池的期望节点数、最小/最大节点数等配置，实现节点池的手动扩缩容。适用于应对流量高峰、资源优化、成本控制等场景。
 
-**API 名称**: `ModifyClusterNodePool`  
-**功能优先级**: P0（核心功能）  
+**API 名称**: `ModifyClusterNodePool`
+**功能优先级**: P0（核心功能）
 **适用场景**: 应对流量高峰、资源扩容、节点缩容、弹性调整
 
 ---
@@ -116,36 +116,36 @@ def scale_node_pool(cluster_id, node_pool_id, desired_capacity=None, min_size=No
     """扩容节点池"""
     # 初始化认证
     cred = credential.Credential("SecretId", "SecretKey")
-    
+
     # 配置 HTTP 请求
     http_profile = HttpProfile()
     http_profile.endpoint = "tke.tencentcloudapi.com"
-    
+
     client_profile = ClientProfile()
     client_profile.httpProfile = http_profile
-    
+
     # 创建 TKE 客户端
     client = tke_client.TkeClient(cred, "ap-guangzhou", client_profile)
-    
+
     # 构建请求
     req = models.ModifyClusterNodePoolRequest()
     params = {
         "ClusterId": cluster_id,
         "NodePoolId": node_pool_id
     }
-    
+
     if desired_capacity is not None:
         params["DesiredCapacity"] = desired_capacity
     if min_size is not None:
         params["MinSize"] = min_size
     if max_size is not None:
         params["MaxSize"] = max_size
-    
+
     req.from_json_string(json.dumps(params))
-    
+
     # 发送请求
     resp = client.ModifyClusterNodePool(req)
-    
+
     print(f"✅ Node pool scaled successfully")
     print(f"   Node Pool ID: {node_pool_id}")
     if desired_capacity:
@@ -154,7 +154,7 @@ def scale_node_pool(cluster_id, node_pool_id, desired_capacity=None, min_size=No
         print(f"   Min Size: {min_size}")
     if max_size:
         print(f"   Max Size: {max_size}")
-    
+
     return resp.RequestId
 
 # 示例调用
@@ -169,7 +169,7 @@ scale_node_pool("cls-xxxxxxxx", "np-xxxxxxxx", desired_capacity=5)
 scale_node_pool("cls-xxxxxxxx", "np-xxxxxxxx", min_size=3, max_size=20)
 
 # 4. 同时修改期望节点数和伸缩范围
-scale_node_pool("cls-xxxxxxxx", "np-xxxxxxxx", 
+scale_node_pool("cls-xxxxxxxx", "np-xxxxxxxx",
                 desired_capacity=10, min_size=5, max_size=30)
 ```
 
@@ -182,7 +182,7 @@ package main
 
 import (
     "fmt"
-    
+
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
     tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
@@ -191,35 +191,35 @@ import (
 func main() {
     // 初始化认证
     credential := common.NewCredential("SecretId", "SecretKey")
-    
+
     // 配置 Client
     cpf := profile.NewClientProfile()
     cpf.HttpProfile.Endpoint = "tke.tencentcloudapi.com"
-    
+
     // 创建 TKE 客户端
     client, _ := tke.NewClient(credential, "ap-guangzhou", cpf)
-    
+
     // 构建请求
     request := tke.NewModifyClusterNodePoolRequest()
-    
+
     clusterId := "cls-xxxxxxxx"
     nodePoolId := "np-xxxxxxxx"
     desiredCapacity := int64(10)
     minSize := int64(3)
     maxSize := int64(20)
-    
+
     request.ClusterId = &clusterId
     request.NodePoolId = &nodePoolId
     request.DesiredCapacity = &desiredCapacity
     request.MinSize = &minSize
     request.MaxSize = &maxSize
-    
+
     // 发送请求
     response, err := client.ModifyClusterNodePool(request)
     if err != nil {
         panic(err)
     }
-    
+
     fmt.Printf("✅ Node pool scaled successfully\n")
     fmt.Printf("   Request ID: %s\n", *response.Response.RequestId)
     fmt.Printf("   Desired Capacity: %d\n", desiredCapacity)
@@ -509,14 +509,14 @@ def auto_scale_by_time():
     now = datetime.datetime.now()
     is_weekend = now.weekday() >= 5
     is_peak_hour = 9 <= now.hour < 22
-    
+
     if is_weekend:
         desired = 5
     elif is_peak_hour:
         desired = 20
     else:
         desired = 10
-    
+
     scale_node_pool("cls-xxxxxxxx", "np-xxxxxxxx", desired_capacity=desired)
 ```
 
@@ -608,6 +608,6 @@ def auto_scale_by_time():
 
 ---
 
-**文档版本**: v1.0  
-**最后更新**: 2025-12-25  
+**文档版本**: v1.0
+**最后更新**: 2025-12-25
 **适用 TKE 版本**: ≥ 1.12
