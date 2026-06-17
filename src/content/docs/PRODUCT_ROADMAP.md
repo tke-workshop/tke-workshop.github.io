@@ -100,7 +100,7 @@ networking/
 ├── service/
 │   ├── 01-clusterip-service.md      # ClusterIP Service
 │   ├── 02-nodeport-service.md       # NodePort Service
-│   ├── 03-loadbalancer-service.md   # LoadBalancer Service
+│   ├── 02-loadbalancer-service.md   # LoadBalancer Service
 │   └── 04-headless-service.md       # Headless Service
 ├── ingress/
 │   ├── 01-nginx-ingress.md          # Nginx Ingress Controller

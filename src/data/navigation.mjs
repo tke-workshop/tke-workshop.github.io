@@ -12,6 +12,18 @@ export const workshopNavItems = [
     sidebarLabels: ['基础操作'],
   },
   {
+    label: '网络',
+    href: '/networking/',
+    match: ['/networking/'],
+    sidebarLabels: ['网络'],
+  },
+  {
+    label: '存储',
+    href: '/storage/',
+    match: ['/storage/'],
+    sidebarLabels: ['存储'],
+  },
+  {
     label: '最佳实践',
     href: '/best-practices/',
     match: ['/best-practices/', '/practice/'],

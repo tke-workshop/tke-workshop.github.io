@@ -253,4 +253,4 @@ kubectl get pods --show-labels -n <namespace>
 
 - [连接集群](./01-connect-cluster.md)
 - [创建节点池](../node-pool/01-create-node-pool.md)
-- [LoadBalancer Service 最佳实践](../../networking/service/03-loadbalancer-service.md)
+- [LoadBalancer Service](../../networking/service/02-loadbalancer-service.md)
