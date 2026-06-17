@@ -309,28 +309,28 @@ NODE_NAMES=(
 
 for node in "${NODE_NAMES[@]}"; do
   echo "处理节点: $node"
-  
+
   # 驱逐 Pod
   kubectl drain $node \
     --ignore-daemonsets \
     --delete-emptydir-data \
     --force \
     --grace-period=300
-  
+
   if [ $? -eq 0 ]; then
     echo "驱逐成功，开始删除节点"
-    
+
     # 删除节点
     tccli tke DeleteClusterVirtualNode \
       --Region $REGION \
       --ClusterId $CLUSTER_ID \
       --NodeNames "[\"$node\"]"
-    
+
     echo "节点 $node 删除完成"
   else
     echo "节点 $node 驱逐失败，跳过删除"
   fi
-  
+
   sleep 5
 done
 ```
@@ -352,7 +352,7 @@ def delete_virtual_node_safely(cluster_id, node_name, force=False):
     """安全删除虚拟节点"""
     # 检查节点上的 Pod
     pods = check_node_pods(node_name)
-    
+
     if pods and not force:
         print(f"警告: 节点 {node_name} 上有运行中的 Pod:")
         print(pods)
@@ -364,12 +364,12 @@ def delete_virtual_node_safely(cluster_id, node_name, force=False):
     # 执行删除
     cred = credential.Credential("SecretId", "SecretKey")
     client = tke_client.TkeClient(cred, "ap-guangzhou")
-    
+
     req = models.DeleteClusterVirtualNodeRequest()
     req.ClusterId = cluster_id
     req.NodeNames = [node_name]
     req.Force = force
-    
+
     try:
         resp = client.DeleteClusterVirtualNode(req)
         print(f"删除成功, 请求ID: {resp.RequestId}")
@@ -465,6 +465,8 @@ delete_virtual_node_safely("cls-xxxxxxxx", "eklet-subnet-xxxxxxxx-0")
 
 ---
 
-**文档版本**: v1.0  
-**最后更新**: 2026-01-07  
+**文档版本**: v1.0
+
+**最后更新**: 2026-01-07
+
 **维护者**: TKE Documentation Team
