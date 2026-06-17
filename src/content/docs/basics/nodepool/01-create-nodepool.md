@@ -431,7 +431,8 @@ tccli tke ModifyNodePool \
 kubectl get nodes
 
 # 2. 登录节点检查 kubelet 日志
-ssh ubuntu@<node-ip>
+# 将 NODE_IP 替换为目标节点的内网 IP
+ssh ubuntu@NODE_IP
 sudo journalctl -u kubelet -f
 
 # 常见原因
@@ -530,7 +531,7 @@ sudo journalctl -u kubelet -f
 
 ### 基础创建
 
-```
+```text
 请帮我在 TKE 集群中创建一个节点池：
 - 集群 ID: cls-abc123
 - 节点池名称: standard-nodepool
@@ -544,7 +545,7 @@ sudo journalctl -u kubelet -f
 
 ### 高级配置
 
-```
+```text
 请帮我创建一个支持自动伸缩的节点池：
 - 集群 ID: cls-abc123
 - 节点池名称: auto-scaling-pool
@@ -559,7 +560,7 @@ sudo journalctl -u kubelet -f
 
 ### 批量创建
 
-```
+```text
 请帮我创建 3 个不同类型的节点池：
 1. 计算密集型节点池（CPU 优化，C5.2XLARGE16）
 2. 内存密集型节点池（内存优化，M5.2XLARGE32）
@@ -643,22 +644,22 @@ sudo journalctl -u kubelet -f
 tccli tke CreateNodePool --cli-input-json file://nodepool-config.json
 
 # 查询节点池列表
-tccli tke DescribeNodePools --ClusterId <cluster-id>
+tccli tke DescribeNodePools --ClusterId cls-abc123
 
 # 查询节点池详情
-tccli tke DescribeNodePool --ClusterId <cluster-id> --NodePoolId <nodepool-id>
+tccli tke DescribeNodePool --ClusterId cls-abc123 --NodePoolId np-abc123
 
 # 修改节点池
-tccli tke ModifyNodePool --ClusterId <cluster-id> --NodePoolId <nodepool-id> --Name <new-name>
+tccli tke ModifyNodePool --ClusterId cls-abc123 --NodePoolId np-abc123 --Name standard-nodepool-v2
 
 # 删除节点池
-tccli tke DeleteNodePool --ClusterId <cluster-id> --NodePoolIds '["<nodepool-id>"]'
+tccli tke DeleteNodePool --ClusterId cls-abc123 --NodePoolIds '["np-abc123"]'
 
 # 查询节点（kubectl）
-kubectl get nodes -l <label-selector>
+kubectl get nodes -l node-type=standard
 
 # 查看节点详情
-kubectl describe node <node-name>
+kubectl describe node 10.0.1.10
 ```
 
 ---
