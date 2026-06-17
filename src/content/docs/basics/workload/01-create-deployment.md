@@ -364,6 +364,7 @@ import (
     corev1 "k8s.io/api/core/v1"
     "k8s.io/apimachinery/pkg/api/resource"
     metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+    "k8s.io/apimachinery/pkg/util/intstr"
     "k8s.io/client-go/kubernetes"
     "k8s.io/client-go/tools/clientcmd"
 )
@@ -745,7 +746,7 @@ kubectl describe quota -n default
 
 ## Cookbook 示例
 
-完整可执行示例：create-deployment-example.py
+完整可执行示例：[部署 Nginx Cookbook](/cookbooks/deploy-nginx/)；源码见 [`cookbook/workload/deploy_nginx.py`](https://github.com/tke-workshop/tke-workshop.github.io/blob/main/cookbook/workload/deploy_nginx.py)。
 
 ---
 
