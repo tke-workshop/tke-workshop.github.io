@@ -53,3 +53,31 @@ test('create cluster documentation shows AutoUpgradeClusterLevel as an object', 
     'documentation should show AutoUpgradeClusterLevel.IsAutoUpgrade'
   );
 });
+
+test('create cluster examples use a valid ServiceCIDR mask', () => {
+  assert.doesNotMatch(
+    cookbookSource,
+    /10\.96\.0\.0\/16/,
+    'cookbook default ServiceCIDR must not use /16'
+  );
+  assert.match(
+    cookbookSource,
+    /service_cidr:\s*str\s*=\s*"10\.96\.0\.0\/24"/,
+    'cookbook should default ServiceCIDR to a /24 range'
+  );
+  assert.match(
+    cookbookSource,
+    /--service-cidr',\s*default='10\.96\.0\.0\/24'/,
+    'CLI --service-cidr default should match the valid /24 range'
+  );
+  assert.doesNotMatch(
+    createClusterDoc,
+    /10\.96\.0\.0\/16/,
+    'documentation must not show invalid /16 Service CIDR examples'
+  );
+  assert.match(
+    createClusterDoc,
+    /Service CIDR: 10\.96\.0\.0\/24/,
+    'Agent prompt should show the valid /24 Service CIDR'
+  );
+});

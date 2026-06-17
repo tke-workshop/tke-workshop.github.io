@@ -9,7 +9,7 @@ title: "如何创建 TKE 集群"
 - **功能名称**: 创建 TKE 集群
 - **API 版本**: 2018-05-25
 - **适用集群版本**: 所有版本
-- **文档更新时间**: 2026-06-16
+- **文档更新时间**: 2026-06-17
 - **Agent 友好度**: ⭐⭐⭐⭐⭐
 
 ---
@@ -58,7 +58,7 @@ title: "如何创建 TKE 集群"
   "ClusterCIDR": "172.16.0.0/16",        // 集群容器网络 CIDR
   "MaxNodePodNum": 64,                    // 每个节点最大 Pod 数
   "MaxClusterServiceNum": 256,            // 集群最大 Service 数
-  "ServiceCIDR": "10.96.0.0/16"          // Service CIDR
+  "ServiceCIDR": "10.96.0.0/24"          // Service CIDR
 }
 ```
 
@@ -108,7 +108,7 @@ curl -X POST "https://tke.tencentcloudapi.com/" \
     "ClusterCIDRSettings": {
       "ClusterCIDR": "172.16.0.0/16",
       "MaxNodePodNum": 64,
-      "ServiceCIDR": "10.96.0.0/16"
+      "ServiceCIDR": "10.96.0.0/24"
     }
   }'
 ```
@@ -135,7 +135,7 @@ tccli tke CreateCluster \
   --ClusterCIDRSettings '{
     "ClusterCIDR": "172.16.0.0/16",
     "MaxNodePodNum": 64,
-    "ServiceCIDR": "10.96.0.0/16"
+    "ServiceCIDR": "10.96.0.0/24"
   }'
 ```
 
@@ -166,7 +166,7 @@ req.ClusterBasicSettings.AutoUpgradeClusterLevel.IsAutoUpgrade = True
 req.ClusterCIDRSettings = models.ClusterCIDRSettings()
 req.ClusterCIDRSettings.ClusterCIDR = "172.16.0.0/16"
 req.ClusterCIDRSettings.MaxNodePodNum = 64
-req.ClusterCIDRSettings.ServiceCIDR = "10.96.0.0/16"
+req.ClusterCIDRSettings.ServiceCIDR = "10.96.0.0/24"
 
 # 发起请求
 resp = client.CreateCluster(req)
@@ -206,7 +206,7 @@ func main() {
 	request.ClusterCIDRSettings = &tke.ClusterCIDRSettings{
 		ClusterCIDR:           common.StringPtr("172.16.0.0/16"),
 		MaxNodePodNum:         common.Uint64Ptr(64),
-		ServiceCIDR:           common.StringPtr("10.96.0.0/16"),
+		ServiceCIDR:           common.StringPtr("10.96.0.0/24"),
 	}
 
 	response, err := client.CreateCluster(request)
@@ -406,7 +406,7 @@ tccli tke EnableClusterDeletionProtection \
 - VPC ID: {{vpc_id}}
 - 集群类型: 托管集群
 - 容器网络 CIDR: 172.16.0.0/16
-- Service CIDR: 10.96.0.0/16
+- Service CIDR: 10.96.0.0/24
 - 集群规模: L5
 ```
 
@@ -431,7 +431,7 @@ tccli tke EnableClusterDeletionProtection \
 1. **集群命名规范**: 使用 `{env}-{project}-{region}` 格式,如 `prod-api-gz`
 2. **网络规划**: 
    - ClusterCIDR 建议使用 /16 网段,支持更多 Pod
-   - ServiceCIDR 建议使用 /16 网段,避免与 ClusterCIDR 冲突
+   - ServiceCIDR 掩码需使用 TKE API 接受的 /17 到 /27 范围；示例采用 /24,并需避免与 VPC CIDR、ClusterCIDR 及同 VPC 内其他集群 CIDR 冲突
 3. **集群规模选择**: 
    - L5: ≤5 节点,适合测试环境
    - L20: 6-20 节点,适合小型生产
@@ -475,5 +475,5 @@ python3 cookbook/cluster/create_cluster.py \
 ---
 
 **文档版本**: v1.0<br>
-**最后更新**: 2026-06-16<br>
+**最后更新**: 2026-06-17<br>
 **维护者**: TKE Documentation Team

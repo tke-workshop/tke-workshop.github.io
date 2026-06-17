@@ -77,7 +77,7 @@ def create_cluster(
     k8s_version: str = "1.28.3",
     vpc_id: str = None,
     cluster_cidr: str = "172.16.0.0/16",
-    service_cidr: str = "10.96.0.0/16",
+    service_cidr: str = "10.96.0.0/24",
     cluster_level: str = "L5"
 ) -> str:
     """
@@ -202,7 +202,7 @@ def main():
     parser.add_argument('--k8s-version', default='1.28.3', help='Kubernetes 版本')
     parser.add_argument('--vpc-id', help='VPC ID (留空从配置文件读取)')
     parser.add_argument('--cluster-cidr', default='172.16.0.0/16', help='集群 CIDR')
-    parser.add_argument('--service-cidr', default='10.96.0.0/16', help='Service CIDR')
+    parser.add_argument('--service-cidr', default='10.96.0.0/24', help='Service CIDR')
     parser.add_argument('--cluster-level', default='L5', 
                        choices=['L5', 'L20', 'L50', 'L100', 'L200'],
                        help='集群规模')
