@@ -51,6 +51,19 @@ title: "如何创建 TKE 集群"
 | RunInstancesForNode | 否 | Array | 节点创建参数 | 见下方 |
 | Region | 是 | String | 地域 | ap-guangzhou |
 
+**ClusterBasicSettings 常用参数**:
+
+| 参数名 | 必填 | 类型 | 说明 | 示例值 |
+|--------|------|------|------|--------|
+| ClusterName | 否 | String | 集群名称,建议不超过 50 个字符 | my-tke-cluster |
+| ClusterVersion | 否 | String | Kubernetes 版本 | 1.28.3 |
+| ClusterDescription | 否 | String | 集群描述 | 生产集群 |
+| VpcId | 否 | String | VPC ID | vpc-xxxxxxxx |
+| ProjectId | 否 | Integer | 项目 ID,默认 0 | 0 |
+| TagSpecification | 否 | Array | 集群资源标签配置 | 见下方 |
+| ClusterLevel | 否 | String | 集群规模: L5/L20/L50/L100/L200/L500 | L5 |
+| AutoUpgradeClusterLevel | 否 | Object | 集群规格自动升配配置 | `{"IsAutoUpgrade": true}` |
+
 **ClusterCIDRSettings 结构**:
 
 ```text
@@ -71,12 +84,50 @@ title: "如何创建 TKE 集群"
   "ClusterDescription": "测试集群",       // 集群描述
   "VpcId": "vpc-xxxxxxxx",                // VPC ID
   "ProjectId": 0,                         // 项目ID (默认0)
+  "TagSpecification": [                   // 集群资源标签
+    {
+      "ResourceType": "cluster",
+      "Tags": [
+        {"Key": "env", "Value": "production"},
+        {"Key": "owner", "Value": "platform-team"}
+      ]
+    }
+  ],
   "ClusterLevel": "L5",                   // 集群规模: L5/L20/L50/L100/L200/L500
   "AutoUpgradeClusterLevel": {            // 集群规格自动升配配置
     "IsAutoUpgrade": true                 // 是否自动升配
   }
 }
 ```
+
+**TagSpecification 结构**:
+
+```text
+[
+  {
+    "ResourceType": "cluster",            // 标签绑定的资源类型,创建集群时固定为 cluster
+    "Tags": [
+      {
+        "Key": "env",                     // 标签键
+        "Value": "production"             // 标签值
+      },
+      {
+        "Key": "owner",
+        "Value": "platform-team"
+      }
+    ]
+  }
+]
+```
+
+常用标签建议:
+
+| 标签键 | 示例值 | 用途 |
+|--------|--------|------|
+| env | production / staging / test | 区分环境 |
+| owner | platform-team | 标识责任团队 |
+| cost-center | cc-1001 | 成本分摊 |
+| project | payment | 关联业务项目 |
 
 #### Step 2: 调用 CreateCluster API
 
@@ -103,7 +154,16 @@ curl -X POST "https://tke.tencentcloudapi.com/" \
       "ClusterLevel": "L5",
       "AutoUpgradeClusterLevel": {
         "IsAutoUpgrade": true
-      }
+      },
+      "TagSpecification": [
+        {
+          "ResourceType": "cluster",
+          "Tags": [
+            {"Key": "env", "Value": "production"},
+            {"Key": "owner", "Value": "platform-team"}
+          ]
+        }
+      ]
     },
     "ClusterCIDRSettings": {
       "ClusterCIDR": "172.16.0.0/16",
@@ -130,7 +190,16 @@ tccli tke CreateCluster \
     "ClusterLevel": "L5",
     "AutoUpgradeClusterLevel": {
       "IsAutoUpgrade": true
-    }
+    },
+    "TagSpecification": [
+      {
+        "ResourceType": "cluster",
+        "Tags": [
+          {"Key": "env", "Value": "production"},
+          {"Key": "owner", "Value": "platform-team"}
+        ]
+      }
+    ]
   }' \
   --ClusterCIDRSettings '{
     "ClusterCIDR": "172.16.0.0/16",
@@ -158,6 +227,16 @@ req.ClusterBasicSettings = models.ClusterBasicSettings()
 req.ClusterBasicSettings.ClusterName = "my-tke-cluster"
 req.ClusterBasicSettings.ClusterVersion = "1.28.3"
 req.ClusterBasicSettings.VpcId = "vpc-xxxxxxxx"
+tag_spec = models.TagSpecification()
+tag_spec.ResourceType = "cluster"
+env_tag = models.Tag()
+env_tag.Key = "env"
+env_tag.Value = "production"
+owner_tag = models.Tag()
+owner_tag.Key = "owner"
+owner_tag.Value = "platform-team"
+tag_spec.Tags = [env_tag, owner_tag]
+req.ClusterBasicSettings.TagSpecification = [tag_spec]
 req.ClusterBasicSettings.ClusterLevel = "L5"
 req.ClusterBasicSettings.AutoUpgradeClusterLevel = models.AutoUpgradeClusterLevel()
 req.ClusterBasicSettings.AutoUpgradeClusterLevel.IsAutoUpgrade = True
@@ -197,6 +276,15 @@ func main() {
 		ClusterName:    common.StringPtr("my-tke-cluster"),
 		ClusterVersion: common.StringPtr("1.28.3"),
 		VpcId:          common.StringPtr("vpc-xxxxxxxx"),
+		TagSpecification: []*tke.TagSpecification{
+			{
+				ResourceType: common.StringPtr("cluster"),
+				Tags: []*tke.Tag{
+					{Key: common.StringPtr("env"), Value: common.StringPtr("production")},
+					{Key: common.StringPtr("owner"), Value: common.StringPtr("platform-team")},
+				},
+			},
+		},
 		ClusterLevel:   common.StringPtr("L5"),
 		AutoUpgradeClusterLevel: &tke.AutoUpgradeClusterLevel{
 			IsAutoUpgrade: common.BoolPtr(true),
@@ -382,6 +470,31 @@ CoreDNS is running at https://cls-xxxxxxxx.ccs.tencent-cloud.com/api/v1/namespac
 
 `AutoUpgradeClusterLevel` 是对象类型,不是布尔值；当前 CreateCluster API 示例使用 `{"IsAutoUpgrade": true}`。
 
+### 配置集群标签
+
+创建集群时可以通过 `ClusterBasicSettings.TagSpecification` 同步绑定标签到集群实例:
+
+```json
+{
+  "ClusterBasicSettings": {
+    "ClusterName": "prod-payment-gz",
+    "TagSpecification": [
+      {
+        "ResourceType": "cluster",
+        "Tags": [
+          {"Key": "env", "Value": "production"},
+          {"Key": "project", "Value": "payment"},
+          {"Key": "cost-center", "Value": "cc-1001"}
+        ]
+      }
+    ]
+  }
+}
+```
+
+!!! note "标签说明"
+    `ResourceType` 创建集群时使用 `cluster`。标签用于资源检索、权限治理和成本分摊,建议在创建时一次性写入基础标签,避免后续补录遗漏。
+
 ### 配置集群删除保护
 
 创建后通过 API 启用:
@@ -408,6 +521,7 @@ tccli tke EnableClusterDeletionProtection \
 - 容器网络 CIDR: 172.16.0.0/16
 - Service CIDR: 10.96.0.0/24
 - 集群规模: L5
+- 集群标签: env=production, owner=platform-team, cost-center=cc-1001
 ```
 
 ### 带节点创建 Prompt
@@ -437,7 +551,11 @@ tccli tke EnableClusterDeletionProtection \
    - L20: 6-20 节点,适合小型生产
    - L50: 21-50 节点,适合中型生产
 4. **启用删除保护**: 生产集群建议启用删除保护
-5. **版本选择**: 选择稳定版本,避免使用最新版本
+5. **标签策略**:
+   - 创建时添加 `env`、`owner`、`project`、`cost-center` 等基础标签
+   - 标签键和值保持稳定,避免同一含义出现 `team`、`owner`、`department` 等多套命名
+   - 结合 CAM、账单和资源检索需求提前约定标签规范
+6. **版本选择**: 选择稳定版本,避免使用最新版本
 
 ---
 

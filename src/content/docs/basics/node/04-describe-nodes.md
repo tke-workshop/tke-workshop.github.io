@@ -641,7 +641,7 @@ export_nodes_to_csv(client, "cls-xxxxxxxx")
 - [添加节点到集群](./01-add-node.md)
 - [删除节点](./02-delete-node.md)
 - 驱逐节点 Pod
-- [创建节点池](../nodepool/01-create-nodepool.md)
+- [创建节点池](../node-pool/01-create-node-pool.md)
 - [查询集群列表](../cluster/04-describe-clusters.md)
 
 ---

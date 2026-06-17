@@ -4,7 +4,7 @@
 
 功能: 在 TKE 集群中部署 Nginx Deployment 和 Service
 使用方法: python3 deploy_nginx.py --cluster-id cls-xxxxxxxx --replicas 3
-文档链接: https://tke-workshop.github.io/basics/workload/01-create-deployment/
+文档链接: https://tke-workshop.github.io/basics/kubernetes/02-kubectl-common-operations/
 """
 
 import argparse

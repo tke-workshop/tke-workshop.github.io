@@ -401,8 +401,8 @@ export const cookbooks = [
     ],
     relatedDocs: [
       { label: '环境准备', href: '/start/environment/' },
-      { label: '创建 Deployment', href: '/basics/workload/01-create-deployment/' },
-      { label: '如何创建 Kubernetes Service', href: '/basics/service/01-create-service/' },
+      { label: '连接集群', href: '/basics/kubernetes/01-connect-cluster/' },
+      { label: '常用 kubectl 命令操作', href: '/basics/kubernetes/02-kubectl-common-operations/' },
     ],
     files: ['cookbook/workload/deploy_nginx.py', 'cookbook/workload/deploy_nginx.yaml'],
     prerequisites: [
@@ -614,7 +614,7 @@ export const cookbooks = [
     },
     relatedDocs: [
       { label: '网络最佳实践', href: '/best-practices/networking/' },
-      { label: '如何创建 Kubernetes Service', href: '/basics/service/01-create-service/' },
+      { label: '常用 kubectl 命令操作', href: '/basics/kubernetes/02-kubectl-common-operations/' },
     ],
     prompt:
       '请基于 TKE 获取客户端 IP Cookbook，在测试集群部署示例 Service，验证客户端 IP 获取方式，并在验证后清理负载均衡资源。',

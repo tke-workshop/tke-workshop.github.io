@@ -561,7 +561,7 @@ delete_nodes_by_label(client, "cls-xxxxxxxx", "env=test")
 - [添加节点到集群](./01-add-node.md)
 - [查询节点列表](./04-describe-nodes.md)
 - 驱逐节点 Pod
-- [节点池管理](../nodepool/01-create-nodepool.md)
+- [节点池管理](../node-pool/index.md)
 
 ---
 
