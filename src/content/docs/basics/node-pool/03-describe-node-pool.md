@@ -118,14 +118,16 @@ print(resp.NodePool.Name)
 ## Kubernetes 侧验证
 
 ```bash
+NODE_NAME=your-node-name
+
 # 查看属于某个节点池的节点
 kubectl get nodes -l node-pool=production-pool -o wide
 
 # 查看节点标签和污点
-kubectl describe node <node-name>
+kubectl describe node "$NODE_NAME"
 
 # 查看节点上的 Pod
-kubectl get pods -A -o wide --field-selector spec.nodeName=<node-name>
+kubectl get pods -A -o wide --field-selector spec.nodeName="$NODE_NAME"
 ```
 
 ---
