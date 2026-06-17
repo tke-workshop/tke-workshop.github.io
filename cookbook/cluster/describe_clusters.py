@@ -7,6 +7,8 @@
 文档链接: https://tke-workshop.github.io/basics/cluster/04-describe-clusters/
 """
 
+from __future__ import annotations
+
 import argparse
 import sys
 from pathlib import Path
