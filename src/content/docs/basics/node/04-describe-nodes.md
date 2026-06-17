@@ -362,7 +362,7 @@ kubectl get nodes
 kubectl get nodes -o wide
 
 # 查看节点详情
-kubectl describe node <node-name>
+kubectl describe node "${NODE_NAME}"
 
 # 按标签过滤节点
 kubectl get nodes -l env=production
