@@ -41,17 +41,16 @@ export default defineConfig({
         {
           label: '基础操作',
           collapsed: true,
-          items: [{ autogenerate: { directory: 'basics', collapsed: true } }],
+          items: [
+            { autogenerate: { directory: 'basics', collapsed: true } },
+            { autogenerate: { directory: 'networking', collapsed: true } },
+            { autogenerate: { directory: 'storage', collapsed: true } },
+          ],
         },
         {
-          label: '网络',
+          label: '运维监控',
           collapsed: true,
-          items: [{ autogenerate: { directory: 'networking', collapsed: true } }],
-        },
-        {
-          label: '存储',
-          collapsed: true,
-          items: [{ autogenerate: { directory: 'storage', collapsed: true } }],
+          items: [{ autogenerate: { directory: 'observability', collapsed: true } }],
         },
         {
           label: '最佳实践',

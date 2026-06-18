@@ -138,6 +138,7 @@ title: "TKE 最佳实践"
 
 - 🔒 [安全最佳实践](security/index.md)
 - 🚀 [可用性最佳实践](availability/index.md)
+- 📈 [可观测性最佳实践](observability/index.md)
 - 🗄️ [存储最佳实践](storage/index.md)
 - 🛡️ [可靠性最佳实践](reliability/index.md)
 - 🔄 [集群升级最佳实践](upgrade/index.md)
