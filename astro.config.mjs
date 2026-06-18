@@ -45,12 +45,8 @@ export default defineConfig({
             { autogenerate: { directory: 'basics', collapsed: true } },
             { autogenerate: { directory: 'networking', collapsed: true } },
             { autogenerate: { directory: 'storage', collapsed: true } },
+            { autogenerate: { directory: 'observability', collapsed: true } },
           ],
-        },
-        {
-          label: '运维监控',
-          collapsed: true,
-          items: [{ autogenerate: { directory: 'observability', collapsed: true } }],
         },
         {
           label: '最佳实践',

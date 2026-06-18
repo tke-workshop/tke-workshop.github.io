@@ -8,14 +8,8 @@ export const workshopNavItems = [
   {
     label: '基础操作',
     href: '/basics/',
-    match: ['/basics/', '/networking/', '/storage/', '/operate/'],
+    match: ['/basics/', '/networking/', '/storage/', '/observability/', '/operate/'],
     sidebarLabels: ['基础操作'],
-  },
-  {
-    label: '运维监控',
-    href: '/observability/',
-    match: ['/observability/'],
-    sidebarLabels: ['运维监控'],
   },
   {
     label: '最佳实践',
