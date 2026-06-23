@@ -9,7 +9,7 @@ title: "删除节点池"
 - **功能名称**: 删除标准节点池
 - **API 版本**: 2018-05-25
 - **API 名称**: `DeleteClusterNodePool`
-- **文档更新时间**: 2026-06-17
+- **文档更新时间**: 2026-06-24
 - **Agent 友好度**: ⭐⭐⭐⭐⭐
 
 ---
@@ -25,11 +25,11 @@ title: "删除节点池"
 
 ## 前置条件
 
-- [ ] 已记录 `ClusterId` 和 `NodePoolId`
+- [ ] 已记录 `ClusterId` 和待删除的 `NodePoolId`
 - [ ] 已确认节点池不是核心业务唯一承载池
 - [ ] 已将业务 Pod 迁移到其他节点池
 - [ ] 已确认删除保护状态
-- [ ] 已确认底层 CVM、CBS、EIP 等资源处理策略
+- [ ] 已确认 `KeepInstance` 取值：保留底层 CVM 实例，或随节点池删除释放实例
 
 ---
 
@@ -82,11 +82,17 @@ tccli tke ModifyClusterNodePool \
 
 ### Step 2: 删除节点池
 
+`DeleteClusterNodePool` 支持一次传入多个节点池 ID。删除前必须明确 `KeepInstance`：
+
+- `KeepInstance=true`：删除节点池管理对象并将节点移出集群，但保留对应 CVM 实例。
+- `KeepInstance=false`：删除节点池时不保留对应实例，底层 CVM 等资源可能被释放。
+
 ```bash
 tccli tke DeleteClusterNodePool \
   --Region ap-guangzhou \
   --ClusterId cls-xxxxxxxx \
-  --NodePoolId np-xxxxxxxx
+  --NodePoolIds '["np-xxxxxxxx"]' \
+  --KeepInstance true
 ```
 
 **成功响应示例**:
@@ -108,7 +114,8 @@ client = tke_client.TkeClient(cred, "ap-guangzhou")
 
 req = models.DeleteClusterNodePoolRequest()
 req.ClusterId = "cls-xxxxxxxx"
-req.NodePoolId = "np-xxxxxxxx"
+req.NodePoolIds = ["np-xxxxxxxx"]
+req.KeepInstance = True
 
 resp = client.DeleteClusterNodePool(req)
 print(f"RequestId: {resp.RequestId}")
@@ -143,6 +150,7 @@ kubectl get pods -A -o wide
 
 - 节点池列表中不再返回目标节点池
 - 业务 Pod 已迁移到其他可用节点
+- 如果 `KeepInstance=true`，原节点对应 CVM 实例仍保留，但已不再作为集群节点
 - 集群中没有长时间 `Pending` 的关键 Pod
 
 ---
