@@ -1,0 +1,11 @@
+{
+    "RegistryName": "tcr-example",
+    "RegistryType": "basic",
+    "RegistryChargeType": 1,
+    "RegistryChargePrepaid": {
+        "Period": 1,
+        "RenewFlag": 0
+    },
+    "SyncTag": true,
+    "DeletionProtection": false
+}

@@ -234,6 +234,185 @@ export default defineConfig({
           ],
         },
         {
+          label: '面向 Agent · CLI',
+          collapsed: true,
+          items: [
+            { label: '概述与环境准备', slug: 'cli' },
+            {
+              label: 'tccli on TKE',
+              collapsed: true,
+              items: [
+                { label: 'TKE tccli 参考', slug: 'cli/tke' },
+                {
+                  label: '集群配置',
+                  collapsed: true,
+                  items: [
+                    {
+                      label: '集群管理',
+                      collapsed: true,
+                      items: [
+                        { label: '创建集群', slug: 'cli/tke/cluster-config/cluster-management/create' },
+                        { label: '删除集群', slug: 'cli/tke/cluster-config/cluster-management/delete' },
+                        { label: '升级集群', slug: 'cli/tke/cluster-config/cluster-management/upgrade' },
+                        { label: '集群扩缩容', slug: 'cli/tke/cluster-config/cluster-management/scale' },
+                        { label: '连接集群', slug: 'cli/tke/cluster-config/cluster-management/connect' },
+                        { label: '集群生命周期', slug: 'cli/tke/cluster-config/cluster-management/lifecycle' },
+                        { label: '集群管理模式说明', slug: 'cli/tke/cluster-config/cluster-management/management-modes' },
+                        { label: '更改集群操作系统', slug: 'cli/tke/cluster-config/cluster-management/change-os' },
+                        { label: '自定义控制面组件参数', slug: 'cli/tke/cluster-config/cluster-management/custom-control-plane' },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              label: 'tccli on TCR',
+              collapsed: true,
+              items: [
+                { label: 'TCR tccli 参考', slug: 'cli/tcr' },
+                {
+                  label: '快速入门',
+                  collapsed: true,
+                  items: [
+                    { label: '企业版快速入门', slug: 'cli/tcr/quickstart/enterprise' },
+                    { label: '个人版快速入门', slug: 'cli/tcr/quickstart/personal' },
+                  ],
+                },
+                {
+                  label: '操作指南',
+                  collapsed: true,
+                  items: [
+                    {
+                      label: '实例',
+                      collapsed: true,
+                      items: [
+                        { label: '创建企业版实例', slug: 'cli/tcr/ops/instances/create' },
+                        { label: '销毁退还实例', slug: 'cli/tcr/ops/instances/delete' },
+                      ],
+                    },
+                    {
+                      label: '访问配置',
+                      collapsed: true,
+                      items: [
+                        {
+                          label: '访问凭证',
+                          collapsed: true,
+                          items: [
+                            { label: '用户级账号管理', slug: 'cli/tcr/ops/access/credentials/user-credentials' },
+                            { label: '服务级账号管理', slug: 'cli/tcr/ops/access/credentials/service-credentials' },
+                          ],
+                        },
+                        {
+                          label: '访问权限',
+                          collapsed: true,
+                          items: [
+                            { label: '权限管理概述', slug: 'cli/tcr/ops/access/permissions/permission-overview' },
+                            { label: 'CAM 子账号权限', slug: 'cli/tcr/ops/access/permissions/cam-subaccount' },
+                          ],
+                        },
+                        {
+                          label: '访问网络',
+                          collapsed: true,
+                          items: [
+                            { label: '网络控制概述', slug: 'cli/tcr/ops/access/network/network-overview' },
+                            { label: '公网访问控制', slug: 'cli/tcr/ops/access/network/public-access' },
+                            { label: '内网访问控制', slug: 'cli/tcr/ops/access/network/private-access' },
+                          ],
+                        },
+                        { label: '自定义域名', slug: 'cli/tcr/ops/access/domain/custom-domain' },
+                      ],
+                    },
+                    {
+                      label: '镜像创建',
+                      collapsed: true,
+                      items: [
+                        { label: '管理命名空间', slug: 'cli/tcr/ops/image-creation/namespace' },
+                        { label: '管理镜像仓库', slug: 'cli/tcr/ops/image-creation/repository' },
+                      ],
+                    },
+                    {
+                      label: '镜像分发',
+                      collapsed: true,
+                      items: [
+                        { label: '同实例多地域复制', slug: 'cli/tcr/ops/image-distribution/cross-region-replication' },
+                        { label: '跨实例同步镜像', slug: 'cli/tcr/ops/image-distribution/cross-instance-sync' },
+                        { label: '按需加载容器镜像', slug: 'cli/tcr/ops/image-distribution/accelerated-image' },
+                      ],
+                    },
+                    {
+                      label: '镜像安全',
+                      collapsed: true,
+                      items: [
+                        { label: '容器镜像安全扫描', slug: 'cli/tcr/ops/image-security/vulnerability-scan' },
+                        { label: '镜像版本不可变', slug: 'cli/tcr/ops/image-security/immutable-tags' },
+                        { label: '高危镜像部署阻断', slug: 'cli/tcr/ops/image-security/deployment-block' },
+                        { label: '容器镜像签名', slug: 'cli/tcr/ops/image-security/image-signing' },
+                      ],
+                    },
+                    {
+                      label: '镜像清理',
+                      collapsed: true,
+                      items: [
+                        { label: '清理 COS 存储空间', slug: 'cli/tcr/ops/image-cleanup/cos-cleanup' },
+                        { label: '自动删除镜像版本', slug: 'cli/tcr/ops/image-cleanup/auto-delete' },
+                      ],
+                    },
+                    {
+                      label: 'OCI 制品管理',
+                      collapsed: true,
+                      items: [
+                        { label: 'OCI 制品管理概述', slug: 'cli/tcr/ops/oci-artifacts/overview' },
+                        { label: '托管 Helm Chart', slug: 'cli/tcr/ops/oci-artifacts/helm-chart' },
+                      ],
+                    },
+                    {
+                      label: 'DevOps',
+                      collapsed: true,
+                      items: [
+                        { label: '触发器（Webhook）', slug: 'cli/tcr/ops/devops/webhook' },
+                      ],
+                    },
+                    {
+                      label: '个人版操作指南',
+                      collapsed: true,
+                      items: [
+                        { label: '更新登录密码', slug: 'cli/tcr/ops/personal-edition/update-password' },
+                        { label: '设置镜像清理', slug: 'cli/tcr/ops/personal-edition/image-cleanup' },
+                        { label: 'CAM API 列表', slug: 'cli/tcr/ops/personal-edition/cam-api-list' },
+                        { label: '授权方案示例', slug: 'cli/tcr/ops/personal-edition/auth-examples' },
+                        { label: 'API 变更指南', slug: 'cli/tcr/ops/personal-edition/api-migration' },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  label: '实践教程',
+                  collapsed: true,
+                  items: [
+                    { label: 'TKE Serverless 拉取 TCR 镜像', slug: 'cli/tcr/practices/tke-serverless-pull' },
+                    { label: 'TKE 插件内网免密拉取', slug: 'cli/tcr/practices/tke-plugin-pull' },
+                    { label: '从 Harbor 同步镜像', slug: 'cli/tcr/practices/harbor-migration' },
+                    { label: '混合云多平台同步', slug: 'cli/tcr/practices/hybrid-cloud-sync' },
+                    { label: '全球多地域同步', slug: 'cli/tcr/practices/global-replication' },
+                    { label: '自定义域名 + 云联网', slug: 'cli/tcr/practices/custom-domain-ccn' },
+                    { label: '实例后端存储切换', slug: 'cli/tcr/practices/storage-switch' },
+                    { label: '个人版迁移至企业版', slug: 'cli/tcr/practices/personal-migration' },
+                    { label: '个人版域名访问企业版', slug: 'cli/tcr/practices/personal-domain-access' },
+                  ],
+                },
+              ],
+            },
+            {
+              label: 'tkectl (产品 CLI)',
+              collapsed: true,
+              items: [
+                { label: '即将发布', slug: 'cli/tkectl' },
+              ],
+            },
+          ],
+        },
+        {
           label: 'Contribute',
           collapsed: true,
           items: [{ label: '贡献与 Agent-First 规范', slug: 'contribute' }],

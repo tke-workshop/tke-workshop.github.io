@@ -1,0 +1,11 @@
+{
+  "VpcSet": [
+    {
+      "InstanceId": "tcr-nn8smeyj",
+      "VpcId": "vpc-of73262z",
+      "EniLBIp": "10.0.0.5",
+      "UsePublicDomain": true,
+      "RegionName": "ap-guangzhou"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "RegistryId": "tcr-example",
+  "Name": "robot-demo",
+  "Permissions": [
+    {
+      "Resource": "team-a",
+      "Actions": ["tcr:PushRepository", "tcr:PullRepository"]
+    },
+    {
+      "Resource": "open-source",
+      "Actions": ["tcr:PullRepository"]
+    }
+  ],
+  "Description": "CI/CD automation account",
+  "Duration": 365,
+  "Disable": false
+}

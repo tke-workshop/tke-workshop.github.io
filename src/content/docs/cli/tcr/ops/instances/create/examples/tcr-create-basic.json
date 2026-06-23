@@ -1,0 +1,14 @@
+{
+    "RegistryName": "tcr-example",
+    "RegistryType": "basic",
+    "RegistryChargeType": 0,
+    "SyncTag": true,
+    "EnableCosMAZ": false,
+    "DeletionProtection": false,
+    "TagSpecification": {
+        "ResourceType": "instance",
+        "Tags": [
+            {"Key": "env", "Value": "dev"}
+        ]
+    }
+}

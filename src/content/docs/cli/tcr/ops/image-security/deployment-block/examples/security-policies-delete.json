@@ -1,0 +1,17 @@
+{
+    "RegistryId": "tcr-example",
+    "SecurityGroupPolicySet": [
+        {
+            "PolicyIndex": 2,
+            "Description": "测试集群 VPC",
+            "CidrBlock": "10.200.0.0/16",
+            "PolicyVersion": "<PolicyVersion>"
+        },
+        {
+            "PolicyIndex": 1,
+            "Description": "办公室网络",
+            "CidrBlock": "172.16.0.0/12",
+            "PolicyVersion": "<PolicyVersion>"
+        }
+    ]
+}
