@@ -461,7 +461,28 @@ delete_virtual_node_safely("cls-xxxxxxxx", "eklet-subnet-xxxxxxxx-0")
 
 ## Cookbook 示例
 
-完整可执行代码示例: TKE 超级节点删除 Cookbook
+完整可执行代码示例: TKE 超级节点删除 Cookbook；源码见 [`cookbook/supernode/delete_supernode.py`](https://github.com/tke-workshop/tke-workshop.github.io/blob/main/cookbook/supernode/delete_supernode.py)。
+
+```bash
+# 预检查删除计划，不提交删除
+python3 cookbook/supernode/delete_supernode.py \
+  --cluster-id cls-xxxxxxxx \
+  --node-name eklet-subnet-xxxxxxxx-0
+
+# 节点已无 Pod 后提交安全删除
+python3 cookbook/supernode/delete_supernode.py \
+  --cluster-id cls-xxxxxxxx \
+  --node-name eklet-subnet-xxxxxxxx-0 \
+  --confirm-delete \
+  --wait
+
+# 已确认业务风险后强制删除
+python3 cookbook/supernode/delete_supernode.py \
+  --cluster-id cls-xxxxxxxx \
+  --node-name eklet-subnet-xxxxxxxx-0 \
+  --force \
+  --confirm-delete
+```
 
 ---
 
