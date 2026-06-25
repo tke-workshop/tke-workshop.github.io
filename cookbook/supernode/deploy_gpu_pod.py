@@ -4,7 +4,7 @@
 
 功能: 在 TKE 超级节点上创建 GPU Pod，支持自动匹配和手动指定 GPU 类型
 使用方法: python3 deploy_gpu_pod.py --help
-文档链接: https://tke-workshop.github.io/ai-ml/04-gpu-pod-best-practices/
+文档链接: https://tke-workshop.github.io/ai-ml/training/supernode-gpu/
 """
 
 import argparse
