@@ -9,7 +9,7 @@ title: "如何创建超级节点池"
 - **功能名称**: 创建超级节点池
 - **API 版本**: 2018-05-25
 - **适用集群版本**: 所有版本
-- **文档更新时间**: 2026-01-07
+- **文档更新时间**: 2026-05-29
 - **Agent 友好度**: ⭐⭐⭐⭐⭐
 
 ---
@@ -50,8 +50,15 @@ title: "如何创建超级节点池"
 | SubnetIds | 否 | Array | 子网 ID 列表 | ["subnet-xxxxxxxx"] |
 | Labels | 否 | Array | 虚拟节点标签 | 见下方 |
 | Taints | 否 | Array | 虚拟节点污点 | 见下方 |
+| VirtualNodes | 否 | Array | 超级节点列表，元素为 VirtualNodeSpec | 见下方 |
 | DeletionProtection | 否 | Boolean | 删除保护开关 | false |
 | OS | 否 | String | 节点池操作系统 | linux |
+| SubnetAllocationPolicy | 否 | Object | 子网资源分配策略，精确控制各子网资源比例 | 见下方 |
+| AgentPlugin | 否 | Object | AgentPlugin 安装配置；传入即表示需要安装，即使是空对象 `{}` | 见下方 |
+
+:::note
+`SubnetAllocationPolicy` 与 `SubnetIds`、`VirtualNodes` 互斥，不要在同一个创建请求中同时传入。
+:::
 
 **Labels 结构**:
 
@@ -81,6 +88,69 @@ title: "如何创建超级节点池"
       "Effect": "NoSchedule"
     }
   ]
+}
+```
+
+**VirtualNodes 结构**:
+
+```json
+{
+  "VirtualNodes": [
+    {
+      "DisplayName": "vk-node-a",
+      "SubnetId": "subnet-xxxxxxxx"
+    }
+  ]
+}
+```
+
+可选字段:
+
+- `Tags`: 腾讯云标签。
+- `Quota`: 按量配额。
+
+**SubnetAllocationPolicy 结构**:
+
+```json
+{
+  "SubnetAllocationPolicy": {
+    "Allocations": [
+      {
+        "SubnetId": "subnet-xxxxxxx1",
+        "Ratio": 60
+      },
+      {
+        "SubnetId": "subnet-xxxxxxx2",
+        "Ratio": 40
+      }
+    ]
+  }
+}
+```
+
+`Allocations` 不能为空；每个 `SubnetId` 不能重复；`Ratio` 需要为正整数，且所有 `Ratio` 之和必须等于 100。
+
+**AgentPlugin 结构**:
+
+```json
+{
+  "AgentPlugin": {}
+}
+```
+
+如需连接外部 PostgreSQL，可传入以下字段。不要在文档、脚本或仓库配置中写入真实密码。
+
+```json
+{
+  "AgentPlugin": {
+    "ChartVersion": "1.0.0",
+    "Host": "10.0.1.100",
+    "Port": 5432,
+    "Username": "dbuser",
+    "Password": "dbpass",
+    "SSLMode": "require",
+    "ServiceDomain": "agentplugin.example.com"
+  }
 }
 ```
 
@@ -235,6 +305,8 @@ tccli tke DescribeClusterVirtualNodePools \
 |--------|---------|------|---------|
 | InvalidParameter.SubnetNotExist | 子网不存在 | SubnetId 不存在或无权限 | 检查子网 ID 是否正确 |
 | InvalidParameter.SubnetInvalidError | 子网配置错误 | 子网配置不合法 | 确认子网在正确的 VPC 中 |
+| InvalidParameter.SubnetAllocationPolicyConflict | 子网分配策略冲突 | `SubnetAllocationPolicy` 与 `SubnetIds` 或 `VirtualNodes` 同时传入 | 仅保留一种子网配置方式 |
+| InvalidParameter.SubnetAllocationPolicyInvalid | 子网分配策略校验失败 | `Allocations` 为空、SubnetId 重复、Ratio 非正整数或总和不等于 100 | 检查 `Allocations` 列表和 `Ratio` 配置 |
 | ResourceInUse.SubnetAlreadyExist | 子网已被使用 | 子网已被其他节点池占用 | 选择其他可用子网 |
 | ResourceUnavailable.ClusterState | 集群状态异常 | 集群状态不支持操作 | 等待集群状态恢复正常 |
 | UnauthorizedOperation.CamNoAuth | 无权限 | CAM 权限不足 | 申请 TKE 相关权限 |
@@ -275,6 +347,46 @@ kubectl logs -n kube-system -l app=virtual-kubelet
 ```
 
 **说明**: 多子网配置可实现跨可用区的容灾能力
+
+### 配置子网资源分配策略
+
+```json
+{
+  "SubnetAllocationPolicy": {
+    "Allocations": [
+      {
+        "SubnetId": "subnet-xxxxxxx1",
+        "Ratio": 50
+      },
+      {
+        "SubnetId": "subnet-xxxxxxx2",
+        "Ratio": 50
+      }
+    ]
+  }
+}
+```
+
+**说明**: 使用 `SubnetAllocationPolicy` 时，不要同时传入 `SubnetIds` 或 `VirtualNodes`。所有 `Ratio` 之和必须等于 100。
+
+### 配置超级节点列表
+
+```json
+{
+  "VirtualNodes": [
+    {
+      "DisplayName": "vk-node-a",
+      "SubnetId": "subnet-xxxxxxx1"
+    },
+    {
+      "DisplayName": "vk-node-b",
+      "SubnetId": "subnet-xxxxxxx2"
+    }
+  ]
+}
+```
+
+**说明**: `DisplayName` 和 `SubnetId` 为必填字段；`DisplayName` 建议不超过 20 个字符。
 
 ### 配置节点标签和污点
 
@@ -390,5 +502,5 @@ kubectl logs -n kube-system -l app=virtual-kubelet
 ---
 
 **文档版本**: v1.0  
-**最后更新**: 2026-01-07  
+**最后更新**: 2026-05-29
 **维护者**: TKE Documentation Team
