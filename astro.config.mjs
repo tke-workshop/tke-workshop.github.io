@@ -217,7 +217,107 @@ export default defineConfig({
         {
           label: 'AI on TKE',
           collapsed: true,
-          items: [{ autogenerate: { directory: 'ai-ml', collapsed: true } }],
+          items: [
+            { label: 'AI on TKE 概览', slug: 'ai-ml' },
+            {
+              label: 'Training on TKE',
+              collapsed: true,
+              items: [
+                { label: '训练概览', slug: 'ai-ml/training' },
+                { label: 'GPU 调度', slug: 'ai-ml/training/gpu-scheduling' },
+                { label: '超级节点 GPU', slug: 'ai-ml/training/supernode-gpu' },
+                { label: '分布式训练', slug: 'ai-ml/training/distributed-training' },
+                { label: 'Training Operator', slug: 'ai-ml/training/training-operator' },
+                { label: '存储优化', slug: 'ai-ml/training/storage-optimization' },
+                { label: '监控调优', slug: 'ai-ml/training/monitoring' },
+              ],
+            },
+            {
+              label: 'Inference on TKE',
+              collapsed: true,
+              items: [
+                { label: '推理概览', slug: 'ai-ml/inference' },
+                { label: '推理框架', slug: 'ai-ml/inference/inference-frameworks' },
+                { label: '服务部署', slug: 'ai-ml/inference/service-deployment' },
+                { label: 'LLM 推理', slug: 'ai-ml/inference/llm-inference' },
+                { label: '自动扩缩容', slug: 'ai-ml/inference/autoscaling' },
+                { label: '性能优化', slug: 'ai-ml/inference/performance' },
+                { label: '模型管理', slug: 'ai-ml/inference/model-management' },
+              ],
+            },
+            {
+              label: 'OpenClaw on TKE',
+              collapsed: true,
+              items: [
+                { label: 'OpenClaw 概览', slug: 'ai-ml/openclaw' },
+                { label: '架构设计', slug: 'ai-ml/openclaw/architecture' },
+                { label: '快速开始', slug: 'ai-ml/openclaw/quickstart' },
+                { label: '弹性伸缩', slug: 'ai-ml/openclaw/elasticity' },
+                { label: '网络方案', slug: 'ai-ml/openclaw/networking' },
+                { label: '生产部署', slug: 'ai-ml/openclaw/production' },
+                { label: '安全隔离', slug: 'ai-ml/openclaw/security' },
+                { label: '存储方案', slug: 'ai-ml/openclaw/storage' },
+              ],
+            },
+            {
+              label: 'OPEA on TKE',
+              collapsed: true,
+              items: [
+                { label: 'OPEA 概览', slug: 'ai-ml/opea' },
+                { label: '快速开始', slug: 'ai-ml/opea/quickstart' },
+                { label: 'ChatQnA 部署', slug: 'ai-ml/opea/chatqna-deployment' },
+              ],
+            },
+            {
+              label: 'KitOps on TKE',
+              collapsed: true,
+              items: [
+                { label: 'KitOps 概览', slug: 'ai-ml/kitops' },
+                { label: '快速开始', slug: 'ai-ml/kitops/quickstart' },
+                { label: 'Kitfile 指南', slug: 'ai-ml/kitops/kitfile-guide' },
+                { label: 'TCR 集成', slug: 'ai-ml/kitops/tcr-integration' },
+                { label: 'TKE 部署', slug: 'ai-ml/kitops/tke-deployment' },
+                { label: 'CI/CD 集成', slug: 'ai-ml/kitops/cicd-integration' },
+                { label: '最佳实践', slug: 'ai-ml/kitops/best-practices' },
+              ],
+            },
+            {
+              label: 'TKE with AI Copilot',
+              collapsed: true,
+              items: [
+                { label: 'AI Copilot 概览', slug: 'ai-ml/ai-copilot' },
+                { label: 'TKE Skill', slug: 'ai-ml/ai-copilot/tke-skill' },
+                { label: '使用场景指南', slug: 'ai-ml/ai-copilot/user-stories' },
+              ],
+            },
+            {
+              label: 'Cube Agent Sandbox',
+              collapsed: true,
+              items: [
+                { label: 'TKE Cube Agent Sandbox', slug: 'ai-ml/cube' },
+                { label: '产品介绍', slug: 'ai-ml/cube/01-overview' },
+                { label: '快速开始', slug: 'ai-ml/cube/02-quick-start' },
+                { label: '生命周期管理', slug: 'ai-ml/cube/03-lifecycle-management' },
+                { label: '存储配置', slug: 'ai-ml/cube/04-storage' },
+                { label: '网络配置', slug: 'ai-ml/cube/05-network' },
+                { label: '可观测性', slug: 'ai-ml/cube/06-observability' },
+                { label: '生产配置建议', slug: 'ai-ml/cube/07-best-practices' },
+                { label: 'FAQ', slug: 'ai-ml/cube/08-faq' },
+                {
+                  label: '场景实践',
+                  collapsed: true,
+                  items: [
+                    { label: '构建 AI Coding 执行环境', slug: 'ai-ml/cube/scenarios/01-ai-coding-sandbox' },
+                    { label: '构建常驻型 Cloud Agent 工作空间', slug: 'ai-ml/cube/scenarios/02-cloud-agent-workspace' },
+                    {
+                      label: '在自有 TKE 集群中交付 Agent Platform 执行面',
+                      slug: 'ai-ml/cube/scenarios/03-agent-platform-byoc',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
         {
           label: 'Data on TKE',

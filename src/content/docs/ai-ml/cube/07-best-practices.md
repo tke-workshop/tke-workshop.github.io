@@ -1,8 +1,8 @@
 ---
-title: "最佳实践"
+title: "生产配置建议"
 ---
 
-# 最佳实践
+# 生产配置建议
 
 本文提供 TKE Cube Agent Sandbox 在生产环境中的配置建议。
 

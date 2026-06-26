@@ -25,9 +25,9 @@ TKE Cube Agent Sandbox 是面向 AI Agent、代码解释器、自动化任务和
 | [存储配置](04-storage.md) | 为沙箱挂载临时存储和共享存储 |
 | [网络配置](05-network.md) | 配置 SandboxGateway、访问入口和出网策略 |
 | [可观测性](06-observability.md) | 查看状态、事件、日志、指标和告警 |
-| [最佳实践](07-best-practices.md) | 生产环境建议、容量、隔离、安全和成本优化 |
+| [生产配置建议](07-best-practices.md) | 生产环境建议、容量、隔离、安全和成本优化 |
 | [FAQ](08-faq.md) | 常见问题和排障建议 |
-| [场景实践](09-scenarios/index.md) | AI Coding、Cloud Agent 工作空间和 Agent Platform BYOC 场景参考 |
+| [场景实践](scenarios/index.md) | AI Coding、Cloud Agent 工作空间和 Agent Platform BYOC 场景参考 |
 
 ## 基本使用流程
 
