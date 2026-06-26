@@ -4,7 +4,7 @@
 
 ## 📖 简介
 
-本目录提供在 TKE 超级节点上部署 GPU Pod 的完整示例，包括 Python 脚本和 YAML 配置文件。
+本目录提供 TKE 超级节点相关的完整示例，包括 GPU Pod 部署、超级节点删除脚本和 YAML 配置文件。
 
 **文档链接**: [GPU Pod 最佳实践](https://tke-workshop.github.io/ai-ml/04-gpu-pod-best-practices/)
 
@@ -15,6 +15,7 @@
 | 文件 | 类型 | 功能 | 推荐场景 |
 |------|------|------|---------|
 | `deploy_gpu_pod.py` | Python | GPU Pod 部署脚本 | 自动化部署、批量操作 |
+| `delete_supernode.py` | Python | 删除超级节点，默认 dry-run | 清理闲置超级节点、批量删除前检查 |
 | `gpu_pod_examples.yaml` | YAML | GPU Pod 配置示例集合 | kubectl 直接部署 |
 
 ---
@@ -133,6 +134,29 @@ python3 deploy_gpu_pod.py --delete --name gpu-inference
 
 ```bash
 python3 deploy_gpu_pod.py --help
+```
+
+### 删除超级节点
+
+```bash
+# 预检查删除计划，不提交删除
+python3 delete_supernode.py \
+  --cluster-id cls-xxxxxxxx \
+  --node-name eklet-subnet-xxxxxxxx-0
+
+# 节点已无 Pod 后提交安全删除
+python3 delete_supernode.py \
+  --cluster-id cls-xxxxxxxx \
+  --node-name eklet-subnet-xxxxxxxx-0 \
+  --confirm-delete \
+  --wait
+
+# 已确认业务风险后强制删除
+python3 delete_supernode.py \
+  --cluster-id cls-xxxxxxxx \
+  --node-name eklet-subnet-xxxxxxxx-0 \
+  --force \
+  --confirm-delete
 ```
 
 ### 方式二：使用 YAML 配置

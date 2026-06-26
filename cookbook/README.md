@@ -78,6 +78,7 @@ cookbook/
 │   └── deploy_nginx.yaml        # Nginx YAML 配置
 └── supernode/                   # 超级节点
     ├── README.md
+    ├── delete_supernode.py      # 删除超级节点
     ├── deploy_gpu_pod.py        # 部署 GPU Pod
     └── gpu_pod_examples.yaml    # GPU Pod 示例配置
 ```
@@ -142,6 +143,7 @@ python3 supernode/deploy_gpu_pod.py \
 | 脚本 | 语言 | 功能 | 文档链接 |
 |------|------|------|---------|
 | `deploy_gpu_pod.py` | Python | 在超级节点上部署 GPU Pod | [docs](../docs/basics/supernode/02-create-supernode.md) |
+| `delete_supernode.py` | Python | 删除超级节点，默认 dry-run | [docs](../src/content/docs/basics/supernode/03-delete-supernode.md) |
 
 ---
 
