@@ -127,9 +127,9 @@ python3 supernode/deploy_gpu_pod.py \
 
 | 脚本 | 语言 | 功能 | 文档链接 |
 |------|------|------|---------|
-| `create_cluster.py` | Python | 创建 TKE 集群 | [docs](../docs/basics/cluster/01-create-cluster.md) |
-| `delete_cluster.py` | Python | 删除 TKE 集群，默认 dry-run | [docs](../docs/basics/cluster/02-delete-cluster.md) |
-| `describe_clusters.py` | Python | 查询 TKE 集群列表和详情 | [docs](../docs/basics/cluster/04-describe-clusters.md) |
+| `create_cluster.py` | Python | 创建 TKE 集群 | [docs](../src/content/docs/basics/cluster/01-create-cluster.md) |
+| `delete_cluster.py` | Python | 删除 TKE 集群，默认 dry-run | [docs](../src/content/docs/basics/cluster/02-delete-cluster.md) |
+| `describe_clusters.py` | Python | 查询 TKE 集群列表和详情 | [docs](../src/content/docs/basics/cluster/04-describe-clusters.md) |
 
 ### 工作负载 (workload/)
 
@@ -141,7 +141,7 @@ python3 supernode/deploy_gpu_pod.py \
 
 | 脚本 | 语言 | 功能 | 文档链接 |
 |------|------|------|---------|
-| `deploy_gpu_pod.py` | Python | 在超级节点上部署 GPU Pod | [docs](../docs/basics/supernode/02-create-supernode.md) |
+| `deploy_gpu_pod.py` | Python | 在超级节点上部署 GPU Pod | [docs](../src/content/docs/basics/supernode/02-create-supernode.md) |
 
 ---
 
