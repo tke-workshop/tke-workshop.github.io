@@ -6,7 +6,7 @@
 
 本目录提供在 TKE 超级节点上部署 GPU Pod 的完整示例，包括 Python 脚本和 YAML 配置文件。
 
-**文档链接**: [GPU Pod 最佳实践](https://tke-workshop.github.io/ai-ml/04-gpu-pod-best-practices/)
+**文档链接**: [超级节点 GPU](https://tke-workshop.github.io/ai-ml/training/supernode-gpu/)
 
 ---
 
@@ -272,7 +272,7 @@ kubectl get pods -l scenario=batch-inference
 | **L20** | 48GB | 12.7 | 高端图形工作负载 | 48核/192GiB |
 | **L40** | 48GB | 12.7 | 高端图形工作负载 | 48核/192GiB |
 
-完整规格表请参考: [GPU Pod 最佳实践文档](https://tke-workshop.github.io/ai-ml/04-gpu-pod-best-practices/#支持的-gpu-规格)
+更多超级节点 GPU 说明请参考: [超级节点 GPU 文档](https://tke-workshop.github.io/ai-ml/training/supernode-gpu/)
 
 ---
 
@@ -370,7 +370,7 @@ kubectl describe pod <pod-name> | grep -i cache
 
 ## 📚 相关文档
 
-- [GPU Pod 最佳实践](https://tke-workshop.github.io/ai-ml/04-gpu-pod-best-practices/)
+- [超级节点 GPU](https://tke-workshop.github.io/ai-ml/training/supernode-gpu/)
 - [创建超级节点池](https://tke-workshop.github.io/basics/supernode/01-create-supernode-pool/)
 - [创建按量超级节点](https://tke-workshop.github.io/basics/supernode/02-create-supernode/)
 - [镜像缓存文档](https://cloud.tencent.com/document/product/457/65908)
@@ -385,7 +385,7 @@ kubectl describe pod <pod-name> | grep -i cache
 
 ## 📄 许可证
 
-[Apache License 2.0](../../LICENSE)
+Apache License 2.0
 
 ---
 

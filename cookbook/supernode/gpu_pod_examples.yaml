@@ -1,5 +1,5 @@
 # GPU Pod 配置示例集合
-# 文档: https://tke-workshop.github.io/ai-ml/04-gpu-pod-best-practices/
+# 文档: https://tke-workshop.github.io/ai-ml/training/supernode-gpu/
 
 ---
 # 示例 1: 基础 GPU Pod（自动匹配 - 推荐）
