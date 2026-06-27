@@ -6,7 +6,7 @@ import { getActiveNavItem, workshopNavItems } from '../src/data/navigation.mjs';
 test('exposes one shared top-level navigation model', () => {
   assert.deepEqual(
     workshopNavItems.map((item) => item.label),
-    ['Start', '基础操作', '最佳实践', 'AI on TKE', 'Data on TKE', 'Cookbooks', 'Contribute']
+    ['Start', '基础操作', '网络', '存储', '最佳实践', 'AI on TKE', 'Data on TKE', 'Cookbooks', 'Contribute']
   );
 });
 
