@@ -41,6 +41,12 @@ export const workshopNavItems = [
     match: ['/contribute/'],
     sidebarLabels: ['Contribute'],
   },
+  {
+    label: 'Agent CLI',
+    href: '/cli/',
+    match: ['/cli/'],
+    sidebarLabels: ['面向 Agent · CLI'],
+  },
 ];
 
 export function normalizePathname(pathname) {

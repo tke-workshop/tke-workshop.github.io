@@ -1,0 +1,15 @@
+{
+    "RegistryName": "tcr-example",
+    "RegistryType": "standard",
+    "RegistryChargeType": 0,
+    "DeletionProtection": true,
+    "EnableCosMAZ": true,
+    "EnableCosVersioning": true,
+    "SyncTag": true,
+    "TagSpecification": {
+        "ResourceType": "instance",
+        "Tags": [
+            {"Key": "env", "Value": "prod"}
+        ]
+    }
+}

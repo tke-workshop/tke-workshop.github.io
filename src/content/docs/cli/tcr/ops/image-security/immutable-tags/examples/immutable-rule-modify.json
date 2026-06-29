@@ -1,0 +1,12 @@
+{
+  "RegistryId": "tcr-example",
+  "NamespaceName": "team-b",
+  "RuleId": 2,
+  "Rule": {
+    "RepositoryPattern": "prod-*",
+    "TagPattern": "stable-*",
+    "RepositoryDecoration": "repoMatches",
+    "TagDecoration": "matches",
+    "Disabled": false
+  }
+}

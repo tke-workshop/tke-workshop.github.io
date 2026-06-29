@@ -1,0 +1,8 @@
+{
+  "RegistryId": "tcr-xxxxxxxx",
+  "VpcId": "vpc-xxxxxxxx",
+  "SubnetId": "subnet-xxxxxxxx",
+  "StorageType": "cfs",
+  "PGroupId": "pgroup-xxxxxxxx",
+  "Zone": "ap-guangzhou-3"
+}
