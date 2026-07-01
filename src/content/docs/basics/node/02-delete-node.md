@@ -16,7 +16,7 @@ title: "如何删除 TKE 节点"
 
 ## 功能概述
 
-从 TKE 集群中删除指定的节点，支持批量删除。删除节点会先驱逐节点上的 Pod，然后从集群中移除节点，最后销毁 CVM 实例（可选）。
+从 TKE 集群中删除指定的节点，支持批量删除。删除时必须显式选择底层 CVM 的处理策略：从集群移除后销毁按量计费 CVM，或仅移出集群并保留 CVM。
 
 **任务目标**: 安全地从集群中删除节点，避免业务中断
 
@@ -48,7 +48,7 @@ title: "如何删除 TKE 节点"
 **⚠️ 重要提示**:
 - 删除节点会驱逐节点上的所有 Pod
 - 如果 Pod 没有副本或 PDB 配置不当，可能导致服务中断
-- 删除节点后 CVM 实例默认会被销毁，数据无法恢复
+- 使用 `terminate` 删除策略会销毁按量计费 CVM，数据无法恢复
 
 ---
 
@@ -64,14 +64,15 @@ title: "如何删除 TKE 节点"
 |--------|------|------|------|--------|
 | ClusterId | 是 | String | 集群 ID | cls-xxxxxxxx |
 | InstanceIds | 是 | Array | 节点 ID 列表（CVM 实例 ID） | ["ins-xxx", "ins-yyy"] |
-| InstanceDeleteMode | 否 | String | 删除模式：retain（保留实例）、terminate（销毁实例，默认） | terminate |
+| InstanceDeleteMode | 是 | String | 删除模式：`retain`（仅移除，保留实例）、`terminate`（销毁实例，仅支持按量计费 CVM） | terminate |
 | ForceDelete | 否 | Boolean | 是否强制删除（跳过驱逐，不推荐） | false |
+| ResourceDeleteOptions | 否 | Array | 资源删除策略，目前支持 CBS（默认保留 CBS） | - |
 
 **删除模式说明**:
 
 | 模式 | 说明 | 适用场景 | CVM 实例 | 数据保留 |
 |------|------|----------|---------|---------|
-| terminate（默认） | 从集群移除并销毁 CVM | 不再需要该节点 | 销毁 | ❌ 不保留 |
+| terminate | 从集群移除并销毁 CVM | 不再需要该节点，且 CVM 为按量计费实例 | 销毁 | ❌ 不保留 |
 | retain | 仅从集群移除，保留 CVM | 节点需要重新使用或迁移到其他集群 | 保留 | ✅ 保留 |
 
 #### Step 2: 调用 DeleteClusterInstances API
@@ -79,17 +80,19 @@ title: "如何删除 TKE 节点"
 **使用腾讯云 CLI (tccli)**:
 
 ```bash
-# 删除单个节点（默认销毁 CVM）
+# 删除单个节点并销毁按量计费 CVM
 tccli tke DeleteClusterInstances \
   --Region ap-guangzhou \
   --ClusterId cls-xxxxxxxx \
-  --InstanceIds '["ins-xxxxxxxx"]'
+  --InstanceIds '["ins-xxxxxxxx"]' \
+  --InstanceDeleteMode terminate
 
-# 批量删除节点
+# 批量删除节点并销毁按量计费 CVM
 tccli tke DeleteClusterInstances \
   --Region ap-guangzhou \
   --ClusterId cls-xxxxxxxx \
-  --InstanceIds '["ins-xxxxxxxx", "ins-yyyyyyyy", "ins-zzzzzzzz"]'
+  --InstanceIds '["ins-xxxxxxxx", "ins-yyyyyyyy", "ins-zzzzzzzz"]' \
+  --InstanceDeleteMode terminate
 
 # 删除节点但保留 CVM 实例
 tccli tke DeleteClusterInstances \
@@ -103,6 +106,7 @@ tccli tke DeleteClusterInstances \
   --Region ap-guangzhou \
   --ClusterId cls-xxxxxxxx \
   --InstanceIds '["ins-xxxxxxxx"]' \
+  --InstanceDeleteMode terminate \
   --ForceDelete true
 ```
 
@@ -116,11 +120,11 @@ from tencentcloud.tke.v20180525 import tke_client, models
 cred = credential.Credential("SecretId", "SecretKey")
 client = tke_client.TkeClient(cred, "ap-guangzhou")
 
-# 方式1: 删除节点（默认销毁 CVM）
+# 方式1: 删除节点并销毁按量计费 CVM
 req = models.DeleteClusterInstancesRequest()
 req.ClusterId = "cls-xxxxxxxx"
 req.InstanceIds = ["ins-xxxxxxxx"]
-req.InstanceDeleteMode = "terminate"  # 可选，默认值
+req.InstanceDeleteMode = "terminate"
 
 resp = client.DeleteClusterInstances(req)
 print(f"删除请求已提交，RequestId: {resp.RequestId}")
@@ -138,6 +142,7 @@ print("节点已从集群移除，CVM 实例已保留")
 req = models.DeleteClusterInstancesRequest()
 req.ClusterId = "cls-xxxxxxxx"
 req.InstanceIds = ["ins-xxx", "ins-yyy", "ins-zzz"]
+req.InstanceDeleteMode = "terminate"
 
 resp = client.DeleteClusterInstances(req)
 print(f"批量删除 {len(req.InstanceIds)} 个节点")
@@ -160,7 +165,7 @@ func main() {
 	cpf := profile.NewClientProfile()
 	client, _ := tke.NewClient(credential, "ap-guangzhou", cpf)
 
-	// 方式1: 删除节点（默认销毁 CVM）
+	// 方式1: 删除节点并销毁按量计费 CVM
 	request := tke.NewDeleteClusterInstancesRequest()
 	request.ClusterId = common.StringPtr("cls-xxxxxxxx")
 	request.InstanceIds = []*string{
@@ -191,6 +196,7 @@ func main() {
 		common.StringPtr("ins-yyy"),
 		common.StringPtr("ins-zzz"),
 	}
+	request3.InstanceDeleteMode = common.StringPtr("terminate")
 
 	response3, _ := client.DeleteClusterInstances(request3)
 	fmt.Printf("批量删除成功，RequestId: %s\n", *response3.Response.RequestId)
@@ -204,14 +210,22 @@ func main() {
 ```json
 {
   "Response": {
+    "SuccInstanceIds": [
+      "ins-xxxxxxxx"
+    ],
+    "FailedInstanceIds": [],
+    "NotFoundInstanceIds": [],
     "RequestId": "12345678-1234-1234-1234-123456789012"
   }
 }
 ```
 
 **响应说明**:
-- API 调用成功仅表示请求已接受，实际删除是异步操作
-- 需要通过查询节点列表或集群事件来确认删除完成
+- `SuccInstanceIds` 表示本次请求中删除成功的实例 ID。
+- `FailedInstanceIds` 表示删除失败的实例 ID。非空时需要结合错误信息、集群事件或控制台事件继续排查。
+- `NotFoundInstanceIds` 表示未匹配到的实例 ID。非空时需要核对实例 ID 是否属于目标集群或是否已被删除。
+- `RequestId` 是本次 API 请求 ID，用于定位问题；不要把它当作节点删除完成的证明。
+- 删除节点后的集群状态仍需通过节点列表、CVM 状态或集群事件确认。
 
 ---
 
@@ -336,6 +350,7 @@ tccli tke DeleteClusterInstances \
   --Region ap-guangzhou \
   --ClusterId cls-xxxxxxxx \
   --InstanceIds '["ins-xxxxxxxx"]' \
+  --InstanceDeleteMode terminate \
   --ForceDelete true
 ```
 
@@ -380,6 +395,7 @@ def batch_delete_nodes(client, cluster_id, instance_ids, batch_size=10):
         req = models.DeleteClusterInstancesRequest()
         req.ClusterId = cluster_id
         req.InstanceIds = batch
+        req.InstanceDeleteMode = "terminate"
         
         try:
             resp = client.DeleteClusterInstances(req)
@@ -431,6 +447,7 @@ def safe_delete_node(client, cluster_id, instance_id):
     req = models.DeleteClusterInstancesRequest()
     req.ClusterId = cluster_id
     req.InstanceIds = [instance_id]
+    req.InstanceDeleteMode = "terminate"
     
     resp = client.DeleteClusterInstances(req)
     print(f"节点删除请求已提交，RequestId: {resp.RequestId}")
@@ -475,6 +492,7 @@ def delete_nodes_by_label(client, cluster_id, label_selector):
         req = models.DeleteClusterInstancesRequest()
         req.ClusterId = cluster_id
         req.InstanceIds = instance_ids
+        req.InstanceDeleteMode = "retain"
         
         resp = client.DeleteClusterInstances(req)
         print(f"删除请求已提交，RequestId: {resp.RequestId}")
@@ -567,7 +585,7 @@ delete_nodes_by_label(client, "cls-xxxxxxxx", "env=test")
 
 ## API 文档链接
 
-- **API 文档**: https://cloud.tencent.com/document/api/457/36704
+- **API 文档**: https://cloud.tencent.com/document/product/457/31864
 - **SDK 文档**: https://cloud.tencent.com/document/sdk
 - **API Explorer**: https://console.cloud.tencent.com/api/explorer?Product=tke&Version=2018-05-25&Action=DeleteClusterInstances
 
