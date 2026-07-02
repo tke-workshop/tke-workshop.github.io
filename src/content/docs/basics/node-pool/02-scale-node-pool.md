@@ -9,14 +9,14 @@ title: "扩缩节点池"
 - **功能名称**: 扩缩标准节点池
 - **API 版本**: 2018-05-25
 - **API 名称**: `ModifyClusterNodePool`
-- **文档更新时间**: 2026-06-17
+- **文档更新时间**: 2026-07-03
 - **Agent 友好度**: ⭐⭐⭐⭐⭐
 
 ---
 
 ## 功能概述
 
-通过 `ModifyClusterNodePool` 可以调整节点池的伸缩开关、最小节点数、最大节点数、标签、污点、资源标签和删除保护等配置。节点池扩缩容适用于业务高峰扩容、低峰缩容、压测临时扩容和成本优化。
+通过 `ModifyClusterNodePool` 可以调整节点池的伸缩开关、最小节点数、最大节点数、标签、污点、资源标签和删除保护等配置。官方 API 入参使用 `MinNodesNum` 和 `MaxNodesNum` 表示伸缩范围；不要把 AS 期望容量字段写成 `DesiredCapacity`、`MinSize` 或 `MaxSize`。节点池扩缩容适用于业务高峰扩容、低峰缩容、压测临时扩容和成本优化。
 
 !!! warning "自动伸缩与手动期望数"
     标准节点池由弹性伸缩能力管理节点数量。开启自动伸缩时，应主要调整 `MinNodesNum`、`MaxNodesNum` 和伸缩策略；如果需要固定节点数量，先确认当前节点池是否允许手动调整期望容量，避免与自动伸缩控制器互相覆盖。
@@ -46,6 +46,9 @@ title: "扩缩节点池"
 | Taints | 否 | Array | 节点污点 | dedicated=backend:NoSchedule |
 | Tags | 否 | Array | 腾讯云资源标签 | cost-center=cc-1001 |
 | DeletionProtection | 否 | Boolean | 删除保护开关 | true |
+
+!!! note "官方参数来源"
+    `ModifyClusterNodePool` 官方 API 文档最后更新时间为 2026-05-27 13:00:01，输入参数包含 `ClusterId`、`NodePoolId`、`MinNodesNum`、`MaxNodesNum`、`EnableAutoscale`、`Labels.N`、`Taints.N`、`Tags.N` 和 `DeletionProtection` 等字段。本文示例仅使用这些官方字段。
 
 ---
 
@@ -115,6 +118,34 @@ resp = client.ModifyClusterNodePool(req)
 print(f"RequestId: {resp.RequestId}")
 ```
 
+### Step 5: 使用本地 Cookbook dry-run
+
+仓库提供了可复制的本地示例脚本，默认只序列化 `ModifyClusterNodePool` 请求体，不会提交 API 变更：
+
+```bash
+cd cookbook
+python3 node-pool/scale_node_pool.py \
+  --cluster-id cls-xxxxxxxx \
+  --node-pool-id np-xxxxxxxx \
+  --region ap-guangzhou \
+  --enable-autoscale true \
+  --min-nodes-num 3 \
+  --max-nodes-num 20
+```
+
+确认节点池状态、CVM/CBS/ENI 配额、子网 IP、PDB 和业务可驱逐性后，再显式添加 `--confirm-change` 提交变更：
+
+```bash
+python3 node-pool/scale_node_pool.py \
+  --cluster-id cls-xxxxxxxx \
+  --node-pool-id np-xxxxxxxx \
+  --region ap-guangzhou \
+  --enable-autoscale true \
+  --min-nodes-num 3 \
+  --max-nodes-num 20 \
+  --confirm-change
+```
+
 ---
 
 ## 验证步骤
@@ -171,3 +202,7 @@ kubectl describe pod <pod-name> -n <namespace>
 - [查询节点池](./03-describe-node-pool.md)
 - [删除节点池](./04-delete-node-pool.md)
 - [节点维护](../node/03-maintain-node.md)
+
+## Cookbook 示例
+
+- 完整可执行代码示例: [`cookbook/node-pool/scale_node_pool.py`](https://github.com/tke-workshop/tke-workshop.github.io/tree/main/cookbook/node-pool)
