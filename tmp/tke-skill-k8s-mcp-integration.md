@@ -22,7 +22,7 @@
 
 ### 整体架构
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                           AI Agent (CodeBuddy / Claude)                  │
 │  ┌────────────────────────────────────────────────────────────────────┐  │
@@ -65,7 +65,7 @@
 
 ### 数据流
 
-```
+```text
 用户请求: "把当前项目部署到广州的 TKE 集群"
                 │
                 ▼
@@ -283,7 +283,7 @@ pods = k8s_mcp.pods_list(
 
 #### 架构
 
-```
+```text
 ┌───────────────────────────────────────────────────────────────┐
 │                   TKE Skill (Enhanced)                        │
 ├───────────────────────────────────────────────────────────────┤
@@ -446,7 +446,7 @@ function routeRequest(userRequest: string): ToolChain {
 
 ### kubeconfig 传递流程
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  TKE Skill                                                       │
 │  ┌─────────────────────────────────────────────────────────────┐ │
@@ -515,7 +515,7 @@ function routeRequest(userRequest: string): ToolChain {
 
 #### 场景 1: 一句话部署应用
 
-```
+```text
 用户: "把当前项目部署到广州 TKE 集群 cls-abc123"
 
 执行流程:
@@ -539,7 +539,7 @@ function routeRequest(userRequest: string): ToolChain {
 
 #### 场景 2: Pod Pending 排障
 
-```
+```text
 用户: "集群 cls-abc123 有 Pod 一直 Pending，帮我看看"
 
 执行流程:
@@ -570,7 +570,7 @@ function routeRequest(userRequest: string): ToolChain {
 
 #### 场景 3: Helm 应用安装
 
-```
+```text
 用户: "在 cls-abc123 集群安装 nginx-ingress"
 
 执行流程:

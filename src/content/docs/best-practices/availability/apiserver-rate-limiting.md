@@ -37,7 +37,7 @@ OpenAI 等超大规模集群，因变更 DaemonSet 触发业务异常 list 请�
 
 6. **计算 APF 规则的 seats 数**：例如这组 APF 规则的并发权重和份额是 10，即 `spec.limited.assuredConcurrencyShares` 中配置了 10，那这组 APF 规则获得总 seats 数：
 
-   ```
+   ```text
    seats = (max-requests-inflight + max-mutating-requests-inflight) * 10 / (10 + 245)
    ```
 
@@ -45,7 +45,7 @@ OpenAI 等超大规模集群，因变更 DaemonSet 触发业务异常 list 请�
 
 ### 计算公式
 
-```
+```text
 NominalCL(i) = ceil(ServerCL * NCS(i) / SUM_NCS)
 ```
 
@@ -418,7 +418,7 @@ spec:
 
 PriorityLevelConfiguration 中 `spec.limited.nominalConcurrencyShares` 最小并发份额可以设置为 1，同时 FlowSchema 中 `subjects.userAgent.nameRegexp` 中配置正则来拦截系统组件之外的 list 请求：
 
-```
+```text
 ^(?!kube-scheduler|kube-apiserver|kubelet|kube-controller-manager|service-controller|tke-eni-ipamd|coredns|csi-provisioner|csi-attacher|csi-snapshotter|csi-resizer|tencent-cloud-controller-manager|gatekeeper|cluster-autoscaler|add-pod-eni-ip-limit-webhook|machine-apiserver|qcloud_ingress|kubectl).*
 ```
 
@@ -480,7 +480,7 @@ spec:
 
 PriorityLevelConfiguration 中 `spec.limited.nominalConcurrencyShares` 最小并发份额可以设置为 1。同时 FlowSchema 中 `subjects.userAgent.nameRegexp` 中配置以下正则来拦截所有 list 请求：
 
-```
+```text
 ^(?!kubectl).*
 ```
 
@@ -549,13 +549,13 @@ spec:
 
 压测工具会命中 APF 默认的 FlowSchema `service-accounts`，对应 PriorityLevelConfiguration `workload-low`
 
-```
+```yaml
 nominalConcurrencyShares: 100
 ```
 
 `workload-low` 计算出可分配 seats 数为：
 
-```
+```text
 ((200 + 400) / 245) * 100 = 245
 ```
 
@@ -571,13 +571,13 @@ nominalConcurrencyShares: 100
 
 下发增强版限速后，list 请求命中 FlowSchema `a-fs-demo` 对应 PriorityLevelConfiguration `plc-demo`
 
-```
+```yaml
 nominalConcurrencyShares: 1
 ```
 
 `plc-demo` 计算出可分配 seats 数为：
 
-```
+```text
 ((200 + 400) / 246) * 1 = 3
 ```
 

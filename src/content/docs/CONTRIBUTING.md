@@ -43,7 +43,7 @@ git push origin docs/your-feature
 
 ### 分支命名
 
-```
+```text
 docs/模块名-简要描述
 fix/问题描述
 feat/新功能描述
@@ -56,7 +56,7 @@ feat/新功能描述
 
 ### Commit 信息格式
 
-```
+```text
 <type>(<scope>): <description>
 ```
 
