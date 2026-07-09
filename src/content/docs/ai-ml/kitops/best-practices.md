@@ -19,7 +19,7 @@ title: "最佳实践"
 
 推荐的 ML 项目目录结构，确保 Kitfile 能够正确打包所有组件：
 
-```
+```text
 my-ml-project/
 ├── Kitfile                      # ModelKit 配置文件（必需）
 ├── VERSION                      # 版本号文件
@@ -123,7 +123,7 @@ docs:
 
 遵循 [Semantic Versioning 2.0.0](https://semver.org/)：
 
-```
+```text
 MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD]
 
 示例：
