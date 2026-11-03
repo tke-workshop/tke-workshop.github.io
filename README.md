@@ -1,6 +1,7 @@
 # TKE Workshop
 
 [![Deploy](https://github.com/tke-workshop/tke-workshop.github.io/actions/workflows/deploy.yml/badge.svg)](https://github.com/tke-workshop/tke-workshop.github.io/actions/workflows/deploy.yml)
+[![Packaged with KitOps](https://img.shields.io/badge/Packaged%20with-KitOps-FFAF52?labelColor=363636)](https://kitops.org)
 
 Hands-on labs and executable practices for Tencent Kubernetes Engine (TKE).
 
