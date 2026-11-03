@@ -1,6 +1,7 @@
 # TKE Workshop
 
 [![Deploy](https://github.com/tke-workshop/tke-workshop.github.io/actions/workflows/deploy.yml/badge.svg)](https://github.com/tke-workshop/tke-workshop.github.io/actions/workflows/deploy.yml)
+[![Packaged with KitOps](https://img.shields.io/badge/Packaged%20with-KitOps-FFAF52?labelColor=363636)](https://kitops.org)
 
 腾讯云容器服务 TKE 动手实践与可执行 Cookbook。
 
